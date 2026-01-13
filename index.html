@@ -1,445 +1,483 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>स्वास्थ क्रांती वर्ष 2026</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
-    <style>
-        /* --- थीम (No White Background) --- */
-        body {
-            font-family: 'Segoe UI', 'Mukta', sans-serif; margin: 0; padding: 0;
-            background: linear-gradient(180deg, rgba(255, 153, 51, 0.25) 0%, rgba(255, 255, 255, 0.9) 50%, rgba(19, 136, 8, 0.25) 100%);
-            color: #222; min-height: 100vh;
-        }
-        .navbar {
-            background: linear-gradient(90deg, #fff5e6, #fff, #e8f5e9);
-            padding: 12px 25px; display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 3px solid #FF9933; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .logo { font-size: 1.3em; font-weight: 800; color: #000080; text-transform: uppercase; }
-        .nav-btn {
-            background: linear-gradient(90deg, #FF9933, #138808); color: white;
-            border: none; padding: 8px 20px; border-radius: 20px; 
-            cursor: pointer; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>स्वास्थ क्रांती वर्ष 2026 – RCM Digital Mission</title>
 
-        /* कार्ड */
-        .container {
-            max-width: 750px; margin: 30px auto;
-            background: linear-gradient(180deg, #fffaf0 0%, #ffffff 60%, #f0fff4 100%);
-            padding: 40px; border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border-top: 8px solid #FF9933; border-bottom: 8px solid #138808;
-            display: none;
-        }
-        .active-section { display: block; }
+<style>
+/* GLOBAL */
+body{
+    font-family:Arial;
+    margin:0;
+    background:linear-gradient(180deg,#FFF5E6,#FFFFFF,#E8F5E9);
+    overflow-x:hidden;
+}
 
-        h1 { 
-            text-align: center; font-size: 2em; font-weight: 900; margin-bottom: 5px;
-            background: linear-gradient(to right, #FF9933, #000080, #138808);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-        h2 { 
-            font-size: 1.2em; color: #000080; 
-            background: linear-gradient(90deg, rgba(255,153,51,0.2), transparent);
-            border-left: 6px solid #FF9933; padding: 10px; margin-top: 30px; margin-bottom: 15px; border-radius: 0 5px 5px 0;
-        }
+/* HEADER */
+header{
+    background:linear-gradient(90deg,#FF671F,#FFFFFF,#046A38);
+    padding:18px;text-align:center;
+    font-size:22px;font-weight:bold;
+    border-bottom:4px solid #0A3D88;
+}
 
-        label { display: block; margin-top: 15px; font-weight: 700; color: #333; }
-        input, select, textarea {
-            width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #aaa; border-radius: 8px; font-size: 16px;
-            background: linear-gradient(180deg, #fff8f0 0%, #fff 100%); transition: 0.3s;
-        }
-        input:focus, select:focus { outline: none; border-color: #000080; background: #fff; }
+/* NAV */
+nav{
+    display:flex;background:#ffffffdd;
+    backdrop-filter:blur(6px);
+    position:sticky;top:0;z-index:50;
+    overflow-x:auto;border-bottom:1px solid #ddd;
+}
+nav button{
+    flex:1;min-width:120px;
+    padding:12px;font-size:14px;
+    background:#fafafa;border:none;
+    font-weight:bold;
+}
+nav button.active{
+    background:#0A3D88;color:white;
+}
 
-        .checkbox-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .checkbox-item {
-            background: linear-gradient(90deg, #fffbf5, #f0fff4); border: 1px solid #ccc; padding: 10px 15px; 
-            border-radius: 10px; font-size: 0.95em; cursor: pointer; display: flex; align-items: center;
-        }
-        .checkbox-item input { margin-right: 10px; transform: scale(1.3); }
+/* SECTION BOX */
+.section{
+    display:none;padding:18px;max-width:100%;
+}
+.box{
+    background:white;padding:18px;border-radius:12px;
+    margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,0.15);
+    border-left:6px solid #FF671F;
+}
 
-        .btn-container { display: flex; gap: 15px; margin-top: 40px; border-top: 1px solid #bbb; padding-top: 20px; }
-        .btn { flex: 1; padding: 15px; border: none; border-radius: 50px; font-size: 1.1em; font-weight: bold; cursor: pointer; color: white; }
-        .btn-submit { background: linear-gradient(45deg, #000080, #1a237e); }
-        .btn-download { background: linear-gradient(90deg, #FF9933, #138808); }
+/* INPUTS */
+input,select{
+    width:100%;padding:12px;margin-top:8px;
+    border:1px solid #ccc;border-radius:10px;
+}
 
-        /* ANALYSIS BOX */
-        .analysis-box {
-            margin-top: 30px; padding: 20px; background: #fdfdfd;
-            border: 2px solid #000080; border-radius: 10px; display: none;
-        }
-        .analysis-header { color: #000080; font-size: 1.2em; border-bottom: 1px solid #ddd; padding-bottom: 10px; margin-bottom: 10px; font-weight:bold; }
-        .analysis-point { margin-bottom: 8px; font-size: 0.95em; color: #444; line-height: 1.4; }
-        .highlight-red { color: #d32f2f; font-weight: bold; }
-        .highlight-green { color: #2e7d32; font-weight: bold; }
-        .highlight-blue { color: #1565c0; font-weight: bold; }
+/* BUTTON */
+.action{
+    background:linear-gradient(90deg,#FF671F,#FFD9B3);
+    padding:14px;width:100%;border:none;
+    border-radius:10px;margin-top:12px;
+    font-weight:bold;font-size:16px;color:#000;
+}
 
-        /* Disclaimer */
-        .disclaimer-box {
-            margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-top: 1px solid #ddd;
-            font-size: 0.8em; color: #666; text-align: center; line-height: 1.5;
-        }
+/* CARDS */
+.cardRow{display:flex;gap:10px;flex-wrap:wrap;}
+.card{
+    flex:1;min-width:150px;
+    background:white;padding:15px;border-radius:12px;
+    text-align:center;box-shadow:0 3px 10px #bbb;
+    border-top:6px solid #046A38;
+}
+.card h2{
+    color:#0A3D88;margin:5px 0;font-size:22px;
+}
 
-        /* Admin Table */
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
-        .admin-table th { background: linear-gradient(90deg, #FF9933, #FF9933); color: white; padding: 10px; text-align: left; }
-        .admin-table td { border-bottom: 1px solid #ccc; padding: 10px; vertical-align: top; background: rgba(255,255,255,0.8); }
-        .analysis-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: #fff; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-bottom: 4px solid #000080; }
-        .stat-num { font-size: 1.8em; font-weight: bold; color: #000080; }
-    </style>
+/* PROGRESS CIRCLE */
+.progressCircle{
+    width:100px;height:100px;border-radius:50%;
+    border:8px solid #046A38;border-left-color:#FF671F;
+    animation:spin 3s linear infinite;margin:auto;
+}
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+/* REPORT BOX */
+.reportBox{
+    background:white;padding:14px;border-radius:10px;
+    margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    border-left:5px solid #0A3D88;
+}
+
+/* STATUS */
+.pending{color:#d10000;font-weight:bold;}
+.done{color:#046A38;font-weight:bold;}
+.highRisk{color:#d10000;font-weight:bold;}
+.normal{color:#046A38;font-weight:bold;}
+
+/* EXPORT BUTTON */
+.exportBtn{
+    background:#0A3D88;color:white;padding:10px;
+    border-radius:10px;border:none;width:100%;
+    margin-bottom:12px;
+}
+</style>
 </head>
+
 <body>
 
-<div class="navbar" data-html2canvas-ignore="true">
-    <div class="logo">🇮🇳 RCM</div>
-    <button class="nav-btn" onclick="window.showLogin()">Admin</button>
-</div>
+<header>🇮🇳 स्वास्थ क्रांती वर्ष 2026 – RCM Digital Mission</header>
 
-<div class="container active-section" id="userPanel">
-    
-    <h1>🇮🇳 स्वास्थ क्रांती वर्ष 2026 🇮🇳</h1>
-    <p style="text-align:center; color:#444; font-weight:bold;">चला, एक निरोगी भारत घडवूया!</p>
+<nav>
+<button class="active" onclick="showSection('target')">लिस्ट</button>
+<button onclick="showSection('dash')">डॅशबोर्ड</button>
+<button onclick="showSection('reg')">नोंदणी</button>
+<button onclick="showSection('upload')">रिपोर्ट अपलोड</button>
+<button onclick="showSection('rep')">सर्व रिपोर्ट</button>
+<button onclick="showSection('follow')">फॉलो-अप</button>
+</nav>
 
-    <form id="healthForm">
-        <h2>१. वैयक्तिक माहिती</h2>
-        <label>पूर्ण नाव:</label><input type="text" id="name" placeholder="पूर्ण नाव">
-        <div style="display: flex; gap: 15px;">
-            <div style="flex: 1;"><label>वय:</label><input type="number" id="age" placeholder="वर्षे"></div>
-            <div style="flex: 1;"><label>मोबाईल:</label><input type="number" id="mobile" placeholder="मोबाईल"></div>
-        </div>
-        <div style="display: flex; gap: 15px; margin-top:10px;">
-            <div style="flex: 1;"><label>उंची (cm):</label><input type="number" id="height" placeholder="उदा. 165"></div>
-            <div style="flex: 1;"><label>वजन (kg):</label><input type="number" id="weight" placeholder="उदा. 65"></div>
-        </div>
 
-        <h2>२. दिनचर्या</h2>
-        <div style="display: flex; gap: 15px;">
-            <div style="flex: 1;"><label>उठणे:</label><input type="time" id="wake"></div>
-            <div style="flex: 1;"><label>झोपणे:</label><input type="time" id="sleep"></div>
-        </div>
-        <label>नाश्ता:</label><textarea id="bf" rows="2" placeholder="सकाळी काय खाता?"></textarea>
+<!-- TARGET LIST -->
+<div class="section" id="target" style="display:block;">
 
-        <h2>३. आहार आणि तेल</h2>
-        <label>स्वयंपाकाचे तेल:</label>
-        <select id="oil">
-            <option>-- निवडा --</option>
-            <option>सोयाबीन तेल (Refined)</option>
-            <option>सूर्यफूल तेल (Refined)</option>
-            <option>शेंगदाणा तेल</option>
-            <option>राईस ब्रान ऑइल (Health Guard)</option>
-            <option>घाण्याचे तेल</option>
-            <option>इतर</option>
-        </select>
-        <label>व्यायाम:</label>
-        <select id="exercise"><option>नाही</option><option>हो, नियमित</option><option>कधीतरी</option></select>
+    <div class="box">
+        <h3>🎯 लिस्ट (Target List)</h3>
 
-        <h2>४. सध्याचे आजार</h2>
-        <div class="checkbox-container">
-            <label class="checkbox-item"><input type="checkbox" class="disease" value="BP"> बीपी</label>
-            <label class="checkbox-item"><input type="checkbox" class="disease" value="Sugar"> शुगर</label>
-            <label class="checkbox-item"><input type="checkbox" class="disease" value="Thyroid"> थायरॉईड</label>
-            <label class="checkbox-item"><input type="checkbox" class="disease" value="Acidity"> ॲसिडिटी</label>
-            <label class="checkbox-item"><input type="checkbox" class="disease" value="JointPain"> सांधेदुखी</label>
-            <label class="checkbox-item"><input type="checkbox" class="disease" value="Fatigue"> थकवा</label>
-        </div>
+        <input id="tname" placeholder="नाव">
+        <input id="tmobile" placeholder="मोबाईल नंबर">
+        <input id="tcity" placeholder="शहर">
 
-        <h2>५. ब्लड रिपोर्ट्स</h2>
-        <label>तुम्ही ब्लड टेस्ट केली आहे का?</label>
-        <select id="bloodStatus" onchange="window.toggleReports()">
-            <option value="No">नाही</option>
-            <option value="Yes">हो, केली आहे</option>
+        <select id="tstatus">
+            <option>Pending</option>
+            <option>Done</option>
         </select>
 
-        <div id="reportSection" style="display: none; margin-top: 15px; border: 1px dashed #FF9933; padding: 15px; border-radius: 10px; background: rgba(255,255,255,0.5);">
-            <div class="checkbox-container">
-                <label class="checkbox-item"><input type="checkbox" class="report" value="CBC"> CBC</label>
-                <label class="checkbox-item"><input type="checkbox" class="report" value="Lipid Profile"> Lipid Profile</label>
-                <label class="checkbox-item"><input type="checkbox" class="report" value="HbA1c"> HbA1c</label>
-                <label class="checkbox-item"><input type="checkbox" class="report" value="Vitamin B12"> Vit B12</label>
-                <label class="checkbox-item"><input type="checkbox" class="report" value="Thyroid"> Thyroid</label>
-            </div>
-        </div>
+        <button class="action" onclick="saveTarget()">सेव्ह करा</button>
+    </div>
 
-        <div id="scientificAnalysis" class="analysis-box">
-            <div class="analysis-header">🔬 वैज्ञानिक विश्लेषण & सल्ला</div>
-            <div id="analysisContent"></div>
-        </div>
+    <button class="exportBtn" onclick="exportListPDF()">⬇ लिस्ट PDF डाउनलोड</button>
 
-        <div class="btn-container" data-html2canvas-ignore="true">
-            <button type="button" class="btn btn-submit" onclick="window.submitData()">✅ Submit Data</button>
-            <button type="button" class="btn btn-download" onclick="window.downloadPDF()">📄 Download PDF</button>
-        </div>
-
-        <div class="disclaimer-box" data-html2canvas-ignore="true">
-            <strong>⚠️ अस्वीकरण (Disclaimer):</strong><br>
-            या फॉर्मद्वारे मिळणारा अहवाल केवळ सामान्य माहितीसाठी आणि जीवनशैली सुधारण्यासाठी आहे. हा कोणत्याही वैद्यकीय उपचारांचा किंवा डॉक्टरांच्या सल्ल्याचा पर्याय नाही.
-        </div>
-    </form>
+    <h3>📌 तुमची लिस्ट</h3>
+    <div id="targetList"></div>
 </div>
 
-<div class="container" id="loginPanel" style="max-width:400px; text-align:center;">
-    <h2>ॲडमिन लॉगिन</h2>
-    <input type="password" id="adminPass" placeholder="पासवर्ड टाका">
-    <button class="btn btn-submit" style="margin-top:20px;" onclick="window.checkLogin()">लॉगिन</button>
-    <p style="margin-top:20px; cursor:pointer;" onclick="window.showUser()">मागे जा</p>
-</div>
 
-<div class="container" id="adminPanel" style="max-width:900px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #aaa; padding-bottom:15px; margin-bottom:20px;">
-        <h2 style="margin:0; background:none; border:none; padding:0;">📊 Admin Dashboard</h2>
-        <button onclick="window.showUser()" style="background:red; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Logout</button>
-    </div>
 
-    <div class="analysis-grid">
-        <div class="stat-card"><div class="stat-num" id="totalCount">0</div><div>Total Patients</div></div>
-        <div class="stat-card"><div class="stat-num" id="bpCount" style="color:red">0</div><div>Health Issues</div></div>
-    </div>
+<!-- DASHBOARD -->
+<div class="section" id="dash">
+    <center><div class="progressCircle"></div></center>
 
-    <div style="overflow-x:auto;">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Date</th><th>Name</th><th>Analysis</th><th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
-    
-    <div style="margin-top:20px; text-align:center;">
-        <button class="btn-download" style="padding:10px 20px; border-radius:5px; border:none;" onclick="window.exportToExcel()">📥 Export Excel</button>
+    <div class="cardRow">
+        <div class="card">
+            <h2 id="tPending">0</h2>
+            <span>Pending</span>
+        </div>
+
+        <div class="card">
+            <h2 id="tDone">0</h2>
+            <span>Done</span>
+        </div>
+
+        <div class="card">
+            <h2 id="totalReg">0</h2>
+            <span>नोंदणी</span>
+        </div>
+
+        <div class="card">
+            <h2 id="totalRep">0</h2>
+            <span>अपलोड रिपोर्ट</span>
+        </div>
     </div>
 </div>
+<!-- REGISTRATION -->
+<div class="section" id="reg">
+    <div class="box">
+        <h3>🧑‍⚕️ नवी नोंदणी</h3>
 
-<div id="hiddenPdfTemplate" style="display:none; padding:30px; font-family:sans-serif;">
-    <h1 style="color:#000080; border-bottom:2px solid #FF9933; text-align:center;">स्वास्थ क्रांती वर्ष 2026</h1>
-    <h3 style="text-align:center; color:#555;">आरोग्य तपासणी अहवाल</h3>
-    <br>
-    <table style="width:100%; border-collapse:collapse; margin-bottom:20px;">
-        <tr>
-            <td style="padding:8px; border-bottom:1px solid #eee;"><strong>नाव:</strong> <span id="pdfName"></span></td>
-            <td style="padding:8px; border-bottom:1px solid #eee;"><strong>वय:</strong> <span id="pdfAge"></span></td>
-        </tr>
-        <tr>
-            <td style="padding:8px; border-bottom:1px solid #eee;"><strong>उंची:</strong> <span id="pdfHeight"></span> cm</td>
-            <td style="padding:8px; border-bottom:1px solid #eee;"><strong>वजन:</strong> <span id="pdfWeight"></span> kg</td>
-        </tr>
-    </table>
-    
-    <div style="background:#f0f8ff; padding:15px; border-left:5px solid #000080; margin-bottom:20px;">
-        <p style="margin:5px 0;"><strong>BMI स्थिती:</strong> <span id="pdfBmi"></span></p>
-        <p style="margin:5px 0;"><strong>आजार:</strong> <span id="pdfDisease"></span></p>
-        <p style="margin:5px 0;"><strong>तेल:</strong> <span id="pdfOil"></span></p>
+        <input id="rname" placeholder="नाव">
+        <input id="rmobile" placeholder="मोबाईल नंबर">
+        <input id="rage" placeholder="वय">
+        <input id="rcity" placeholder="शहर">
+
+        <button class="action" onclick="saveReg()">सेव्ह करा</button>
     </div>
-    
-    <div style="background:#fff; padding:15px; border:1px solid #ccc; border-radius:5px;">
-        <h3 style="margin-top:0; color:#000080;">🔬 वैज्ञानिक विश्लेषण & सल्ला:</h3>
-        <div id="pdfAnalysisContent"></div>
-    </div>
-    <div style="margin-top:40px; font-size:0.8em; color:#777; text-align:center;">
-        अस्वीकरण: हा अहवाल केवळ माहितीसाठी आहे. वैद्यकीय उपचारांसाठी डॉक्टरांचा सल्ला घ्या.
+
+    <button class="exportBtn" onclick="exportRegistrationPDF()">
+        ⬇ नोंदणीचा PDF डाउनलोड
+    </button>
+
+</div>
+
+
+
+<!-- REPORT UPLOAD -->
+<div class="section" id="upload">
+    <div class="box">
+        <h3>📄 PDF रिपोर्ट अपलोड</h3>
+
+        <input id="umobile" placeholder="मोबाईल नंबर">
+
+        <select id="utest">
+            <option value="">टेस्ट निवडा</option>
+            <option>CBC</option>
+            <option>Lipid</option>
+            <option>HbA1c</option>
+            <option>Liver</option>
+            <option>Kidney</option>
+            <option>Vitamin D</option>
+            <option>Vitamin B12</option>
+        </select>
+
+        <input type="file" id="updf" accept="application/pdf">
+
+        <button class="action" onclick="uploadPDF()">UPLOAD PDF</button>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
-      authDomain: "swasth-80320.firebaseapp.com",
-      projectId: "swasth-80320",
-      storageBucket: "swasth-80320.firebasestorage.app",
-      messagingSenderId: "143665591308",
-      appId: "1:143665591308:web:51b7ef03156b10fed6ea29"
-    };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const reportsCol = collection(db, 'health_reports');
-    let allReportsData = [];
+<!-- ALL REPORTS -->
+<div class="section" id="rep">
 
-    // --- HELPER: Scientific Analysis (Updated with Ideal Weight & Water) ---
-    window.getScientificAnalysis = (bmiVal, oil, disease, heightCm, weightKg) => {
-        let text = "";
-        let bmiNum = parseFloat(bmiVal);
-        let h = parseFloat(heightCm);
-        let w = parseFloat(weightKg);
-        
-        // 1. Ideal Weight Calculation (Simple: Height in cm - 100 for men approx, generic rule used here)
-        // More scientific: Target BMI 22.
-        let idealWeight = (22 * (h/100) * (h/100)).toFixed(1);
-        
-        // 2. Water Intake Calculation (Weight / 20)
-        let waterIntake = (w / 20).toFixed(1);
+    <h3>📁 रिपोर्ट – PDF डाउनलोड</h3>
 
-        // --- Analysis Output ---
-        
-        // BMI & Weight Analysis
-        if(bmiNum < 18.5) {
-            text += `<div class='analysis-point'><span class='highlight-red'>• वजन (Weight):</span> तुमचे वजन कमी आहे. <strong>तुमचे आदर्श वजन ${idealWeight} kg</strong> असायला हवे.</div>`;
-        } else if(bmiNum >= 25) {
-            let extraWeight = (w - idealWeight).toFixed(1);
-            text += `<div class='analysis-point'><span class='highlight-red'>• वजन (Weight):</span> तुमचे वजन जास्त आहे. निरोगी राहण्यासाठी तुम्हाला <strong>सुमारे ${extraWeight} kg</strong> कमी करावे लागेल. तुमचे आदर्श वजन <strong>${idealWeight} kg</strong> असायला हवे.</div>`;
-        } else if(bmiNum >= 18.5 && bmiNum < 25) {
-            text += `<div class='analysis-point'><span class='highlight-green'>• वजन (Weight):</span> तुमचे वजन अगदी योग्य आहे (Ideal: ${idealWeight} kg). अभिनंदन!</div>`;
-        }
+    <button class="exportBtn" onclick="exportListPDF()">⬇ लिस्ट रिपोर्ट PDF</button>
+    <button class="exportBtn" onclick="exportRegistrationPDF()">⬇ नोंदणी रिपोर्ट PDF</button>
+    <button class="exportBtn" onclick="exportUploadedReportsPDF()">⬇ अपलोड केलेले रिपोर्ट PDF</button>
+    <button class="exportBtn" onclick="exportFollowupPDF()">⬇ फॉलो-अप रिपोर्ट PDF</button>
 
-        // Water Analysis
-        text += `<div class='analysis-point'><span class='highlight-blue'>• पाणी (Water):</span> तुमच्या वजनानुसार, शरीराची साफसफाई करण्यासाठी तुम्हाला दिवसाला किमान <strong>${waterIntake} लिटर</strong> पाणी पिणे आवश्यक आहे.</div>`;
+    <br><br>
 
-        // Oil Analysis
-        if(oil.includes("Refined") || oil.includes("सोयाबीन") || oil.includes("सूर्यफूल")) {
-            text += `<div class='analysis-point'><span class='highlight-red'>• तेल (Oil):</span> रिफाईंड तेलामुळे शरीरात सूज (Inflammation) वाढते. कृपया <strong>Health Guard (Rice Bran)</strong> किंवा <strong>Cold Pressed</strong> तेलाचा वापर सुरू करा.</div>`;
-        } else if (oil.includes("Rice Bran") || oil.includes("Health Guard")) {
-            text += `<div class='analysis-point'><span class='highlight-green'>• तेल (Oil):</span> तुम्ही हृदयासाठी उत्तम तेल वापरत आहात.</div>`;
-        }
+    <h3>📄 अपलोड केलेले रिपोर्ट</h3>
+    <div id="reportList"></div>
+</div>
 
-        // Disease Analysis
-        if(disease.includes("Sugar") || disease.includes("Diabetes")) text += `<div class='analysis-point'>• <strong>शुगर:</strong> साखरेचे प्रमाण नियंत्रित ठेवा. Gamma Oryzanol नैसर्गिक इन्सुलिनसाठी मदत करू शकते.</div>`;
-        if(disease.includes("BP")) text += `<div class='analysis-point'>• <strong>बीपी:</strong> आहारात मीठ कमी करा.</div>`;
-        if(disease.includes("Acidity")) text += `<div class='analysis-point'>• <strong>ॲसिडिटी:</strong> पाणी जास्त प्या आणि वेळेवर जेवण करा.</div>`;
-        
-        return text;
+
+
+<!-- FOLLOW-UP -->
+<div class="section" id="follow">
+    <div class="box">
+        <h3>📝 फॉलो-अप अपडेट</h3>
+
+        <input id="fm" placeholder="मोबाईल नंबर">
+        <input id="f1" placeholder="Day 1 नोट्स">
+        <input id="f15" placeholder="Day 15 नोट्स">
+        <input id="f30" placeholder="Day 30 नोट्स">
+        <input id="f60" placeholder="Day 60 नोट्स">
+
+        <button class="action" onclick="saveFollow()">सेव्ह करा</button>
+    </div>
+</div>
+
+
+
+<!-- FIREBASE SCRIPTS -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+<script>
+/******** FIREBASE CONFIG *******/
+firebase.initializeApp({
+    apiKey:"AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
+    authDomain:"swasth-80320.firebaseapp.com",
+    projectId:"swasth-80320",
+    storageBucket:"swasth-80320.appspot.com",
+    messagingSenderId:"143665591308",
+    appId:"1:143665591308:web:99ce02ee034d041dd6ea29",
+    databaseURL:"https://swasth-80320-default-rtdb.asia-southeast1.firebasedatabase.app"
+});
+const db=firebase.database();
+const storage=firebase.storage();
+
+
+
+/******** SECTION SWITCH *******/    
+function showSection(id){
+    document.querySelectorAll(".section").forEach(s=>s.style.display="none");
+    document.getElementById(id).style.display="block";
+
+    document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+    event.target.classList.add("active");
+}
+
+
+
+/*************** TARGET LIST SAVE ****************/
+function saveTarget(){
+    let m=tmobile.value;
+
+    db.ref("targets/"+m).set({
+        name:tname.value,
+        mobile:m,
+        city:tcity.value,
+        status:tstatus.value,
+        time:Date.now()
+    });
+
+    alert("लिस्टमध्ये नोंद झाली ✔");
+}
+
+
+
+/*************** TARGET LIST LOAD ****************/
+db.ref("targets").on("value",snap=>{
+    let html="",pen=0,don=0;
+
+    snap.forEach(t=>{
+        let d=t.val();
+
+        if(d.status=="Pending") pen++;
+        if(d.status=="Done") don++;
+
+        html+=`
+        <div class='reportBox'>
+            <h4>${d.name} (${d.mobile})</h4>
+            <p>शहर: ${d.city}</p>
+            <p>Status: 
+                <span class="${d.status=='Done'?'done':'pending'}">${d.status}</span>
+            </p>
+        </div>`;
+    });
+
+    targetList.innerHTML=html;
+    tPending.innerText=pen;
+    tDone.innerText=don;
+});
+
+
+
+/*************** REGISTRATION SAVE ****************/
+function saveReg(){
+    let m=rmobile.value;
+
+    db.ref("patients/"+m).set({
+        name:rname.value,
+        mobile:m,
+        age:rage.value,
+        city:rcity.value,
+        time:Date.now()
+    });
+
+    alert("नोंदणी पूर्ण ✔");
+}
+
+
+
+/*************** REPORT UPLOAD ****************/
+function uploadPDF(){
+    let m=umobile.value,
+        t=utest.value,
+        f=updf.files[0];
+
+    if(!m||!t||!f){
+        alert("पूर्ण माहिती भरा");
+        return;
     }
 
-    // --- NAVIGATION ---
-    window.showUser = () => { document.getElementById('userPanel').style.display = 'block'; document.getElementById('loginPanel').style.display = 'none'; document.getElementById('adminPanel').style.display = 'none'; }
-    window.showLogin = () => { document.getElementById('userPanel').style.display = 'none'; document.getElementById('loginPanel').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; }
-    window.toggleReports = () => { document.getElementById('reportSection').style.display = (document.getElementById('bloodStatus').value === 'Yes') ? 'block' : 'none'; }
+    let ref=storage.ref("reports/"+m+"/"+t+".pdf");
 
-    // --- SUBMIT ---
-    window.submitData = async () => {
-        let name = document.getElementById('name').value;
-        if(!name) { alert("नाव टाका."); return; }
-
-        let h = document.getElementById('height').value;
-        let w = document.getElementById('weight').value;
-        let bmiRes = "N/A";
-        let bmiNum = 0;
-        if(h && w) {
-            let m = h/100;
-            bmiNum = (w/(m*m)).toFixed(1);
-            let st = (bmiNum<18.5)?"(Low)":(bmiNum<25)?"(Fit)":"(High)";
-            bmiRes = `${bmiNum} ${st}`;
-        } else {
-            alert("कृपया उंची आणि वजन टाका, तरच विश्लेषण मिळेल."); return;
-        }
-
-        let diseases = [];
-        document.querySelectorAll('.disease:checked').forEach(d => diseases.push(d.value));
-        
-        let reports = [];
-        if(document.getElementById('bloodStatus').value === 'Yes') {
-            document.querySelectorAll('.report:checked').forEach(r => reports.push(r.value));
-        } else { reports.push("केली नाही"); }
-
-        let oil = document.getElementById('oil').value;
-        let diseaseStr = diseases.join(', ') || 'निरोगी';
-
-        // Show Analysis
-        let analysisHTML = window.getScientificAnalysis(bmiNum, oil, diseaseStr, h, w);
-        document.getElementById('analysisContent').innerHTML = analysisHTML;
-        document.getElementById('scientificAnalysis').style.display = 'block';
-
-        try {
-            await addDoc(reportsCol, {
-                date: new Date().toLocaleDateString('mr-IN'),
-                name: name,
-                mobile: document.getElementById('mobile').value,
-                age: document.getElementById('age').value,
-                height: h, weight: w, bmi: bmiRes,
-                oil: oil,
-                disease: diseaseStr,
-                report: reports.join(', '),
-                timestamp: Date.now()
+    ref.put(f).then(()=>{
+        ref.getDownloadURL().then(url=>{
+            db.ref("reports/"+m+"/"+t).set({
+                mobile:m,test:t,url:url,time:Date.now()
             });
-            alert("✅ माहिती सबमिट झाली! खालील विश्लेषण वाचा.");
-        } catch (e) { alert("Error: " + e.message); }
-    }
+            alert("PDF अपलोड झाले ✔");
+        });
+    });
+}
 
-    // --- ADMIN ---
-    window.checkLogin = () => {
-        if(document.getElementById('adminPass').value === "rcm") {
-            document.getElementById('loginPanel').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'block';
-            window.loadAdminData();
-        } else alert("Error");
-    }
 
-    window.loadAdminData = () => {
-        onSnapshot(reportsCol, (snapshot) => {
-            let tbody = document.getElementById('tableBody');
-            tbody.innerHTML = "";
-            allReportsData = [];
-            let total = 0, bpSugar = 0;
 
-            snapshot.forEach((doc) => {
-                let i = doc.data();
-                i.id = doc.id;
-                allReportsData.push(i);
-                total++;
-                if(i.disease.includes('BP') || i.disease.includes('Sugar')) bpSugar++;
+/*************** REPORT LIST LOAD ****************/
+db.ref("reports").on("value",snap=>{
+    let html="";
+    snap.forEach(u=>{
+        u.forEach(r=>{
+            let d=r.val();
+            html+=`
+            <div class='reportBox'>
+                <h4>${d.mobile} – ${d.test}</h4>
+                <a href="${d.url}" target="_blank">PDF उघडा</a>
+            </div>`;
+        });
+    });
+    reportList.innerHTML=html;
+});
 
-                tbody.innerHTML += `<tr>
-                    <td>${i.date}</td>
-                    <td><b>${i.name}</b><br>${i.mobile}</td>
-                    <td>${i.bmi}<br>${i.disease}</td>
-                    <td>
-                        <button onclick="window.genAdminPDF('${i.id}')" style="cursor:pointer; font-size:1.2em;">📄</button>
-                        <button onclick="window.deleteRec('${i.id}')" style="color:red;cursor:pointer; font-size:1.2em; margin-left:10px;">&times;</button>
-                    </td>
-                </tr>`;
+
+
+/*************** FOLLOW-UP SAVE ****************/
+function saveFollow(){
+    db.ref("followup/"+fm.value).set({
+        day1:f1.value,
+        day15:f15.value,
+        day30:f30.value,
+        day60:f60.value,
+        time:Date.now()
+    });
+
+    alert("फॉलो-अप सेव्ह झाले ✔");
+}
+
+
+
+/*************** DASH COUNTS ****************/
+db.ref("patients").on("value",s=>totalReg.innerText=s.numChildren());
+db.ref("reports").on("value",s=>totalRep.innerText=s.numChildren());
+
+
+
+/*************** PDF EXPORT FUNCTIONS ****************/
+
+/* 1) Registration PDF */
+function exportRegistrationPDF(){
+    db.ref("patients").once("value",(snap)=>{
+        let data="नोंदणी रिपोर्ट\n\nनाव,मोबाईल,वय,शहर\n";
+        snap.forEach(p=>{
+            let d=p.val();
+            data+=`${d.name},${d.mobile},${d.age},${d.city}\n`;
+        });
+        downloadFile(data,"registration_report.pdf");
+    });
+}
+
+/* 2) List (Target) PDF */
+function exportListPDF(){
+    db.ref("targets").once("value",(snap)=>{
+        let data="लिस्ट रिपोर्ट\n\nनाव,मोबाईल,शहर,स्थिती\n";
+        snap.forEach(t=>{
+            let d=t.val();
+            data+=`${d.name},${d.mobile},${d.city},${d.status}\n`;
+        });
+        downloadFile(data,"list_report.pdf");
+    });
+}
+
+/* 3) Uploaded Reports PDF */
+function exportUploadedReportsPDF(){
+    db.ref("reports").once("value",(snap)=>{
+        let data="अपलोड रिपोर्ट\n\nमोबाईल,टेस्ट,PDF लिंक\n";
+        snap.forEach(u=>{
+            u.forEach(r=>{
+                let d=r.val();
+                data+=`${d.mobile},${d.test},${d.url}\n`;
             });
-            document.getElementById('totalCount').innerText = total;
-            document.getElementById('bpCount').innerText = bpSugar;
         });
-    }
+        downloadFile(data,"uploaded_reports.pdf");
+    });
+}
 
-    window.exportToExcel = () => {
-        if(allReportsData.length === 0) return alert("No Data");
-        let csv = "Date,Name,Mobile,Weight,Ideal Weight,BMI,Oil,Disease\n";
-        allReportsData.forEach(r => {
-            let idealW = (22 * (r.height/100) * (r.height/100)).toFixed(1);
-            csv += `${r.date},${r.name},${r.mobile},${r.weight},${idealW},${r.bmi},${r.oil},"${r.disease}"\n`;
+/* 4) Follow-Up PDF */
+function exportFollowupPDF(){
+    db.ref("followup").once("value",(snap)=>{
+        let data="फॉलो-अप रिपोर्ट\n\nमोबाईल,Day1,Day15,Day30,Day60\n";
+        snap.forEach(f=>{
+            let d=f.val();
+            data+=`${f.key},${d.day1},${d.day15},${d.day30},${d.day60}\n`;
         });
-        let a = document.createElement("a");
-        a.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
-        a.download = "Health_Data_2026.csv";
-        a.click();
-    }
+        downloadFile(data,"followup_report.pdf");
+    });
+}
 
-    window.genAdminPDF = (id) => {
-        let rec = allReportsData.find(r => r.id === id);
-        if(!rec) return;
 
-        document.getElementById('pdfName').innerText = rec.name;
-        document.getElementById('pdfAge').innerText = rec.age;
-        document.getElementById('pdfMobile').innerText = rec.mobile;
-        document.getElementById('pdfHeight').innerText = rec.height;
-        document.getElementById('pdfWeight').innerText = rec.weight;
-        document.getElementById('pdfBmi').innerText = rec.bmi;
-        document.getElementById('pdfDisease').innerText = rec.disease;
-        document.getElementById('pdfOil').innerText = rec.oil;
-        
-        let bmiVal = parseFloat(rec.bmi.split(' ')[0]) || 0;
-        let analysisHTML = window.getScientificAnalysis(bmiVal, rec.oil, rec.disease, rec.height, rec.weight);
-        document.getElementById('pdfAnalysisContent').innerHTML = analysisHTML;
 
-        let el = document.getElementById('hiddenPdfTemplate');
-        el.style.display = 'block';
-        html2pdf().from(el).save(`HealthReport_${rec.name}.pdf`).then(() => el.style.display = 'none');
-    }
+/*************** DOWNLOAD HELPER ****************/
+function downloadFile(data,filename){
+    let blob=new Blob([data],{type:"text/plain"});
+    let url=URL.createObjectURL(blob);
+    let a=document.createElement("a");
+    a.href=url;
+    a.download=filename;
+    a.click();
+}
 
-    window.deleteRec = async (id) => { if(confirm("Delete?")) await deleteDoc(doc(db, "health_reports", id)); }
-    window.downloadPDF = () => { html2pdf().from(document.getElementById('userPanel')).save(); }
-
-    window.showUser();
 </script>
 
 </body>
