@@ -1,484 +1,370 @@
-<!DOCTYPE html>
-<html lang="mr">
+<!DOCTYPE html><html lang="mr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>स्वास्थ क्रांती वर्ष 2026 – RCM Digital Mission</title>
-
-<style>
-/* GLOBAL */
-body{
-    font-family:Arial;
-    margin:0;
-    background:linear-gradient(180deg,#FFF5E6,#FFFFFF,#E8F5E9);
-    overflow-x:hidden;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blood Test Tracking - India Health Mission</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(#e8f3ff, #dff7e3, #fff0e0);
+    }.header {
+  background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+  padding: 18px;
+  text-align: center;
+  color: #000;
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 1px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
-/* HEADER */
-header{
-    background:linear-gradient(90deg,#FF671F,#FFFFFF,#046A38);
-    padding:18px;text-align:center;
-    font-size:22px;font-weight:bold;
-    border-bottom:4px solid #0A3D88;
+/* TABS */
+.tab-btns {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  background: #fff;
+  padding: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.tab-btns button {
+  padding: 10px 16px;
+  border: none;
+  background: #0057b7;
+  color: white;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  flex: 1 1 auto;
+  min-width: 120px;
+}
+.tab-btns button:hover {
+  background: #003f82;
 }
 
-/* NAV */
-nav{
-    display:flex;background:#ffffffdd;
-    backdrop-filter:blur(6px);
-    position:sticky;top:0;z-index:50;
-    overflow-x:auto;border-bottom:1px solid #ddd;
-}
-nav button{
-    flex:1;min-width:120px;
-    padding:12px;font-size:14px;
-    background:#fafafa;border:none;
-    font-weight:bold;
-}
-nav button.active{
-    background:#0A3D88;color:white;
+.container {
+  width: 95%;
+  max-width: 800px;
+  margin: 15px auto;
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.15);
 }
 
-/* SECTION BOX */
-.section{
-    display:none;padding:18px;max-width:100%;
-}
-.box{
-    background:white;padding:18px;border-radius:12px;
-    margin-bottom:18px;box-shadow:0 3px 12px rgba(0,0,0,0.15);
-    border-left:6px solid #FF671F;
+.tab { display: none; }
+.active { display: block; }
+
+label { font-weight: 600; font-size: 14px; }
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  font-size: 14px;
 }
 
-/* INPUTS */
-input,select{
-    width:100%;padding:12px;margin-top:8px;
-    border:1px solid #ccc;border-radius:10px;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 13px;
 }
 
-/* BUTTON */
-.action{
-    background:linear-gradient(90deg,#FF671F,#FFD9B3);
-    padding:14px;width:100%;border:none;
-    border-radius:10px;margin-top:12px;
-    font-weight:bold;font-size:16px;color:#000;
+th {
+  background: #0057b7;
+  color: white;
+  padding: 10px 6px;
+}
+td {
+  padding: 8px 6px;
+  border: 1px solid #ddd;
+  word-wrap: break-word;
 }
 
-/* CARDS */
-.cardRow{display:flex;gap:10px;flex-wrap:wrap;}
-.card{
-    flex:1;min-width:150px;
-    background:white;padding:15px;border-radius:12px;
-    text-align:center;box-shadow:0 3px 10px #bbb;
-    border-top:6px solid #046A38;
-}
-.card h2{
-    color:#0A3D88;margin:5px 0;font-size:22px;
+.india-badge {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #444;
+  font-weight: 500;
+  padding-bottom: 20px;
 }
 
-/* PROGRESS CIRCLE */
-.progressCircle{
-    width:100px;height:100px;border-radius:50%;
-    border:8px solid #046A38;border-left-color:#FF671F;
-    animation:spin 3s linear infinite;margin:auto;
-}
-@keyframes spin{
-    from{transform:rotate(0deg);}
-    to{transform:rotate(360deg);}
+/* MOBILE OPTIMIZATION */
+@media(max-width: 600px){
+  .header { font-size: 18px; padding: 14px; }
+  h2 { font-size: 18px; }
+  .tab-btns button { font-size: 13px; padding: 10px; }
+  input, select, textarea { font-size: 13px; }
+  th, td { font-size: 12px; padding: 6px; }
 }
 
-/* REPORT BOX */
-.reportBox{
-    background:white;padding:14px;border-radius:10px;
-    margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,0.15);
-    border-left:5px solid #0A3D88;
-}
-
-/* STATUS */
-.pending{color:#d10000;font-weight:bold;}
-.done{color:#046A38;font-weight:bold;}
-.highRisk{color:#d10000;font-weight:bold;}
-.normal{color:#046A38;font-weight:bold;}
-
-/* EXPORT BUTTON */
-.exportBtn{
-    background:#0A3D88;color:white;padding:10px;
-    border-radius:10px;border:none;width:100%;
-    margin-bottom:12px;
-}
-</style>
+  </style>
 </head>
+<body>  <div class="header">🇮🇳 स्वास्थ्य क्रांती वर्ष 2026 – Blood Test Tracking System</div>  <div class="tab-btns">
+    <button onclick="openTab('tab1')">➊ लोकांची माहिती</button>
+    <button onclick="openTab('tab2')">➋ टेस्ट स्टेटस + कॉल</button>
+    <button onclick="openTab('tab3')">➌ रिपोर्ट अपलोड</button>
+    <button onclick="openTab('tab4')">➍ Dashboard</button>
+    <button onclick="openTab('tab5')">➎ Team Login</button>
+  </div>  <!-- TAB 1 -->  <div id="tab1" class="tab active container">
+    <h2>🧑‍🤝‍🧑 1) लोकांची बेसिक माहिती</h2>
+    <form id="form1">
+      <label>नाव:</label>
+      <input type="text" id="name" required /><label>वय:</label>
+  <input type="number" id="age" />
 
-<body>
+  <label>शहर:</label>
+  <input type="text" id="city" />
 
-<header>🇮🇳 स्वास्थ क्रांती वर्ष 2026 – RCM Digital Mission</header>
+  <label>मोबाईल नंबर:</label>
+  <input type="text" id="mobile" />
 
-<nav>
-<button class="active" onclick="showSection('target')">लिस्ट</button>
-<button onclick="showSection('dash')">डॅशबोर्ड</button>
-<button onclick="showSection('reg')">नोंदणी</button>
-<button onclick="showSection('upload')">रिपोर्ट अपलोड</button>
-<button onclick="showSection('rep')">सर्व रिपोर्ट</button>
-<button onclick="showSection('follow')">फॉलो-अप</button>
-</nav>
+  <button type="button" onclick="pickContact()" style="background:#ff9933; color:white; padding:10px 14px; border:none; border-radius:6px; cursor:pointer; margin-bottom:10px;">📱 Contact Pick</button>
 
+  <button type="button" onclick="savePerson()" style="background:#138808; color:white; padding:12px 20px; border:none; border-radius:6px; cursor:pointer; font-size:16px;">Save</button>
+</form>
 
-<!-- TARGET LIST -->
-<div class="section" id="target" style="display:block;">
+<h3>Saved Records</h3>
+<table id="listTable">
+  <tr><th>नाव</th><th>वय</th><th>शहर</th><th>मोबाईल</th></tr>
+</table>
 
-    <div class="box">
-        <h3>🎯 लिस्ट (Target List)</h3>
+  </div>  <!-- TAB 4 Dashboard -->  <div id="tab4" class="tab container">
+    <h2>📊 Dashboard</h2>
+    <div id="dashTotal">Total: 0</div>
+    <div id="dashCheck">Check: 0</div>
+    <div id="dashNot">Not Check: 0</div>
+  </div>  <!-- TAB 5 Login -->  <div id="tab5" class="tab container">
+    <h2>🔐 Team Login / Signup</h2><label>Mobile:</label>
+<input type="text" id="authMobile" />
 
-        <input id="tname" placeholder="नाव">
-        <input id="tmobile" placeholder="मोबाईल नंबर">
-        <input id="tcity" placeholder="शहर">
+<label>Password:</label>
+<input type="password" id="authPass" />
 
-        <select id="tstatus">
-            <option>Pending</option>
-            <option>Done</option>
+<button onclick="teamSignup()" style="background:#138808;color:white;padding:10px 14px;border:none;border-radius:6px;">Sign Up</button>
+<button onclick="teamLogin()" style="background:#0057b7;color:white;padding:10px 14px;border:none;border-radius:6px;">Login</button>
+
+<p id="authMsg" style="color:red;margin-top:10px;"></p>
+
+  </div>  <!-- TAB 2 --> -->  <div id="tab2" class="tab container">
+    <h2>🩸 2) Blood Sample Status</h2><table id="sampleTable">
+  <tr>
+    <th>नाव</th>
+    <th>मोबाईल</th>
+    <th>Sample Status</th>
+  </tr>
+</table>
+
+  </div><script>
+  // Auto-fill blood sample table from tab1 list
+  function refreshSampleTable(){
+    let mainTable = document.getElementById('listTable');
+    let sampleTable = document.getElementById('sampleTable');
+
+    sampleTable.innerHTML = '<tr><th>नाव</th><th>मोबाईल</th><th>Sample Status</th></tr>';
+
+    for(let i = 1; i < mainTable.rows.length; i++){
+      let row = sampleTable.insertRow();
+      row.insertCell(0).innerHTML = mainTable.rows[i].cells[0].innerHTML;
+      row.insertCell(1).innerHTML = mainTable.rows[i].cells[3].innerHTML;
+      row.insertCell(2).innerHTML = `
+        <select>
+          <option>Check</option>
+          <option>Not Check</option>
         </select>
+        <a href=\"tel:${mainTable.rows[i].cells[3].innerHTML}\" style=\"color:#0057b7; font-weight:600; margin-left:8px;\">📞 Call</a>
+      `;;
+    }
+  }
 
-        <button class="action" onclick="saveTarget()">सेव्ह करा</button>
-    </div>
+  // Refresh when switching to Tab 2
+  function openTab(tabId){
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    if(tabId === 'tab2'){ refreshSampleTable(); }
+  }
+</script>  <!-- TAB 3 -->  <div id="tab3" class="tab container">
+    <h2>📄 3) रिपोर्ट अपलोड + AI अनालिसिस</h2><label>रिपोर्ट Upload:</label>
+<input type="file" />
 
-    <button class="exportBtn" onclick="exportListPDF()">⬇ लिस्ट PDF डाउनलोड</button>
+<p>👉 या सेक्शनमध्ये नंतर Automated CBC / LFT / Lipid / Thyroid AI Analysis जोडला जाईल.</p>
 
-    <h3>📌 तुमची लिस्ट</h3>
-    <div id="targetList"></div>
-</div>
-
-
-
-<!-- DASHBOARD -->
-<div class="section" id="dash">
-    <center><div class="progressCircle"></div></center>
-
-    <div class="cardRow">
-        <div class="card">
-            <h2 id="tPending">0</h2>
-            <span>Pending</span>
-        </div>
-
-        <div class="card">
-            <h2 id="tDone">0</h2>
-            <span>Done</span>
-        </div>
-
-        <div class="card">
-            <h2 id="totalReg">0</h2>
-            <span>नोंदणी</span>
-        </div>
-
-        <div class="card">
-            <h2 id="totalRep">0</h2>
-            <span>अपलोड रिपोर्ट</span>
-        </div>
-    </div>
-</div>
-<!-- REGISTRATION -->
-<div class="section" id="reg">
-    <div class="box">
-        <h3>🧑‍⚕️ नवी नोंदणी</h3>
-
-        <input id="rname" placeholder="नाव">
-        <input id="rmobile" placeholder="मोबाईल नंबर">
-        <input id="rage" placeholder="वय">
-        <input id="rcity" placeholder="शहर">
-
-        <button class="action" onclick="saveReg()">सेव्ह करा</button>
-    </div>
-
-    <button class="exportBtn" onclick="exportRegistrationPDF()">
-        ⬇ नोंदणीचा PDF डाउनलोड
-    </button>
-
-</div>
-
-
-
-<!-- REPORT UPLOAD -->
-<div class="section" id="upload">
-    <div class="box">
-        <h3>📄 PDF रिपोर्ट अपलोड</h3>
-
-        <input id="umobile" placeholder="मोबाईल नंबर">
-
-        <select id="utest">
-            <option value="">टेस्ट निवडा</option>
-            <option>CBC</option>
-            <option>Lipid</option>
-            <option>HbA1c</option>
-            <option>Liver</option>
-            <option>Kidney</option>
-            <option>Vitamin D</option>
-            <option>Vitamin B12</option>
-        </select>
-
-        <input type="file" id="updf" accept="application/pdf">
-
-        <button class="action" onclick="uploadPDF()">UPLOAD PDF</button>
-    </div>
-</div>
-
-
-
-<!-- ALL REPORTS -->
-<div class="section" id="rep">
-
-    <h3>📁 रिपोर्ट – PDF डाउनलोड</h3>
-
-    <button class="exportBtn" onclick="exportListPDF()">⬇ लिस्ट रिपोर्ट PDF</button>
-    <button class="exportBtn" onclick="exportRegistrationPDF()">⬇ नोंदणी रिपोर्ट PDF</button>
-    <button class="exportBtn" onclick="exportUploadedReportsPDF()">⬇ अपलोड केलेले रिपोर्ट PDF</button>
-    <button class="exportBtn" onclick="exportFollowupPDF()">⬇ फॉलो-अप रिपोर्ट PDF</button>
-
-    <br><br>
-
-    <h3>📄 अपलोड केलेले रिपोर्ट</h3>
-    <div id="reportList"></div>
-</div>
-
-
-
-<!-- FOLLOW-UP -->
-<div class="section" id="follow">
-    <div class="box">
-        <h3>📝 फॉलो-अप अपडेट</h3>
-
-        <input id="fm" placeholder="मोबाईल नंबर">
-        <input id="f1" placeholder="Day 1 नोट्स">
-        <input id="f15" placeholder="Day 15 नोट्स">
-        <input id="f30" placeholder="Day 30 नोट्स">
-        <input id="f60" placeholder="Day 60 नोट्स">
-
-        <button class="action" onclick="saveFollow()">सेव्ह करा</button>
-    </div>
-</div>
-
-
-
-<!-- FIREBASE SCRIPTS -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
-
-<script>
-/******** FIREBASE CONFIG *******/
-firebase.initializeApp({
-    apiKey:"AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
-    authDomain:"swasth-80320.firebaseapp.com",
-    projectId:"swasth-80320",
-    storageBucket:"swasth-80320.appspot.com",
-    messagingSenderId:"143665591308",
-    appId:"1:143665591308:web:99ce02ee034d041dd6ea29",
-    databaseURL:"https://swasth-80320-default-rtdb.asia-southeast1.firebasedatabase.app"
-});
-const db=firebase.database();
-const storage=firebase.storage();
-
-
-
-/******** SECTION SWITCH *******/    
-function showSection(id){
-    document.querySelectorAll(".section").forEach(s=>s.style.display="none");
-    document.getElementById(id).style.display="block";
-
-    document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-    event.target.classList.add("active");
-}
-
-
-
-/*************** TARGET LIST SAVE ****************/
-function saveTarget(){
-    let m=tmobile.value;
-
-    db.ref("targets/"+m).set({
-        name:tname.value,
-        mobile:m,
-        city:tcity.value,
-        status:tstatus.value,
-        time:Date.now()
-    });
-
-    alert("लिस्टमध्ये नोंद झाली ✔");
-}
-
-
-
-/*************** TARGET LIST LOAD ****************/
-db.ref("targets").on("value",snap=>{
-    let html="",pen=0,don=0;
-
-    snap.forEach(t=>{
-        let d=t.val();
-
-        if(d.status=="Pending") pen++;
-        if(d.status=="Done") don++;
-
-        html+=`
-        <div class='reportBox'>
-            <h4>${d.name} (${d.mobile})</h4>
-            <p>शहर: ${d.city}</p>
-            <p>Status: 
-                <span class="${d.status=='Done'?'done':'pending'}">${d.status}</span>
-            </p>
-        </div>`;
-    });
-
-    targetList.innerHTML=html;
-    tPending.innerText=pen;
-    tDone.innerText=don;
-});
-
-
-
-/*************** REGISTRATION SAVE ****************/
-function saveReg(){
-    let m=rmobile.value;
-
-    db.ref("patients/"+m).set({
-        name:rname.value,
-        mobile:m,
-        age:rage.value,
-        city:rcity.value,
-        time:Date.now()
-    });
-
-    alert("नोंदणी पूर्ण ✔");
-}
-
-
-
-/*************** REPORT UPLOAD ****************/
-function uploadPDF(){
-    let m=umobile.value,
-        t=utest.value,
-        f=updf.files[0];
-
-    if(!m||!t||!f){
-        alert("पूर्ण माहिती भरा");
-        return;
+  </div>  <div class="india-badge">Made with 🇮🇳 for India's Anaemia-Free Revolution</div>  <script>
+    function openTab(tabId){
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
     }
 
-    let ref=storage.ref("reports/"+m+"/"+t+".pdf");
+    function savePerson(){
+      let name = document.getElementById('name').value;
+      let age = document.getElementById('age').value;
+      let city = document.getElementById('city').value;
+      let mobile = document.getElementById('mobile').value;
 
-    ref.put(f).then(()=>{
-        ref.getDownloadURL().then(url=>{
-            db.ref("reports/"+m+"/"+t).set({
-                mobile:m,test:t,url:url,time:Date.now()
-            });
-            alert("PDF अपलोड झाले ✔");
-        });
+      let table = document.getElementById('listTable');
+      let row = table.insertRow();
+      row.insertCell(0).innerHTML = name;
+      row.insertCell(1).innerHTML = age;
+      row.insertCell(2).innerHTML = city;
+      row.insertCell(3).innerHTML = mobile;
+
+      document.getElementById('form1').reset();
+
+      // Auto-update Tab 2 instantly
+      refreshSampleTable();
+    }
+  </script><script>
+    function pickContact(){
+      alert('📱 Contact Pick feature demo mode मध्ये आहे — मी याला full mobile contact access compatible करून देईन!');
+    }
+</script><script type="module">
+  // Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
+    authDomain: "swasth-80320.firebaseapp.com",
+    projectId: "swasth-80320",
+    storageBucket: "swasth-80320.firebasestorage.app",
+    messagingSenderId: "143665591308",
+    appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  console.log("Firebase Connected ✔");
+</script><script type="module">
+  /* ---------------------- Firebase INIT ----------------------- */
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
+    authDomain: "swasth-80320.firebaseapp.com",
+    projectId: "swasth-80320",
+    storageBucket: "swasth-80320.firebasestorage.app",
+    messagingSenderId: "143665591308",
+    appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+
+  console.log("Firebase Connected ✔");
+
+  /* ---------------------- SAVE PERSON ----------------------- */
+  window.savePerson = async function(){
+    let person = {
+      name: document.getElementById('name').value,
+      age: document.getElementById('age').value,
+      city: document.getElementById('city').value,
+      mobile: document.getElementById('mobile').value,
+      status: "Not Check"
+    };
+
+    await addDoc(collection(db, "people"), person);
+    alert("Saved to Cloud ✔");
+    document.getElementById('form1').reset();
+    loadPeople();
+  }
+
+  /* ---------------------- LOAD PEOPLE ----------------------- */
+  async function loadPeople(){
+    const querySnapshot = await getDocs(collection(db, "people"));
+    let listTable = document.getElementById('listTable');
+    listTable.innerHTML = `<tr><th>नाव</th><th>वय</th><th>शहर</th><th>मोबाईल</th></tr>`;
+
+    let sampleTable = document.getElementById('sampleTable');
+    sampleTable.innerHTML = `<tr><th>नाव</th><th>मोबाईल</th><th>Sample Status</th><th>Call</th></tr>`;
+
+    querySnapshot.forEach((docSnap) => {
+      let p = docSnap.data();
+
+      // TAB 1
+      let row = listTable.insertRow();
+      row.insertCell(0).innerHTML = p.name;
+      row.insertCell(1).innerHTML = p.age;
+      row.insertCell(2).innerHTML = p.city;
+      row.insertCell(3).innerHTML = p.mobile;
+
+      // TAB 2
+      let r2 = sampleTable.insertRow();
+      r2.insertCell(0).innerHTML = p.name;
+      r2.insertCell(1).innerHTML = p.mobile;
+      r2.insertCell(2).innerHTML = `
+        <select onchange="updateStatus('${docSnap.id}', this.value)">
+          <option ${p.status==='Check'?'selected':''}>Check</option>
+          <option ${p.status==='Not Check'?'selected':''}>Not Check</option>
+        </select>
+      `;
+      r2.insertCell(3).innerHTML = `<a href='tel:${p.mobile}' style='color:#0057b7;font-weight:600;'>📞</a>`;
     });
-}
+  }
 
+  /* ---------------------- UPDATE STATUS ----------------------- */
+  window.updateStatus = async function(id, status){
+    const refDoc = doc(db, "people", id);
+    await updateDoc(refDoc, { status: status });
+    alert("Status Updated ✔");
+  }
 
+  /* ---------------------- REPORT UPLOAD ----------------------- */
+  window.uploadReport = async function(file){
+    if(!file) return alert("Select file first");
+    const storageRef = ref(storage, 'reports/' + file.name);
+    await uploadBytes(storageRef, file);
+    alert("Report Uploaded ✔");
+  }
 
-/*************** REPORT LIST LOAD ****************/
-db.ref("reports").on("value",snap=>{
-    let html="";
-    snap.forEach(u=>{
-        u.forEach(r=>{
-            let d=r.val();
-            html+=`
-            <div class='reportBox'>
-                <h4>${d.mobile} – ${d.test}</h4>
-                <a href="${d.url}" target="_blank">PDF उघडा</a>
-            </div>`;
-        });
-    });
-    reportList.innerHTML=html;
-});
+  loadPeople();
+</script><script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
+    authDomain: "swasth-80320.firebaseapp.com",
+    projectId: "swasth-80320",
+    storageBucket: "swasth-80320.firebasestorage.app",
+    messagingSenderId: "143665591308",
+    appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
+  };
 
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
 
-/*************** FOLLOW-UP SAVE ****************/
-function saveFollow(){
-    db.ref("followup/"+fm.value).set({
-        day1:f1.value,
-        day15:f15.value,
-        day30:f30.value,
-        day60:f60.value,
-        time:Date.now()
-    });
+  window.teamSignup = async function(){
+    let mobile = document.getElementById('authMobile').value;
+    let pass = document.getElementById('authPass').value;
 
-    alert("फॉलो-अप सेव्ह झाले ✔");
-}
+    let email = mobile + "@swasth.com";
 
+    try{
+      await createUserWithEmailAndPassword(auth, email, pass);
+      document.getElementById('authMsg').innerHTML = "Signup Successful ✔";
+    }catch(e){ document.getElementById('authMsg').innerHTML = e.message; }
+  }
 
+  window.teamLogin = async function(){
+    let mobile = document.getElementById('authMobile').value;
+    let pass = document.getElementById('authPass').value;
+    let email = mobile + "@swasth.com";
 
-/*************** DASH COUNTS ****************/
-db.ref("patients").on("value",s=>totalReg.innerText=s.numChildren());
-db.ref("reports").on("value",s=>totalRep.innerText=s.numChildren());
-
-
-
-/*************** PDF EXPORT FUNCTIONS ****************/
-
-/* 1) Registration PDF */
-function exportRegistrationPDF(){
-    db.ref("patients").once("value",(snap)=>{
-        let data="नोंदणी रिपोर्ट\n\nनाव,मोबाईल,वय,शहर\n";
-        snap.forEach(p=>{
-            let d=p.val();
-            data+=`${d.name},${d.mobile},${d.age},${d.city}\n`;
-        });
-        downloadFile(data,"registration_report.pdf");
-    });
-}
-
-/* 2) List (Target) PDF */
-function exportListPDF(){
-    db.ref("targets").once("value",(snap)=>{
-        let data="लिस्ट रिपोर्ट\n\nनाव,मोबाईल,शहर,स्थिती\n";
-        snap.forEach(t=>{
-            let d=t.val();
-            data+=`${d.name},${d.mobile},${d.city},${d.status}\n`;
-        });
-        downloadFile(data,"list_report.pdf");
-    });
-}
-
-/* 3) Uploaded Reports PDF */
-function exportUploadedReportsPDF(){
-    db.ref("reports").once("value",(snap)=>{
-        let data="अपलोड रिपोर्ट\n\nमोबाईल,टेस्ट,PDF लिंक\n";
-        snap.forEach(u=>{
-            u.forEach(r=>{
-                let d=r.val();
-                data+=`${d.mobile},${d.test},${d.url}\n`;
-            });
-        });
-        downloadFile(data,"uploaded_reports.pdf");
-    });
-}
-
-/* 4) Follow-Up PDF */
-function exportFollowupPDF(){
-    db.ref("followup").once("value",(snap)=>{
-        let data="फॉलो-अप रिपोर्ट\n\nमोबाईल,Day1,Day15,Day30,Day60\n";
-        snap.forEach(f=>{
-            let d=f.val();
-            data+=`${f.key},${d.day1},${d.day15},${d.day30},${d.day60}\n`;
-        });
-        downloadFile(data,"followup_report.pdf");
-    });
-}
-
-
-
-/*************** DOWNLOAD HELPER ****************/
-function downloadFile(data,filename){
-    let blob=new Blob([data],{type:"text/plain"});
-    let url=URL.createObjectURL(blob);
-    let a=document.createElement("a");
-    a.href=url;
-    a.download=filename;
-    a.click();
-}
-
-</script>
-
-</body>
+    try{
+      await signInWithEmailAndPassword(auth, email, pass);
+      document.getElementById('authMsg').innerHTML = "Login Successful ✔";
+    }catch(e){ document.getElementById('authMsg').innerHTML = e.message; }
+  }
+</script></body>
 </html>
