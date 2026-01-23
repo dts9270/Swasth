@@ -2,369 +2,168 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blood Test Tracking - India Health Mission</title>
-  <style>
+  <title>स्वास्थ्य क्रांती 2026 – Cloud Health Mission</title>  <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
       background: linear-gradient(#e8f3ff, #dff7e3, #fff0e0);
-    }.header {
-  background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
-  padding: 18px;
-  text-align: center;
-  color: #000;
-  font-weight: 700;
-  font-size: 22px;
-  letter-spacing: 1px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-/* TABS */
-.tab-btns {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  background: #fff;
-  padding: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-.tab-btns button {
-  padding: 10px 16px;
-  border: none;
-  background: #0057b7;
-  color: white;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-  flex: 1 1 auto;
-  min-width: 120px;
-}
-.tab-btns button:hover {
-  background: #003f82;
-}
-
-.container {
-  width: 95%;
-  max-width: 800px;
-  margin: 15px auto;
-  background: white;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-}
-
-.tab { display: none; }
-.active { display: block; }
-
-label { font-weight: 600; font-size: 14px; }
-
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-bottom: 15px;
-  font-size: 14px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 13px;
-}
-
-th {
-  background: #0057b7;
-  color: white;
-  padding: 10px 6px;
-}
-td {
-  padding: 8px 6px;
-  border: 1px solid #ddd;
-  word-wrap: break-word;
-}
-
-.india-badge {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 13px;
-  color: #444;
-  font-weight: 500;
-  padding-bottom: 20px;
-}
-
-/* MOBILE OPTIMIZATION */
-@media(max-width: 600px){
-  .header { font-size: 18px; padding: 14px; }
-  h2 { font-size: 18px; }
-  .tab-btns button { font-size: 13px; padding: 10px; }
-  input, select, textarea { font-size: 13px; }
-  th, td { font-size: 12px; padding: 6px; }
-}
-
-  </style>
-</head>
-<body>  <div class="header">🇮🇳 स्वास्थ्य क्रांती वर्ष 2026 – Blood Test Tracking System</div>  <div class="tab-btns">
-    <button onclick="openTab('tab1')">➊ लोकांची माहिती</button>
-    <button onclick="openTab('tab2')">➋ टेस्ट स्टेटस + कॉल</button>
-    <button onclick="openTab('tab3')">➌ रिपोर्ट अपलोड</button>
-    <button onclick="openTab('tab4')">➍ Dashboard</button>
-    <button onclick="openTab('tab5')">➎ Team Login</button>
-  </div>  <!-- TAB 1 -->  <div id="tab1" class="tab active container">
-    <h2>🧑‍🤝‍🧑 1) लोकांची बेसिक माहिती</h2>
-    <form id="form1">
-      <label>नाव:</label>
-      <input type="text" id="name" required /><label>वय:</label>
-  <input type="number" id="age" />
-
-  <label>शहर:</label>
-  <input type="text" id="city" />
-
-  <label>मोबाईल नंबर:</label>
-  <input type="text" id="mobile" />
-
-  <button type="button" onclick="pickContact()" style="background:#ff9933; color:white; padding:10px 14px; border:none; border-radius:6px; cursor:pointer; margin-bottom:10px;">📱 Contact Pick</button>
-
-  <button type="button" onclick="savePerson()" style="background:#138808; color:white; padding:12px 20px; border:none; border-radius:6px; cursor:pointer; font-size:16px;">Save</button>
-</form>
-
-<h3>Saved Records</h3>
-<table id="listTable">
-  <tr><th>नाव</th><th>वय</th><th>शहर</th><th>मोबाईल</th></tr>
-</table>
-
-  </div>  <!-- TAB 4 Dashboard -->  <div id="tab4" class="tab container">
-    <h2>📊 Dashboard</h2>
-    <div id="dashTotal">Total: 0</div>
-    <div id="dashCheck">Check: 0</div>
-    <div id="dashNot">Not Check: 0</div>
-  </div>  <!-- TAB 5 Login -->  <div id="tab5" class="tab container">
-    <h2>🔐 Team Login / Signup</h2><label>Mobile:</label>
-<input type="text" id="authMobile" />
-
-<label>Password:</label>
-<input type="password" id="authPass" />
-
-<button onclick="teamSignup()" style="background:#138808;color:white;padding:10px 14px;border:none;border-radius:6px;">Sign Up</button>
-<button onclick="teamLogin()" style="background:#0057b7;color:white;padding:10px 14px;border:none;border-radius:6px;">Login</button>
-
-<p id="authMsg" style="color:red;margin-top:10px;"></p>
-
-  </div>  <!-- TAB 2 --> -->  <div id="tab2" class="tab container">
-    <h2>🩸 2) Blood Sample Status</h2><table id="sampleTable">
-  <tr>
-    <th>नाव</th>
-    <th>मोबाईल</th>
-    <th>Sample Status</th>
-  </tr>
-</table>
-
-  </div><script>
-  // Auto-fill blood sample table from tab1 list
-  function refreshSampleTable(){
-    let mainTable = document.getElementById('listTable');
-    let sampleTable = document.getElementById('sampleTable');
-
-    sampleTable.innerHTML = '<tr><th>नाव</th><th>मोबाईल</th><th>Sample Status</th></tr>';
-
-    for(let i = 1; i < mainTable.rows.length; i++){
-      let row = sampleTable.insertRow();
-      row.insertCell(0).innerHTML = mainTable.rows[i].cells[0].innerHTML;
-      row.insertCell(1).innerHTML = mainTable.rows[i].cells[3].innerHTML;
-      row.insertCell(2).innerHTML = `
-        <select>
-          <option>Check</option>
-          <option>Not Check</option>
-        </select>
-        <a href=\"tel:${mainTable.rows[i].cells[3].innerHTML}\" style=\"color:#0057b7; font-weight:600; margin-left:8px;\">📞 Call</a>
-      `;;
-    }
-  }
-
-  // Refresh when switching to Tab 2
-  function openTab(tabId){
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    if(tabId === 'tab2'){ refreshSampleTable(); }
-  }
-</script>  <!-- TAB 3 -->  <div id="tab3" class="tab container">
-    <h2>📄 3) रिपोर्ट अपलोड + AI अनालिसिस</h2><label>रिपोर्ट Upload:</label>
-<input type="file" />
-
-<p>👉 या सेक्शनमध्ये नंतर Automated CBC / LFT / Lipid / Thyroid AI Analysis जोडला जाईल.</p>
-
-  </div>  <div class="india-badge">Made with 🇮🇳 for India's Anaemia-Free Revolution</div>  <script>
-    function openTab(tabId){
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+      overflow-x: hidden;
     }
 
-    function savePerson(){
-      let name = document.getElementById('name').value;
-      let age = document.getElementById('age').value;
-      let city = document.getElementById('city').value;
-      let mobile = document.getElementById('mobile').value;
-
-      let table = document.getElementById('listTable');
-      let row = table.insertRow();
-      row.insertCell(0).innerHTML = name;
-      row.insertCell(1).innerHTML = age;
-      row.insertCell(2).innerHTML = city;
-      row.insertCell(3).innerHTML = mobile;
-
-      document.getElementById('form1').reset();
-
-      // Auto-update Tab 2 instantly
-      refreshSampleTable();
+    .header {
+      background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+      padding: 18px;
+      text-align: center;
+      color: #000;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 1px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
-  </script><script>
-    function pickContact(){
-      alert('📱 Contact Pick feature demo mode मध्ये आहे — मी याला full mobile contact access compatible करून देईन!');
+
+    .tab-btns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      background: #fff;
+      padding: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-</script><script type="module">
-  // Firebase SDK
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    .tab-btns button {
+      padding: 10px 16px;
+      border: none;
+      background: #0057b7;
+      color: white;
+      font-size: 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      flex: 1 1 auto;
+      min-width: 120px;
+    }
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
-    authDomain: "swasth-80320.firebaseapp.com",
-    projectId: "swasth-80320",
-    storageBucket: "swasth-80320.firebasestorage.app",
-    messagingSenderId: "143665591308",
-    appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
-  };
+    .container {
+      width: 95%;
+      max-width: 850px;
+      margin: 15px auto;
+      background: white;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    }
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  console.log("Firebase Connected ✔");
-</script><script type="module">
-  /* ---------------------- Firebase INIT ----------------------- */
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    .tab { display: none; }
+    .active { display: block; }
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
-    authDomain: "swasth-80320.firebaseapp.com",
-    projectId: "swasth-80320",
-    storageBucket: "swasth-80320.firebasestorage.app",
-    messagingSenderId: "143665591308",
-    appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
-  };
+    label { font-weight: 600; font-size: 14px; }
+    input, select, textarea {
+      width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 15px; font-size: 14px;
+    }
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const storage = getStorage(app);
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    th { background: #0057b7; color: white; padding: 10px 6px; }
+    td { padding: 8px 6px; border: 1px solid #ddd; }
 
-  console.log("Firebase Connected ✔");
+    #logoutBtn{
+      display:none; position:fixed; bottom:20px; right:20px; background:red; color:#fff;
+      padding:10px 14px; border:none; border-radius:6px;
+    }
 
-  /* ---------------------- SAVE PERSON ----------------------- */
-  window.savePerson = async function(){
-    let person = {
-      name: document.getElementById('name').value,
-      age: document.getElementById('age').value,
-      city: document.getElementById('city').value,
-      mobile: document.getElementById('mobile').value,
-      status: "Not Check"
-    };
+    @media(max-width:600px){ th,td{font-size:12px;} }
+  </style></head>
+<body><div class="header">🇮🇳 स्वास्थ्य क्रांती वर्ष 2026 – Cloud Health Mission</div><div class="tab-btns">
+  <button onclick="openTab('tab1')">➊ लोकांची माहिती</button>
+  <button onclick="openTab('tab2')">➋ टेस्ट स्टेटस + कॉल</button>
+  <button onclick="openTab('tab3')">➌ रिपोर्ट अपलोड</button>
+  <button onclick="openTab('tab4')">➍ Dashboard</button>
+  <button onclick="openTab('tab5')">➎ Team Login</button>
+  <button onclick="openTab('tab6')">➏ QR Scanner</button>
+</div><!-- TAB 1 --><div id="tab1" class="tab container">
+  <h2>1) लोकांची माहिती</h2>
+  <label>नाव</label><input id="name">
+  <label>वय</label><input id="age">
+  <label>शहर</label><input id="city">
+  <label>मोबाईल</label><input id="mobile">
+  <button onclick="savePerson()" style="background:#138808;color:#fff;padding:10px;border:none;border-radius:6px;">Save</button>  <h3>List</h3>
+  <table id="listTable"><tr><th>नाव</th><th>वय</th><th>शहर</th><th>मोबाईल</th></tr></table>
+</div><!-- TAB 2 --><div id="tab2" class="tab container">
+  <h2>2) टेस्ट स्टेटस + कॉल</h2>
+  <table id="sampleTable">
+    <tr><th>नाव</th><th>मोबाईल</th><th>Status</th><th>Call</th></tr>
+  </table>
+</div><!-- TAB 3 --><div id="tab3" class="tab container">
+  <h2>3) रिपोर्ट अपलोड</h2>
+  <input type="file" id="reportFile">
+  <button onclick="uploadReport()">Upload</button>
+</div><!-- TAB 4 Dashboard --><div id="tab4" class="tab container">
+  <h2>4) Dashboard</h2>
+  <div id="dashTotal"></div>
+  <div id="dashCheck"></div>
+  <div id="dashNot"></div>
+  <div id="dashFollow"></div>
+</div><!-- TAB 5 Login --><div id="tab5" class="tab container">
+  <h2>5) Login</h2>
+  <label>Mobile</label><input id="authMobile">
+  <label>Password</label><input id="authPass" type="password">
+  <button onclick="teamSignup()">Sign Up</button>
+  <button onclick="teamLogin()">Login</button>
+  <p id="authMsg"></p>
+</div><!-- TAB 6 QR Scanner --><div id="tab6" class="tab container">
+  <h2>6) QR Scanner</h2>
+  <video id="preview" width="100%"></video>
+  <p id="qrResult"></p>
+</div><button id="logoutBtn" onclick="logout()">Logout</button>
 
-    await addDoc(collection(db, "people"), person);
-    alert("Saved to Cloud ✔");
-    document.getElementById('form1').reset();
-    loadPeople();
-  }
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-  /* ---------------------- LOAD PEOPLE ----------------------- */
-  async function loadPeople(){
-    const querySnapshot = await getDocs(collection(db, "people"));
-    let listTable = document.getElementById('listTable');
-    listTable.innerHTML = `<tr><th>नाव</th><th>वय</th><th>शहर</th><th>मोबाईल</th></tr>`;
+const firebaseConfig = {
+  apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
+  authDomain: "swasth-80320.firebaseapp.com",
+  projectId: "swasth-80320",
+  storageBucket: "swasth-80320.firebasestorage.app",
+  messagingSenderId: "143665591308",
+  appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
+};
 
-    let sampleTable = document.getElementById('sampleTable');
-    sampleTable.innerHTML = `<tr><th>नाव</th><th>मोबाईल</th><th>Sample Status</th><th>Call</th></tr>`;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const storage = getStorage(app);
 
-    querySnapshot.forEach((docSnap) => {
-      let p = docSnap.data();
+window.openTab = function(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
 
-      // TAB 1
-      let row = listTable.insertRow();
-      row.insertCell(0).innerHTML = p.name;
-      row.insertCell(1).innerHTML = p.age;
-      row.insertCell(2).innerHTML = p.city;
-      row.insertCell(3).innerHTML = p.mobile;
-
-      // TAB 2
-      let r2 = sampleTable.insertRow();
-      r2.insertCell(0).innerHTML = p.name;
-      r2.insertCell(1).innerHTML = p.mobile;
-      r2.insertCell(2).innerHTML = `
-        <select onchange="updateStatus('${docSnap.id}', this.value)">
-          <option ${p.status==='Check'?'selected':''}>Check</option>
-          <option ${p.status==='Not Check'?'selected':''}>Not Check</option>
-        </select>
-      `;
-      r2.insertCell(3).innerHTML = `<a href='tel:${p.mobile}' style='color:#0057b7;font-weight:600;'>📞</a>`;
-    });
-  }
-
-  /* ---------------------- UPDATE STATUS ----------------------- */
-  window.updateStatus = async function(id, status){
-    const refDoc = doc(db, "people", id);
-    await updateDoc(refDoc, { status: status });
-    alert("Status Updated ✔");
-  }
-
-  /* ---------------------- REPORT UPLOAD ----------------------- */
-  window.uploadReport = async function(file){
-    if(!file) return alert("Select file first");
-    const storageRef = ref(storage, 'reports/' + file.name);
-    await uploadBytes(storageRef, file);
-    alert("Report Uploaded ✔");
-  }
-
+/* SAVE PERSON */
+window.savePerson = async function(){
+  await addDoc(collection(db,"people"),{
+    name:name.value, age:age.value, city:city.value, mobile:mobile.value,
+    status:"Not Check", follow:""
+  });
   loadPeople();
-</script><script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+}
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
-    authDomain: "swasth-80320.firebaseapp.com",
-    projectId: "swasth-80320",
-    storageBucket: "swasth-80320.firebasestorage.app",
-    messagingSenderId: "143665591308",
-    appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
-  };
+/* LOAD */
+async function loadPeople(){
+  const snap = await getDocs(collection(db,"people"));
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+  listTable.innerHTML = `<tr><th>नाव</th><th>वय</th><th>शहर</th><th>मोबाईल</th></tr>`;
+  sampleTable.innerHTML = `<tr><th>नाव</th><th>मोबाईल</th><th>Status</th><th>Call</th></tr>`;
 
-  window.teamSignup = async function(){
-    let mobile = document.getElementById('authMobile').value;
-    let pass = document.getElementById('authPass').value;
+  let total=0, check=0, not=0;
 
-    let email = mobile + "@swasth.com";
+  snap.forEach(s=>{
+    let p=s.data(); total++;
+    if(p.status=="Check") check++; else not++;
 
-    try{
-      await createUserWithEmailAndPassword(auth, email, pass);
-      document.getElementById('authMsg').innerHTML = "Signup Successful ✔";
-    }catch(e){ document.getElementById('authMsg').innerHTML = e.message; }
-  }
+    let r=listTable.insertRow();
+    r.innerHTML=`<td>${p.name}</td><td>${p.age}</td><td>${p.city}</td><td>${p.mobile}</td>`;
 
-  window.teamLogin = async function(){
-    let mobile = document.getElementById('authMobile').value;
-    let pass = document.getElementById('authPass').value;
-    let email = mobile + "@swasth.com";
-
-    try{
-      await signInWithEmailAndPassword(auth, email, pass);
-      document.getElementById('authMsg').innerHTML = "Login Successful ✔";
-    }catch(e){ document.getElementById('authMsg').innerHTML = e.message; }
-  }
-</script></body>
-</html>
+    let r2=sampleTable.insertRow();
+    r2.innerHTML=`<td>${p.name}</td><td>${p.mobile}
