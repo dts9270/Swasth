@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mission 1 Lakh - Pro Reports</title>
+  <title>Mission 1 Lakh - Final App</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
   <style>
-    /* --- GLOBAL & SCROLL SETTINGS --- */
+    /* --- GLOBAL STYLES --- */
     * { box-sizing: border-box; }
     body { 
       font-family: 'Segoe UI', sans-serif; 
       margin: 0; padding: 0; 
-      background: #f4f7f6; 
+      background: #f0f2f5; 
       overflow-x: hidden; 
       width: 100vw;
     }
@@ -27,33 +27,34 @@
 
     /* HEADER */
     .header { 
-      background: linear-gradient(135deg, #0057b7, #003366); 
-      padding: 20px; text-align: center; color: white; 
-      border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+      background: linear-gradient(135deg, #0061f2 0%, rgba(105, 0, 199, 0.8) 100%); 
+      padding: 25px 20px; text-align: center; color: white; 
+      border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+    .header h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
 
     /* TABS */
     .tab-btns { 
       display: flex; justify-content: center; gap: 8px; 
-      padding: 15px; margin-top: -15px;
+      padding: 0 15px; margin-top: -20px;
     }
     .tab-btns button { 
-      padding: 10px 10px; border: none; background: white; 
-      border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 13px; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; color: #555;
-      flex: 1;
+      padding: 12px 10px; border: none; background: white; 
+      border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 13px; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; color: #555;
+      flex: 1; text-transform: uppercase;
     }
     .tab-btns button.active-btn { 
-      background: #ff9933; color: white; transform: translateY(-2px); 
-      box-shadow: 0 4px 10px rgba(255, 153, 51, 0.4);
+      background: #ff9933; color: white; transform: translateY(-3px); 
+      box-shadow: 0 6px 12px rgba(255, 153, 51, 0.4);
     }
 
     /* CONTAINER */
     .container { 
-      width: 96%; max-width: 800px; margin: 0 auto 20px auto; 
-      background: white; padding: 15px; border-radius: 15px; 
-      box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+      width: 95%; max-width: 800px; margin: 20px auto; 
+      background: white; padding: 20px; border-radius: 15px; 
+      box-shadow: 0 2px 15px rgba(0,0,0,0.05); 
       min-height: 500px;
     }
     .tab { display: none; }
@@ -62,65 +63,71 @@
 
     /* DASHBOARD CARDS */
     .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-    .dash-card { padding: 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+    .dash-card { padding: 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
     .card-total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
     .card-done { background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%); }
     .card-plan { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #444; }
     .card-pending { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #444; }
-    .dash-num { font-size: 32px; font-weight: 800; display: block; }
+    .dash-num { font-size: 36px; font-weight: 800; display: block; margin-bottom: 5px; }
+    .dash-lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; }
 
     /* FORMS */
-    label { display: block; margin-top: 12px; font-weight: 600; color: #444; font-size: 14px; }
-    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
-    .action-btn { margin-top: 25px; background: #0057b7; color: white; padding: 14px; border: none; border-radius: 50px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+    label { display: block; margin-top: 15px; font-weight: 600; color: #444; font-size: 14px; }
+    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; font-size: 15px; }
+    input:focus, select:focus { border-color: #0061f2; background: white; outline: none; }
+    .action-btn { margin-top: 25px; background: #0061f2; color: white; padding: 15px; border: none; border-radius: 50px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,97,242,0.3); }
 
     /* TABLE */
-    .table-responsive { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
-    th { background: #f1f5f9; color: #444; padding: 10px 5px; font-size: 12px; text-align: left; }
-    td { border-bottom: 1px solid #eee; padding: 10px 5px; vertical-align: middle; font-size: 13px; word-wrap: break-word; }
-    .col-sr { width: 35px; text-align: center; font-weight: bold; color: #888; }
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 100%; }
+    th { background: #f8f9fa; color: #444; padding: 12px 8px; font-size: 12px; text-align: left; font-weight: 700; border-bottom: 2px solid #eee; }
+    td { border-bottom: 1px solid #eee; padding: 12px 8px; vertical-align: middle; font-size: 14px; }
+    .col-sr { width: 40px; text-align: center; color: #888; font-weight: bold; }
 
     /* UPLOAD MODAL */
-    #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; }
-    .modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; }
+    #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
     
     /* PROGRESS BAR */
-    #pContainer { width: 100%; background: #eee; height: 20px; border-radius: 10px; display: none; overflow: hidden; margin-top: 10px; position: relative; }
-    #pBar { width: 0%; height: 100%; background: #28a745; transition: width 0.2s; }
-    #pText { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 12px; line-height: 20px; color: #333; font-weight: bold; }
+    #pContainer { width: 100%; background: #eee; height: 25px; border-radius: 12px; display: none; overflow: hidden; margin-top: 15px; position: relative; }
+    #pBar { width: 0%; height: 100%; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.2s; }
+    #pText { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 13px; line-height: 25px; color: #333; font-weight: bold; }
 
     /* BUTTONS */
-    .btn-download { background: #28a745; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px; display: inline-block; }
-    .pick-btn { background: #0057b7; color: white; border: none; border-radius: 5px; width: 45px; cursor: pointer; font-size: 18px; }
-    
-    /* EXPORT BUTTONS */
+    .btn-download { background: #28a745; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; display: inline-block; font-weight: bold; }
+    .pick-btn { background: #0061f2; color: white; border: none; border-radius: 8px; width: 50px; cursor: pointer; font-size: 20px; }
     .export-btns { display: flex; gap: 10px; margin-bottom: 15px; }
-    .btn-export { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; }
+    .btn-export { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; display: flex; justify-content: center; align-items: center; gap: 5px; }
     .btn-excel { background: #1D6F42; }
     .btn-pdf { background: #D32F2F; }
+
+    /* STATUS SELECT */
+    .status-select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%; font-size: 13px; font-weight: 600; }
 
   </style>
 </head>
 
 <body>
 
-  <div id="loaderOverlay"><div class="spinner"></div><p style="margin-top:10px; font-weight:bold; color:#0057b7;">Processing...</p></div>
+  <div id="loaderOverlay"><div class="spinner"></div><p style="margin-top:10px; font-weight:bold; color:#0061f2;">Loading...</p></div>
 
   <div id="uploadModal">
     <div class="modal-content">
-      <h3 style="color:#0057b7; margin-top:0;">📂 रिपोर्ट अपलोड</h3>
-      <p id="modalUserName" style="color:#666; font-size:14px; margin-bottom:15px;"></p>
-      <input type="file" id="popupFile" style="border: 2px dashed #ccc; padding: 10px; width:100%; margin-bottom:15px;">
+      <h3 style="color:#0061f2; margin-top:0;">📂 रिपोर्ट अपलोड</h3>
+      <p id="modalUserName" style="color:#666; font-size:15px; margin-bottom:20px; font-weight:600;"></p>
+      
+      <div style="background:#f8f9fa; padding:15px; border-radius:10px; border:2px dashed #ccc;">
+        <input type="file" id="popupFile" style="width:100%;">
+      </div>
       
       <div id="pContainer">
         <div id="pBar"></div>
         <div id="pText">0%</div>
       </div>
       
-      <div style="display:flex; gap:10px; margin-top:20px;">
-        <button onclick="closeModal()" style="flex:1; padding:10px; border:none; background:#eee; border-radius:5px;">Cancel</button>
-        <button onclick="uploadFromModal()" style="flex:1; padding:10px; border:none; background:#0057b7; color:white; border-radius:5px;">Start Upload</button>
+      <div style="display:flex; gap:10px; margin-top:25px;">
+        <button onclick="closeModal()" style="flex:1; padding:12px; border:none; background:#f1f3f5; border-radius:10px; font-weight:bold; color:#555;">Cancel</button>
+        <button onclick="uploadFromModal()" style="flex:1; padding:12px; border:none; background:#0061f2; color:white; border-radius:10px; font-weight:bold;">Start Upload</button>
       </div>
       <input type="hidden" id="modalUserId">
     </div>
@@ -128,7 +135,7 @@
 
   <div class="header">
     <h2>🇮🇳 Mission 1 Lakh</h2>
-    <small>Swasthya Kranti 2026</small>
+    <small style="opacity:0.9;">Swasthya Kranti 2026</small>
   </div>
 
   <div class="tab-btns">
@@ -140,16 +147,17 @@
 
   <div id="tab4" class="tab active container" style="background:transparent; box-shadow:none; padding:0;">
     <div class="dash-grid">
-      <div class="dash-card card-total"><span class="dash-num" id="dTotal">0</span><span class="dash-label">एकूण नोंदणी</span></div>
-      <div class="dash-card card-done"><span class="dash-num" id="dDone">0</span><span class="dash-label">चेक झाले</span></div>
-      <div class="dash-card card-plan"><span class="dash-num" id="dPlanning">0</span><span class="dash-label">प्लॅनिंग</span></div>
-      <div class="dash-card card-pending"><span class="dash-num" id="dPending">0</span><span class="dash-label">बाकी</span></div>
+      <div class="dash-card card-total"><span class="dash-num" id="dTotal">0</span><span class="dash-lbl">एकूण नोंदणी</span></div>
+      <div class="dash-card card-done"><span class="dash-num" id="dDone">0</span><span class="dash-lbl">चेक झाले</span></div>
+      <div class="dash-card card-plan"><span class="dash-num" id="dPlanning">0</span><span class="dash-lbl">प्लॅनिंग</span></div>
+      <div class="dash-card card-pending"><span class="dash-num" id="dPending">0</span><span class="dash-lbl">बाकी</span></div>
     </div>
-    <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; margin-top:0;">🔄 Refresh Data</button>
+    <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; margin-top:0; box-shadow:0 4px 10px rgba(0,0,0,0.1);">🔄 Refresh Data</button>
   </div>
 
   <div id="tab1" class="tab container">
     <h3>📝 नवीन नागरिक नोंदणी</h3>
+    
     <label>पूर्ण नाव</label>
     <input type="text" id="inpName" placeholder="नाव टाका..."/>
     
@@ -174,13 +182,13 @@
         </div>
     </div>
 
-    <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #eee;">
-      <h4 style="margin:0 0 10px 0; color:#0057b7; font-size:14px;">⚖️ BMI कॅल्क्युलेटर</h4>
+    <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-top:20px; border:1px solid #eee;">
+      <h4 style="margin:0 0 10px 0; color:#0061f2; font-size:14px;">⚖️ BMI कॅल्क्युलेटर</h4>
       <div style="display:flex; gap:10px;">
         <div style="flex:1"><input type="number" id="inpWeight" placeholder="W (KG)" oninput="calcBMI()"/></div>
         <div style="flex:1"><input type="number" id="inpHeight" placeholder="H (CM)" oninput="calcBMI()"/></div>
       </div>
-      <div id="bmiDisplay" style="margin-top:10px; font-weight:bold; font-size:13px;">BMI: 0.0</div>
+      <div id="bmiDisplay" style="margin-top:10px; font-weight:bold; font-size:14px; color:#444;">BMI: 0.0</div>
     </div>
     
     <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
@@ -209,8 +217,8 @@
     <h3>📂 रिपोर्ट मॅनेजर</h3>
     
     <div class="export-btns">
-      <button onclick="exportToExcel()" class="btn-export btn-excel">📊 Excel List</button>
-      <button onclick="exportToPDF()" class="btn-export btn-pdf">📄 PDF List</button>
+      <button onclick="exportToExcel()" class="btn-export btn-excel">📊 Excel</button>
+      <button onclick="exportToPDF()" class="btn-export btn-pdf">📄 PDF</button>
     </div>
 
     <div class="table-responsive">
@@ -232,6 +240,7 @@
     import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+    // FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
       authDomain: "swasth-80320.firebaseapp.com",
@@ -245,6 +254,7 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
+    // UTILS
     const loader = document.getElementById("loaderOverlay");
     function showLoading() { loader.style.display = "flex"; }
     function hideLoading() { loader.style.display = "none"; }
@@ -257,6 +267,7 @@
       if(id === 'tab3') loadReportTab();
     };
 
+    // MOBILE CONTACT PICKER
     window.pickContact = async function() {
       if('contacts' in navigator) {
         try {
@@ -269,6 +280,7 @@
       } else alert("Mobile Only Feature");
     };
 
+    // BMI CALCULATOR
     window.calcBMI = function() {
       let w = parseFloat(document.getElementById("inpWeight").value);
       let h = parseFloat(document.getElementById("inpHeight").value);
@@ -282,10 +294,11 @@
       }
     };
 
+    // SAVE DATA
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
-      const gender = document.getElementById("inpGender").value; 
+      const gender = document.getElementById("inpGender").value;
       const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
       
       if(!name || !mobile) { alert("नाव आणि मोबाईल भरा!"); return; }
@@ -306,6 +319,7 @@
       } catch(e) { alert(e.message); } finally { hideLoading(); }
     };
 
+    // LOAD DATA
     window.loadPeople = async function(){
       showLoading();
       const tbody = document.querySelector("#dataTable tbody");
@@ -342,7 +356,7 @@
               </div>
             </td>
             <td>
-              <select onchange="handleStatusChange('${p.id}', '${p.name}', this)" style="padding:5px; font-weight:bold; border-radius:4px; border:1px solid #ccc; width:100%; font-size:12px;">
+              <select onchange="handleStatusChange('${p.id}', '${p.name}', this)" class="status-select">
                 <option value="No" ${p.status==="No"?"selected":""}>❌ चेक नाही</option>
                 <option value="Planning" ${p.status==="Planning"?"selected":""}>🗓️ प्लॅनिंग</option>
                 <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले</option>
@@ -360,6 +374,7 @@
       } catch(e){console.error(e);} finally { hideLoading(); }
     };
 
+    // MODAL LOGIC
     window.handleStatusChange = async function(id, name, el) {
       await updateDoc(doc(db, "mission1lakh", id), { status: el.value });
       
@@ -376,16 +391,19 @@
     
     window.closeModal = () => document.getElementById("uploadModal").style.display="none";
     
+    // UPLOAD LOGIC WITH PROGRESS
     window.uploadFromModal = function() {
       let file = document.getElementById("popupFile").files[0];
       let id = document.getElementById("modalUserId").value;
-      if(!file) return alert("Select File");
+      if(!file) return alert("Please select a file.");
 
       document.getElementById("pContainer").style.display="block";
       let pBar = document.getElementById("pBar");
       let pText = document.getElementById("pText");
 
-      const task = uploadBytesResumable(ref(storage, "reports/"+file.name), file);
+      // Unique file name to prevent overwrite
+      let fileName = Date.now() + "_" + file.name;
+      const task = uploadBytesResumable(ref(storage, "reports/"+fileName), file);
       
       task.on('state_changed', 
         (snap) => { 
@@ -393,7 +411,7 @@
             pBar.style.width = percent + "%"; 
             pText.innerText = Math.round(percent) + "%"; 
         },
-        (err) => alert(err.message),
+        (err) => alert("Upload Error: " + err.message),
         () => {
           getDownloadURL(task.snapshot.ref).then(async (url) => {
              await updateDoc(doc(db, "mission1lakh", id), { reportUrl: url });
@@ -406,7 +424,7 @@
     window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
     window.deletePerson = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
-    /* --- REPORTS: DOWNLOAD LISTS --- */
+    // REPORT TAB + DOWNLOAD LINK
     window.loadReportTab = function() {
       const tbody = document.querySelector("#reportTable tbody");
       tbody.innerHTML = "";
@@ -439,8 +457,7 @@
         Mobile: p.mobile,
         Gender: p.gender,
         Date: p.regDate,
-        BMI: p.bmi,
-        ReportLink: p.reportUrl || "Pending"
+        Report: p.reportUrl || "Pending"
       }));
 
       const ws = XLSX.utils.json_to_sheet(data);
@@ -456,25 +473,23 @@
 
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-      
-      doc.text("Mission 1 Lakh - Health Reports", 14, 20);
+      doc.text("Mission 1 Lakh - Report List", 14, 20);
       
       let bodyData = list.map((p, index) => [
         index + 1,
         p.name,
-        p.mobile,
         p.gender,
-        p.regDate,
+        p.mobile,
         p.reportUrl ? "Yes" : "No"
       ]);
 
       doc.autoTable({
-        head: [['Sr.', 'Name', 'Mobile', 'Gender', 'Date', 'Report Uploaded']],
+        head: [['Sr', 'Name', 'Gender', 'Mobile', 'Uploaded']],
         body: bodyData,
         startY: 30,
       });
 
-      doc.save("Health_Report_List.pdf");
+      doc.save("Report_List.pdf");
     };
 
     window.searchTable = function() {
