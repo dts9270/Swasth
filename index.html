@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mission 1 Lakh - Final Report</title>
+  <title>Mission 1 Lakh - Marathi Report</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
   <style>
-    /* --- GLOBAL STYLES --- */
+    /* --- GLOBAL & SCROLL SETTINGS --- */
     * { box-sizing: border-box; }
     body { 
-      font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; 
-      background: #f0f2f5; overflow-x: hidden; width: 100vw;
+      font-family: 'Segoe UI', sans-serif; 
+      margin: 0; padding: 0; 
+      background: #f4f7f6; 
+      overflow-x: hidden; 
+      width: 100vw;
     }
 
     /* LOADER */
@@ -24,9 +25,9 @@
 
     /* HEADER */
     .header { 
-      background: linear-gradient(135deg, #0061f2 0%, #6900c7 100%); 
-      padding: 25px 20px; text-align: center; color: white; 
-      border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
+      background: linear-gradient(135deg, #0057b7, #003366); 
+      padding: 20px; text-align: center; color: white; 
+      border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     .header h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
@@ -84,9 +85,9 @@
     .status-select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%; font-size: 13px; font-weight: 600; }
     
     /* STATUS BADGES FOR REPORT */
-    .badge-done { background: #d4edda; color: #155724; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; }
-    .badge-pending { background: #f8d7da; color: #721c24; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; }
-    .badge-plan { background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; }
+    .badge-done { background: #d4edda; color: #155724; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; display:inline-block; }
+    .badge-pending { background: #f8d7da; color: #721c24; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; display:inline-block; }
+    .badge-plan { background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; display:inline-block; }
 
   </style>
 </head>
@@ -174,12 +175,12 @@
   </div>
 
   <div id="tab3" class="tab container">
-    <h3>📋 नोंदणी अहवाल (Report)</h3>
-    <p>नागरिकांची माहिती आणि ब्लड चेक स्टेटस.</p>
+    <h3>📋 नोंदणी अहवाल (Marathi Report)</h3>
+    <p>येथे सर्व नागरिकांची माहिती आणि स्टेटस दिसेल.</p>
     
     <div class="export-btns">
       <button onclick="exportToExcel()" class="btn-export btn-excel">📊 Excel डाउनलोड</button>
-      <button onclick="exportToPDF()" class="btn-export btn-pdf">📄 PDF डाउनलोड</button>
+      <button onclick="exportToPDF()" class="btn-export btn-pdf">📄 PDF डाउनलोड (मराठी)</button>
     </div>
 
     <div class="table-responsive">
@@ -187,7 +188,7 @@
         <thead>
           <tr>
             <th class="col-sr">क्र.</th>
-            <th>नाव / माहिती</th>
+            <th>नाव</th>
             <th>मोबाईल</th>
             <th>ब्लड चेक स्टेटस</th>
           </tr>
@@ -338,7 +339,7 @@
     window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
     window.deletePerson = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
-    // TAB 3: DATA REPORT (UPDATED)
+    // TAB 3: DATA REPORT (WITH MARATHI & STATUS)
     window.loadReportTab = function() {
       const tbody = document.querySelector("#reportTable tbody");
       tbody.innerHTML = "";
@@ -359,8 +360,7 @@
           <td class="col-sr">${sr++}</td>
           <td>
             <b>${p.name}</b> <br>
-            <small style="color:#666;">${p.age} वर्षे / ${p.gender}</small><br>
-            <small style="color:#0057b7;">BMI: ${p.bmi}</small>
+            <small style="color:#666;">${p.age} वर्षे / ${p.gender}</small>
           </td>
           <td style="font-weight:bold; color:#333;">${p.mobile}</td>
           <td>${statusBadge}</td>
@@ -372,7 +372,7 @@
       if(window.allPeople.length === 0) return alert("No Data");
       let data = window.allPeople.map(p => ({
         Name: p.name, Mobile: p.mobile, CheckStatus: p.status, 
-        Gender: p.gender, Age: p.age, Weight: p.weight, Height: p.height, BMI: p.bmi
+        Gender: p.gender, Age: p.age, BMI: p.bmi
       }));
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
@@ -380,14 +380,48 @@
       XLSX.writeFile(wb, "Mission_1Lakh_Data.xlsx");
     };
 
+    // PDF EXPORT (UPDATED FOR MARATHI PRINTING)
     window.exportToPDF = function() {
       if(window.allPeople.length === 0) return alert("No Data");
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text("Mission 1 Lakh - Patient Report", 14, 20);
-      let body = window.allPeople.map((p, i) => [i+1, p.name, p.mobile, p.status, p.bmi]);
-      doc.autoTable({ head: [['Sr', 'Name', 'Mobile', 'Status', 'BMI']], body: body, startY: 30 });
-      doc.save("Mission_Data.pdf");
+      
+      let printWindow = window.open('', '', 'height=600,width=800');
+      
+      let rows = window.allPeople.map((p, i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td>${p.name}</td>
+          <td>${p.mobile}</td>
+          <td>${p.age}</td>
+          <td>${p.gender}</td>
+          <td>${p.status==='Yes'?'✅ झाले':(p.status==='Planning'?'🗓️ प्लॅनिंग':'❌ नाही')}</td>
+        </tr>
+      `).join('');
+
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Mission 1 Lakh Report</title>
+            <style>
+              body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
+              table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+              th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+              th { background-color: #f2f2f2; }
+              h2 { color: #0057b7; }
+            </style>
+          </head>
+          <body>
+            <h2>🇮🇳 Mission 1 Lakh - नोंदणी अहवाल</h2>
+            <table>
+              <thead>
+                <tr><th>क्र.</th><th>नाव</th><th>मोबाईल</th><th>वय</th><th>लिंग</th><th>स्टेटस</th></tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+            <script>window.onload = function(){ window.print(); window.close(); }<\/script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
     };
 
     window.searchTable = function() {
