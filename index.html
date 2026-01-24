@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mission 1 Lakh - Pro Dashboard</title>
+  <title>Mission 1 Lakh - Pro Reports</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
   <style>
-    /* --- 1. GLOBAL & NO SCROLL SETTINGS --- */
+    /* --- GLOBAL & SCROLL SETTINGS --- */
     * { box-sizing: border-box; }
     body { 
       font-family: 'Segoe UI', sans-serif; 
       margin: 0; padding: 0; 
       background: #f4f7f6; 
-      overflow-x: hidden; /* Stop Horizontal Scroll */
+      overflow-x: hidden; 
       width: 100vw;
     }
 
@@ -30,7 +32,6 @@
       border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    .header h2 { margin: 0; font-size: 22px; letter-spacing: 1px; }
 
     /* TABS */
     .tab-btns { 
@@ -38,10 +39,10 @@
       padding: 15px; margin-top: -15px;
     }
     .tab-btns button { 
-      padding: 10px 12px; border: none; background: white; 
+      padding: 10px 10px; border: none; background: white; 
       border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 13px; 
       box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; color: #555;
-      flex: 1; max-width: 100px;
+      flex: 1;
     }
     .tab-btns button.active-btn { 
       background: #ff9933; color: white; transform: translateY(-2px); 
@@ -59,70 +60,52 @@
     .active { display: block; animation: fadeIn 0.4s; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 2. ATTRACTIVE DASHBOARD CARDS --- */
-    .dash-grid {
-      display: grid; 
-      grid-template-columns: repeat(2, 1fr); /* 2 Columns */
-      gap: 15px; margin-bottom: 20px;
-    }
-    .dash-card {
-      padding: 20px; border-radius: 15px; color: white;
-      text-align: center; position: relative; overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-      transition: transform 0.2s;
-    }
-    .dash-card:active { transform: scale(0.98); }
-    
+    /* DASHBOARD CARDS */
+    .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+    .dash-card { padding: 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
     .card-total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
     .card-done { background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%); }
     .card-plan { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #444; }
-    .card-pending { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #444; }
-
-    .dash-num { font-size: 32px; font-weight: 800; display: block; margin-top: 5px; }
-    .dash-label { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
-    .dash-icon { font-size: 24px; opacity: 0.8; }
+    .card-pending { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #444; }
+    .dash-num { font-size: 32px; font-weight: 800; display: block; }
 
     /* FORMS */
     label { display: block; margin-top: 12px; font-weight: 600; color: #444; font-size: 14px; }
-    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; background: #fafafa; }
-    input:focus, select:focus { border-color: #0057b7; background: white; outline: none; }
-    
-    .action-btn { 
-      margin-top: 25px; background: #0057b7; color: white; padding: 14px; 
-      border: none; border-radius: 50px; cursor: pointer; width: 100%; 
-      font-size: 16px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,87,183,0.3); 
-    }
+    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+    .action-btn { margin-top: 25px; background: #0057b7; color: white; padding: 14px; border: none; border-radius: 50px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
 
-    /* TABLE STYLES (NO HORIZONTAL SCROLL) */
-    .table-responsive { 
-      width: 100%; overflow-x: auto; 
-    }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; /* Fix layout */ }
-    
+    /* TABLE */
+    .table-responsive { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
     th { background: #f1f5f9; color: #444; padding: 10px 5px; font-size: 12px; text-align: left; }
     td { border-bottom: 1px solid #eee; padding: 10px 5px; vertical-align: middle; font-size: 13px; word-wrap: break-word; }
-    
-    /* Column Widths */
     .col-sr { width: 35px; text-align: center; font-weight: bold; color: #888; }
-    .col-action { width: 40px; }
 
-    /* STATUS COLORS */
-    .status-select { padding: 6px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 100%; font-size: 12px; }
-    
-    /* MODAL */
+    /* UPLOAD MODAL */
     #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; }
     .modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; }
+    
+    /* PROGRESS BAR */
+    #pContainer { width: 100%; background: #eee; height: 20px; border-radius: 10px; display: none; overflow: hidden; margin-top: 10px; position: relative; }
+    #pBar { width: 0%; height: 100%; background: #28a745; transition: width 0.2s; }
+    #pText { position: absolute; top: 0; left: 0; width: 100%; text-align: center; font-size: 12px; line-height: 20px; color: #333; font-weight: bold; }
 
-    /* UTILS */
-    .btn-icon { text-decoration: none; font-size: 20px; margin-right: 10px; }
+    /* BUTTONS */
+    .btn-download { background: #28a745; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 12px; display: inline-block; }
     .pick-btn { background: #0057b7; color: white; border: none; border-radius: 5px; width: 45px; cursor: pointer; font-size: 18px; }
+    
+    /* EXPORT BUTTONS */
+    .export-btns { display: flex; gap: 10px; margin-bottom: 15px; }
+    .btn-export { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; }
+    .btn-excel { background: #1D6F42; }
+    .btn-pdf { background: #D32F2F; }
 
   </style>
 </head>
 
 <body>
 
-  <div id="loaderOverlay"><div class="spinner"></div><p style="margin-top:10px; font-weight:bold; color:#0057b7;">Loading...</p></div>
+  <div id="loaderOverlay"><div class="spinner"></div><p style="margin-top:10px; font-weight:bold; color:#0057b7;">Processing...</p></div>
 
   <div id="uploadModal">
     <div class="modal-content">
@@ -130,13 +113,14 @@
       <p id="modalUserName" style="color:#666; font-size:14px; margin-bottom:15px;"></p>
       <input type="file" id="popupFile" style="border: 2px dashed #ccc; padding: 10px; width:100%; margin-bottom:15px;">
       
-      <div id="pContainer" style="width:100%; background:#eee; height:10px; border-radius:5px; display:none; overflow:hidden;">
-        <div id="pBar" style="width:0%; height:100%; background:#28a745;"></div>
+      <div id="pContainer">
+        <div id="pBar"></div>
+        <div id="pText">0%</div>
       </div>
       
       <div style="display:flex; gap:10px; margin-top:20px;">
         <button onclick="closeModal()" style="flex:1; padding:10px; border:none; background:#eee; border-radius:5px;">Cancel</button>
-        <button onclick="uploadFromModal()" style="flex:1; padding:10px; border:none; background:#0057b7; color:white; border-radius:5px;">Upload</button>
+        <button onclick="uploadFromModal()" style="flex:1; padding:10px; border:none; background:#0057b7; color:white; border-radius:5px;">Start Upload</button>
       </div>
       <input type="hidden" id="modalUserId">
     </div>
@@ -155,31 +139,12 @@
   </div>
 
   <div id="tab4" class="tab active container" style="background:transparent; box-shadow:none; padding:0;">
-    <h3 style="margin-left:10px; color:#444;">प्रगती अहवाल (Live)</h3>
-    
     <div class="dash-grid">
-      <div class="dash-card card-total">
-        <div class="dash-icon">👥</div>
-        <span class="dash-num" id="dTotal">0</span>
-        <span class="dash-label">एकूण नोंदणी</span>
-      </div>
-      <div class="dash-card card-done">
-        <div class="dash-icon">✅</div>
-        <span class="dash-num" id="dDone">0</span>
-        <span class="dash-label">चेक झाले</span>
-      </div>
-      <div class="dash-card card-plan">
-        <div class="dash-icon">🗓️</div>
-        <span class="dash-num" id="dPlanning">0</span>
-        <span class="dash-label">प्लॅनिंग</span>
-      </div>
-      <div class="dash-card card-pending">
-        <div class="dash-icon">⏳</div>
-        <span class="dash-num" id="dPending">0</span>
-        <span class="dash-label">बाकी</span>
-      </div>
+      <div class="dash-card card-total"><span class="dash-num" id="dTotal">0</span><span class="dash-label">एकूण नोंदणी</span></div>
+      <div class="dash-card card-done"><span class="dash-num" id="dDone">0</span><span class="dash-label">चेक झाले</span></div>
+      <div class="dash-card card-plan"><span class="dash-num" id="dPlanning">0</span><span class="dash-label">प्लॅनिंग</span></div>
+      <div class="dash-card card-pending"><span class="dash-num" id="dPending">0</span><span class="dash-label">बाकी</span></div>
     </div>
-
     <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; margin-top:0;">🔄 Refresh Data</button>
   </div>
 
@@ -190,13 +155,23 @@
     
     <div style="display:flex; gap:10px;">
       <div style="flex:1"><label>वय</label><input type="number" id="inpAge" placeholder="30"/></div>
-      <div style="flex:1.5">
-          <label>मोबाईल</label>
-          <div style="display:flex; gap:5px;">
+      
+      <div style="flex:1">
+          <label>लिंग (Gender)</label>
+          <select id="inpGender">
+              <option value="Male">Male (पुरुष)</option>
+              <option value="Female">Female (स्त्री)</option>
+              <option value="Other">Other</option>
+          </select>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;">
+        <label>मोबाईल</label>
+        <div style="display:flex; gap:5px;">
             <input type="tel" id="inpMobile" placeholder="Number"/>
             <button onclick="pickContact()" class="pick-btn">📒</button>
-          </div>
-      </div>
+        </div>
     </div>
 
     <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #eee;">
@@ -220,9 +195,9 @@
         <thead>
           <tr>
             <th class="col-sr">Sr.</th>
-            <th>नाव / BMI</th>
+            <th>नाव / लिंग</th>
             <th style="width:35%;">स्टेटस</th>
-            <th class="col-action">Del</th>
+            <th style="width:40px;">Del</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -231,7 +206,13 @@
   </div>
 
   <div id="tab3" class="tab container">
-    <h3>📂 रिपोर्ट डाउनलोड</h3>
+    <h3>📂 रिपोर्ट मॅनेजर</h3>
+    
+    <div class="export-btns">
+      <button onclick="exportToExcel()" class="btn-export btn-excel">📊 Excel List</button>
+      <button onclick="exportToPDF()" class="btn-export btn-pdf">📄 PDF List</button>
+    </div>
+
     <div class="table-responsive">
       <table id="reportTable">
         <thead>
@@ -304,13 +285,14 @@
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
+      const gender = document.getElementById("inpGender").value; 
       const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
       
       if(!name || !mobile) { alert("नाव आणि मोबाईल भरा!"); return; }
       showLoading();
       try {
         await addDoc(collection(db, "mission1lakh"), {
-          name, mobile, 
+          name, mobile, gender,
           age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
@@ -329,7 +311,7 @@
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = "";
       let total=0, done=0, planning=0, pending=0;
-      let srNo = 1; // SERIAL NUMBER
+      let srNo = 1;
 
       try {
         const snap = await getDocs(collection(db, "mission1lakh"));
@@ -343,7 +325,6 @@
           else pending++;
 
           let row = tbody.insertRow();
-          // Status Color Logic
           if(p.status === "Yes") row.style.background = "#e8f5e9";
           else if(p.status === "Planning") row.style.background = "#fff3cd";
           
@@ -353,15 +334,15 @@
           row.innerHTML = `
             <td class="col-sr">${srNo++}</td>
             <td>
-              <b>${p.name}</b><br>
+              <b>${p.name}</b> <small>(${p.gender || '-'})</small><br>
               <small style="color:#666;">${p.mobile}</small>
               <div style="margin-top:5px;">
-                 <a href="tel:${p.mobile}" class="btn-icon">📞</a>
-                 <a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn-icon">💚</a>
+                 <a href="tel:${p.mobile}" style="font-size:18px; text-decoration:none; margin-right:10px;">📞</a>
+                 <a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(waMsg)}" target="_blank" style="font-size:18px; text-decoration:none;">💚</a>
               </div>
             </td>
             <td>
-              <select onchange="handleStatusChange('${p.id}', '${p.name}', this)" class="status-select">
+              <select onchange="handleStatusChange('${p.id}', '${p.name}', this)" style="padding:5px; font-weight:bold; border-radius:4px; border:1px solid #ccc; width:100%; font-size:12px;">
                 <option value="No" ${p.status==="No"?"selected":""}>❌ चेक नाही</option>
                 <option value="Planning" ${p.status==="Planning"?"selected":""}>🗓️ प्लॅनिंग</option>
                 <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले</option>
@@ -401,15 +382,22 @@
       if(!file) return alert("Select File");
 
       document.getElementById("pContainer").style.display="block";
+      let pBar = document.getElementById("pBar");
+      let pText = document.getElementById("pText");
+
       const task = uploadBytesResumable(ref(storage, "reports/"+file.name), file);
       
       task.on('state_changed', 
-        (snap) => { document.getElementById("pBar").style.width = ((snap.bytesTransferred/snap.totalBytes)*100)+"%"; },
+        (snap) => { 
+            let percent = (snap.bytesTransferred / snap.totalBytes) * 100;
+            pBar.style.width = percent + "%"; 
+            pText.innerText = Math.round(percent) + "%"; 
+        },
         (err) => alert(err.message),
         () => {
           getDownloadURL(task.snapshot.ref).then(async (url) => {
              await updateDoc(doc(db, "mission1lakh", id), { reportUrl: url });
-             alert("Done ✔"); closeModal(); loadPeople();
+             alert("Upload Successful! ✔"); closeModal(); loadPeople();
           });
         }
       );
@@ -418,6 +406,7 @@
     window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
     window.deletePerson = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
+    /* --- REPORTS: DOWNLOAD LISTS --- */
     window.loadReportTab = function() {
       const tbody = document.querySelector("#reportTable tbody");
       tbody.innerHTML = "";
@@ -429,23 +418,70 @@
       list.forEach(p => {
         let row = tbody.insertRow();
         let btn = p.reportUrl 
-          ? `<a href="${p.reportUrl}" target="_blank" style="color:blue; text-decoration:none; font-weight:bold;">📄 Download</a>` 
-          : `<span style="color:red">Pending</span>`;
+          ? `<a href="${p.reportUrl}" target="_blank" class="btn-download">⬇️ Download</a>` 
+          : `<span style="color:red; font-size:12px;">Pending</span>`;
 
         row.innerHTML = `
           <td class="col-sr">${sr++}</td>
-          <td><b>${p.name}</b></td>
+          <td><b>${p.name}</b><br><small>${p.mobile}</small></td>
           <td>${btn}</td>
         `;
       });
     };
     
-    // Search Function
+    // EXCEL EXPORT
+    window.exportToExcel = function() {
+      let list = window.allPeople.filter(p => p.status === "Yes");
+      if(list.length === 0) return alert("No Data to Export");
+      
+      let data = list.map(p => ({
+        Name: p.name,
+        Mobile: p.mobile,
+        Gender: p.gender,
+        Date: p.regDate,
+        BMI: p.bmi,
+        ReportLink: p.reportUrl || "Pending"
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Health_Reports");
+      XLSX.writeFile(wb, "Mission_1Lakh_Reports.xlsx");
+    };
+
+    // PDF EXPORT
+    window.exportToPDF = function() {
+      let list = window.allPeople.filter(p => p.status === "Yes");
+      if(list.length === 0) return alert("No Data to Export");
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      doc.text("Mission 1 Lakh - Health Reports", 14, 20);
+      
+      let bodyData = list.map((p, index) => [
+        index + 1,
+        p.name,
+        p.mobile,
+        p.gender,
+        p.regDate,
+        p.reportUrl ? "Yes" : "No"
+      ]);
+
+      doc.autoTable({
+        head: [['Sr.', 'Name', 'Mobile', 'Gender', 'Date', 'Report Uploaded']],
+        body: bodyData,
+        startY: 30,
+      });
+
+      doc.save("Health_Report_List.pdf");
+    };
+
     window.searchTable = function() {
       let val = document.getElementById("searchInput").value.toUpperCase();
       let tr = document.getElementById("dataTable").getElementsByTagName("tr");
       for(let i=1; i<tr.length; i++){
-        let td = tr[i].getElementsByTagName("td")[1]; // Name column
+        let td = tr[i].getElementsByTagName("td")[1];
         if(td) tr[i].style.display = td.innerText.toUpperCase().indexOf(val) > -1 ? "" : "none";
       }
     };
