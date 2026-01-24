@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mission 1 Lakh - Final Fixed</title>
+  <title>Mission 1 Lakh - Final Dashboard</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -39,29 +39,33 @@
     .active { display: block; animation: fadeIn 0.4s; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* DASHBOARD */
+    /* DASHBOARD (OLD COLORS RESTORED) */
     .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-    .dash-card { padding: 15px; border-radius: 12px; color: white; text-align: center; }
-    .card-total { background: linear-gradient(135deg, #667eea, #764ba2); }
-    .card-done { background: #28a745; }
-    .card-plan { background: #ffc107; color: #333; }
-    .card-pending { background: #dc3545; }
+    .dash-card { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
+    
+    /* Old Color Logic */
+    .card-total { background: #eee; color: #333; }
+    .card-done { background: #d4edda; color: #155724; }
+    .card-plan { background: #fff3cd; color: #856404; }
+    .card-pending { background: #f8d7da; color: #721c24; }
+    
     .dash-num { font-size: 28px; font-weight: bold; display: block; }
+    .dash-lbl { font-size: 12px; font-weight: bold; }
 
     /* FORMS */
     label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
     input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; }
     .action-btn { margin-top: 20px; background: #0061f2; color: white; padding: 12px; border: none; border-radius: 50px; width: 100%; font-size: 16px; font-weight: bold; }
 
-    /* TABLE - OLD COLOR CODING STYLE */
+    /* TABLE */
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
     th { background: #0057b7; color: white; padding: 10px; text-align: left; }
     td { padding: 10px; border-bottom: 1px solid #ddd; vertical-align: middle; }
     
-    /* Row Colors (As requested) */
-    tr.row-done { background-color: #e8f5e9; }      /* Greenish */
-    tr.row-planning { background-color: #fff3cd; }  /* Yellowish */
-    tr.row-pending { background-color: #fff; }      /* White */
+    /* List Row Colors */
+    tr.row-done { background-color: #e8f5e9; }
+    tr.row-planning { background-color: #fff3cd; }
+    tr.row-pending { background-color: #fff; }
 
     /* UTILS */
     .status-select { padding: 5px; border-radius: 5px; width: 100%; font-weight: bold; }
@@ -86,10 +90,22 @@
 
   <div id="tab4" class="tab active container">
     <div class="dash-grid">
-      <div class="dash-card card-total"><span class="dash-num" id="dTotal">0</span><small>एकूण</small></div>
-      <div class="dash-card card-done"><span class="dash-num" id="dDone">0</span><small>झाले</small></div>
-      <div class="dash-card card-plan"><span class="dash-num" id="dPlanning">0</span><small>प्लॅनिंग</small></div>
-      <div class="dash-card card-pending"><span class="dash-num" id="dPending">0</span><small>बाकी</small></div>
+      <div class="dash-card card-total">
+          <span class="dash-num" id="dTotal">0</span>
+          <span class="dash-lbl">एकूण नोंदणी</span>
+      </div>
+      <div class="dash-card card-done">
+          <span class="dash-num" id="dDone">0</span>
+          <span class="dash-lbl">चेक झाले</span>
+      </div>
+      <div class="dash-card card-plan">
+          <span class="dash-num" id="dPlanning">0</span>
+          <span class="dash-lbl">प्लॅनिंग</span>
+      </div>
+      <div class="dash-card card-pending">
+          <span class="dash-num" id="dPending">0</span>
+          <span class="dash-lbl">बाकी</span>
+      </div>
     </div>
     <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; border:1px solid #ccc;">🔄 Refresh Data</button>
   </div>
@@ -188,7 +204,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // TAB SWITCHER
     window.openTab = function(id, btn){
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
       document.getElementById(id).classList.add('active');
@@ -197,7 +212,6 @@
       if(id === 'tab3') loadReportTab();
     };
 
-    // CONTACT PICKER
     window.pickContact = async function() {
       if('contacts' in navigator) {
         try {
@@ -210,7 +224,6 @@
       } else alert("Mobile Only Feature");
     };
 
-    // BMI CALCULATION
     window.calcBMI = function() {
       let w = parseFloat(document.getElementById("inpWeight").value);
       let h = parseFloat(document.getElementById("inpHeight").value);
@@ -219,20 +232,15 @@
         let bmi = (w/((h/100)*(h/100))).toFixed(1);
         let s = bmi<18.5?"Underweight":bmi<25?"Normal":"Overweight";
         let c = bmi<18.5?"orange":bmi<25?"green":"red";
-        
         d.innerHTML = `BMI: ${bmi} <span style="color:${c}">(${s})</span>`;
-        d.dataset.val=bmi; 
-        d.dataset.stat=s; // Storing status for save
+        d.dataset.val=bmi; d.dataset.stat=s;
       }
     };
 
-    // SAVE DATA
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
       const gender = document.getElementById("inpGender").value;
-      
-      // Get BMI data from the display element
       const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
       const bmiStat = document.getElementById("bmiDisplay").dataset.stat || "-";
 
@@ -244,8 +252,7 @@
           age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
-          bmi: bmiVal, 
-          bmiStatus: bmiStat, // Saving the analysis (Normal/Overweight etc)
+          bmi: bmiVal, bmiStatus: bmiStat,
           status: "No", planDate: "",
           regDate: new Date().toLocaleDateString('en-IN')
         });
@@ -256,7 +263,6 @@
       } catch(e) { alert(e.message); }
     };
 
-    // LOAD DATA
     window.loadPeople = async function(){
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = "";
@@ -276,8 +282,6 @@
           total++;
 
           let row = tbody.insertRow();
-          
-          // --- OLD COLOR CODING LOGIC ---
           if(p.status === "Yes") row.className = "row-done";
           else if(p.status === "Planning") row.className = "row-planning";
           else row.className = "row-pending";
@@ -285,7 +289,7 @@
           let planStyle = p.status==="Planning" ? "display:block" : "display:none";
           let msg = p.status==="Planning"?`तुमची तारीख ${p.planDate} ठरली आहे.`:`रिपोर्ट तयार आहे.`;
 
-          // BMI Color Logic for Display
+          // BMI Color Logic
           let bmiColor = "black";
           if(p.bmiStatus === "Underweight") bmiColor = "orange";
           else if(p.bmiStatus === "Normal") bmiColor = "green";
@@ -321,12 +325,11 @@
 
     window.updateStatus = async function(id, el) {
       await updateDoc(doc(db, "mission1lakh", id), { status: el.value });
-      loadPeople(); // Reload to apply background color
+      loadPeople();
     };
     window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
     window.delP = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
-    // REPORT TAB
     window.loadReportTab = function() {
       const tbody = document.querySelector("#reportTable tbody");
       tbody.innerHTML = "";
@@ -337,16 +340,14 @@
       });
     };
 
-    // EXCEL
     window.exportToExcel = function() {
-      let data = window.allPeople.map(p => ({Name:p.name, Mobile:p.mobile, Status:p.status, Age:p.age, Gender:p.gender, BMI:p.bmi, BMI_Analysis:p.bmiStatus}));
+      let data = window.allPeople.map(p => ({Name:p.name, Mobile:p.mobile, Status:p.status, Age:p.age, Gender:p.gender, BMI:p.bmi, BMI_Stat:p.bmiStatus}));
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Data");
       XLSX.writeFile(wb, "Mission_Data.xlsx");
     };
 
-    // PDF PRINT (Window Print - Reliable)
     window.printPDF = function() {
       let printWindow = window.open('', '', 'height=600,width=800');
       let rows = window.allPeople.map((p,i) => `
@@ -358,7 +359,6 @@
           <td>${p.status==='Yes'?'Done':(p.status==='Planning'?'Plan':'No')}</td>
         </tr>
       `).join('');
-
       printWindow.document.write(`<html><head><title>Report</title><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #000;padding:5px;text-align:left;}</style></head><body><h2>Mission Report</h2><table><thead><tr><th>Sr</th><th>Name</th><th>Mobile</th><th>BMI</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
       printWindow.document.close();
       printWindow.print();
