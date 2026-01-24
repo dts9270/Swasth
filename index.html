@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission 1 Lakh - Health Planner</title>
+  <title>Mission 1 Lakh - Contact Picker</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -25,7 +25,7 @@
     .tab-btns button.active-btn { background: #0057b7; color: white; }
 
     /* CONTAINER */
-    .container { width: 95%; max-width: 900px; margin: 15px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-height: 500px; }
+    .container { width: 95%; max-width: 950px; margin: 15px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-height: 500px; }
     .tab { display: none; }
     .active { display: block; animation: fadeIn 0.3s; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -35,18 +35,28 @@
     input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
     .action-btn { margin-top: 20px; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
 
+    /* BMI BOX */
+    .bmi-result { margin-top: 10px; padding: 10px; background: #e9ecef; border-left: 5px solid #333; font-weight: bold; }
+
     /* TABLE */
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th { background: #0057b7; color: white; padding: 10px; text-align: left; }
-    td { border-bottom: 1px solid #ddd; padding: 10px; vertical-align: middle; }
+    td { border-bottom: 1px solid #ddd; padding: 8px; vertical-align: middle; }
     
-    /* STATUS COLORS (Dropdown) */
-    .status-select { padding: 8px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 100%; }
+    /* STATUS COLORS */
+    .status-select { padding: 8px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 100%; margin-bottom: 5px; }
     
     /* ROW COLORS */
     tr.row-done { background-color: #e8f5e9; }      /* Greenish */
     tr.row-planning { background-color: #fff3cd; }  /* Yellowish */
     tr.row-pending { background-color: #fff; }      /* White */
+
+    /* CONTACT ICONS */
+    .btn-icon { text-decoration: none; font-size: 22px; margin-right: 15px; display: inline-block; transition: 0.2s; }
+    .btn-icon:hover { transform: scale(1.2); }
+
+    /* CONTACT PICKER BTN */
+    .pick-btn { background: #0057b7; color: white; border: none; border-radius: 5px; width: 50px; cursor: pointer; font-size: 20px; margin-top: 5px; }
 
   </style>
 </head>
@@ -56,47 +66,67 @@
   <div id="loaderOverlay"><div class="spinner"></div><p>Please Wait...</p></div>
 
   <div class="header">
-    <h2>🇮🇳 Mission 1 Lakh (नागरिक आरोग्य)</h2>
+    <h2>🇮🇳 Mission 1 Lakh (Auto Contact)</h2>
   </div>
 
   <div class="tab-btns">
-    <button onclick="openTab('tab1', this)" class="active-btn">1. नोंदणी (Registration)</button>
-    <button onclick="openTab('tab2', this)">2. प्लॅनिंग (Status)</button>
-    <button onclick="openTab('tab3', this)">3. रिपोर्ट (Upload)</button>
+    <button onclick="openTab('tab1', this)" class="active-btn">1. नोंदणी & BMI</button>
+    <button onclick="openTab('tab2', this)">2. प्लॅनिंग & संपर्क</button>
+    <button onclick="openTab('tab3', this)">3. रिपोर्ट</button>
     <button onclick="openTab('tab4', this)">4. डॅशबोर्ड</button>
   </div>
 
   <div id="tab1" class="tab active container">
-    <h3>📝 नवीन नागरिकाची नोंदणी</h3>
+    <h3>📝 नवीन नागरिक नोंदणी</h3>
     
-    <label>नागरिकाचे पूर्ण नाव</label>
-    <input type="text" id="inpName" placeholder="नाव टाका"/>
+    <label>पूर्ण नाव</label>
+    <input type="text" id="inpName" placeholder="नाव आपोआप येईल किंवा टाइप करा"/>
 
     <div style="display:flex; gap:10px;">
-      <div style="flex:1"><label>वय</label><input type="number" id="inpAge" placeholder="30"/></div>
-      <div style="flex:1"><label>मोबाईल</label><input type="tel" id="inpMobile" placeholder="98XXXXXXXX"/></div>
+      <div style="flex:1">
+          <label>वय</label>
+          <input type="number" id="inpAge" placeholder="30"/>
+      </div>
+      
+      <div style="flex:1.5">
+          <label>मोबाईल</label>
+          <div style="display:flex; gap:5px;">
+            <input type="tel" id="inpMobile" placeholder="98XXXXXXXX" style="width:100%;"/>
+            <button onclick="pickContact()" class="pick-btn" title="Select Contact">📒</button>
+          </div>
+      </div>
     </div>
     
-    <div style="display:flex; gap:10px;">
-        <div style="flex:1"><label>वजन (Weight KG)</label><input type="number" id="inpWeight"/></div>
-        <div style="flex:1"><label>उंची (Height CM)</label><input type="number" id="inpHeight"/></div>
+    <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:15px; border:1px solid #ddd;">
+      <h4 style="margin:0 0 10px 0; color:#0057b7;">⚖️ BMI कॅल्क्युलेटर</h4>
+      <div style="display:flex; gap:10px;">
+        <div style="flex:1">
+          <label>वजन (KG)</label>
+          <input type="number" id="inpWeight" placeholder="Ex: 70" oninput="calcBMI()"/>
+        </div>
+        <div style="flex:1">
+          <label>उंची (CM)</label>
+          <input type="number" id="inpHeight" placeholder="Ex: 170" oninput="calcBMI()"/>
+        </div>
+      </div>
+      <div id="bmiDisplay" class="bmi-result">BMI: 0.0</div>
     </div>
 
     <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
   </div>
 
   <div id="tab2" class="tab container">
-    <h3>🗓️ ब्लड चेक प्लॅनिंग & स्टेटस</h3>
+    <h3>🗓️ स्टेटस, प्लॅनिंग आणि संपर्क</h3>
     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:10px; width:100%; margin-bottom:15px; border: 2px solid #0057b7;">
     
     <div style="overflow-x:auto;">
       <table id="dataTable">
         <thead>
           <tr>
-            <th>नाव / तारीख</th>
-            <th>मोबाईल</th>
-            <th>सद्यस्थिती (Planning Status)</th>
-            <th>Delete</th>
+            <th>नाव / BMI</th>
+            <th style="width: 28%;">स्टेटस & प्लॅनिंग</th>
+            <th>संपर्क (Call/WA)</th>
+            <th>Del</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -113,26 +143,20 @@
   <div id="tab4" class="tab container">
     <h3>📊 प्रगती अहवाल</h3>
     
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center; margin-bottom:20px;">
-      
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center;">
       <div style="background:#eee; padding:15px; border-radius:10px; grid-column: span 2;">
         <h1 id="dTotal" style="margin:0;">0</h1><small>एकूण नोंदणी</small>
       </div>
-
       <div style="background:#d4edda; padding:15px; border-radius:10px;">
         <h1 id="dDone" style="color:green; margin:0;">0</h1><small>✅ चेक झाले</small>
       </div>
-
       <div style="background:#fff3cd; padding:15px; border-radius:10px;">
-        <h1 id="dPlanning" style="color:#856404; margin:0;">0</h1><small>🗓️ प्लॅनिंग (करणार)</small>
+        <h1 id="dPlanning" style="color:#856404; margin:0;">0</h1><small>🗓️ प्लॅनिंग</small>
       </div>
-
       <div style="background:#f8d7da; padding:15px; border-radius:10px; grid-column: span 2;">
-        <h1 id="dPending" style="color:red; margin:0;">0</h1><small>❌ काहीच झाले नाही</small>
+        <h1 id="dPending" style="color:red; margin:0;">0</h1><small>❌ काहीच नाही</small>
       </div>
-
     </div>
-
     <button class="action-btn" style="background:#666;" onclick="loadPeople()">Refresh Data 🔄</button>
   </div>
 
@@ -165,12 +189,72 @@
       if(btn) btn.classList.add('active-btn');
     };
 
-    /* --- 1. SAVE (TAB 1) --- */
+    /* --- CONTACT PICKER --- */
+    window.pickContact = async function() {
+      // Check if feature is supported (Mobile only)
+      const supported = ('contacts' in navigator && 'ContactsManager' in window);
+      
+      if(supported) {
+        try {
+          const props = ['name', 'tel'];
+          const opts = { multiple: false };
+          const contacts = await navigator.contacts.select(props, opts);
+          
+          if(contacts.length > 0) {
+            const c = contacts[0];
+            
+            // Fill Mobile
+            if(c.tel && c.tel.length > 0) {
+              document.getElementById("inpMobile").value = c.tel[0];
+            }
+            // Fill Name if empty
+            if(c.name && c.name.length > 0) {
+              const currentName = document.getElementById("inpName").value;
+              if(!currentName) {
+                 document.getElementById("inpName").value = c.name[0];
+              }
+            }
+          }
+        } catch(ex) {
+          // Ignore error if user cancelled
+          console.log(ex);
+        }
+      } else {
+        alert("हे फीचर फक्त मोबाईल (Android/iOS) वर चालते. लॅपटॉपवर नंबर टाइप करावा लागेल.");
+      }
+    };
+
+    /* --- BMI CALCULATOR --- */
+    window.calcBMI = function() {
+      let w = parseFloat(document.getElementById("inpWeight").value);
+      let h = parseFloat(document.getElementById("inpHeight").value);
+      let display = document.getElementById("bmiDisplay");
+      
+      if(w > 0 && h > 0) {
+        let bmi = (w / ((h/100)*(h/100))).toFixed(1);
+        let status = "";
+        let color = "black";
+        
+        if(bmi < 18.5) { status = "Underweight"; color = "orange"; }
+        else if(bmi < 25) { status = "Normal"; color = "green"; }
+        else { status = "Overweight"; color = "red"; }
+        
+        display.innerHTML = `BMI: ${bmi} <span style="color:${color}">(${status})</span>`;
+        display.dataset.val = bmi; 
+        display.dataset.stat = status;
+      } else {
+        display.innerHTML = "BMI: 0.0";
+      }
+    };
+
+    /* --- 1. SAVE --- */
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
+      const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
+      const bmiStat = document.getElementById("bmiDisplay").dataset.stat || "-";
       
-      if(!name || !mobile) { alert("नाव आणि मोबाईल नंबर भरा!"); return; }
+      if(!name || !mobile) { alert("नाव आणि मोबाईल भरा!"); return; }
       showLoading();
 
       try {
@@ -179,18 +263,22 @@
           age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
-          status: "No", // Default Status: No (Not Checked)
+          bmi: bmiVal,
+          bmiStatus: bmiStat,
+          status: "No",
+          planDate: "", 
           regDate: new Date().toLocaleDateString('en-IN')
         });
 
-        alert("नागरिकाची माहिती सेव्ह झाली! ✔");
+        alert("सेव्ह झाले! ✔");
         document.querySelectorAll("input").forEach(i => i.value = "");
+        document.getElementById("bmiDisplay").innerHTML = "BMI: 0.0";
         loadPeople();
       } catch(e) { alert(e.message); }
       finally { hideLoading(); }
     };
 
-    /* --- 2. LOAD & STATUS (TAB 2) --- */
+    /* --- 2. LOAD & STATUS --- */
     window.loadPeople = async function(){
       showLoading();
       const tbody = document.querySelector("#dataTable tbody");
@@ -205,37 +293,58 @@
           let id = d.id;
           total++;
           
-          // Count Logic
           if(p.status === "Yes") done++;
           else if(p.status === "Planning") planning++;
-          else pending++; // Status is 'No'
+          else pending++;
 
-          // Row Color Logic
           let rowClass = "row-pending";
           if(p.status === "Yes") rowClass = "row-done";
           if(p.status === "Planning") rowClass = "row-planning";
+
+          let planDateInputStyle = (p.status === "Planning") ? "display:block;" : "display:none;";
+          
+          // WhatsApp Message Logic
+          let msg = `नमस्कार ${p.name}, मिशन 1 लाख मध्ये आपले स्वागत.`;
+          if(p.status === "Planning" && p.planDate) {
+            msg = `नमस्कार ${p.name}, तुमची तपासणी तारीख ${p.planDate} रोजी ठरली आहे.`;
+          } else if(p.status === "Yes") {
+            msg = `नमस्कार ${p.name}, तुमचा रिपोर्ट तयार आहे.`;
+          }
+
+          let waLink = `https://wa.me/91${p.mobile}?text=${encodeURIComponent(msg)}`;
 
           let row = tbody.insertRow();
           row.className = rowClass;
           
           row.innerHTML = `
-            <td><b>${p.name}</b><br><small>${p.regDate}</small></td>
-            <td>${p.mobile}</td>
             <td>
-              <select onchange="updateStatus('${id}', this.value)" class="status-select" 
-                style="background:${p.status==='Yes'?'#d4edda':(p.status==='Planning'?'#fff3cd':'#fff')};">
-                
-                <option value="No" ${p.status === "No" ? "selected" : ""}>❌ चेक केले नाही</option>
-                <option value="Planning" ${p.status === "Planning" ? "selected" : ""}>🗓️ करणार (Planning)</option>
-                <option value="Yes" ${p.status === "Yes" ? "selected" : ""}>✅ चेक झाले (Done)</option>
-              
+              <b>${p.name}</b><br>
+              <small style="color:#555;">${p.mobile}</small><br>
+              <small style="font-weight:bold;">BMI: ${p.bmi}</small>
+            </td>
+            <td>
+              <select onchange="handleStatusChange('${id}', this)" class="status-select"
+                 style="background:${p.status==='Yes'?'#d4edda':(p.status==='Planning'?'#fff3cd':'#fff')};">
+                <option value="No" ${p.status==="No"?"selected":""}>❌ चेक नाही</option>
+                <option value="Planning" ${p.status==="Planning"?"selected":""}>🗓️ प्लॅनिंग</option>
+                <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले</option>
               </select>
+              
+              <input type="date" id="date_${id}" value="${p.planDate || ''}" 
+                     style="${planDateInputStyle} width:100%; border:2px solid #ff9933; margin-top:5px;" 
+                     onchange="updateDate('${id}', this.value)">
+              <div id="dateDisplay_${id}" style="font-size:12px; color:#666; margin-top:2px; ${p.status==='Planning' && p.planDate ? 'display:block':'display:none'}">
+                तारीख: <b>${p.planDate}</b>
+              </div>
+            </td>
+            <td>
+              <a href="tel:${p.mobile}" class="btn-icon">📞</a>
+              <a href="${waLink}" target="_blank" class="btn-icon">💚</a>
             </td>
             <td><button onclick="deletePerson('${id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px;">X</button></td>
           `;
         });
 
-        // Update Dashboard
         document.getElementById("dTotal").innerText = total;
         document.getElementById("dDone").innerText = done;
         document.getElementById("dPlanning").innerText = planning;
@@ -245,15 +354,34 @@
       finally { hideLoading(); }
     };
 
-    window.updateStatus = async function(id, val){
-      showLoading();
-      await updateDoc(doc(db, "mission1lakh", id), { status: val });
-      loadPeople(); // Reload to update colors and counts
+    /* --- HANDLE STATUS CHANGE --- */
+    window.handleStatusChange = async function(id, selectElem) {
+      let val = selectElem.value;
+      let dateInput = document.getElementById("date_"+id);
+      
+      if(val === "Planning") {
+        dateInput.style.display = "block";
+        dateInput.focus();
+        await updateDoc(doc(db, "mission1lakh", id), { status: val });
+      } 
+      else {
+        dateInput.style.display = "none";
+        await updateDoc(doc(db, "mission1lakh", id), { status: val });
+      }
+      loadPeople();
+    };
+
+    window.updateDate = async function(id, dateVal) {
+      if(dateVal) {
+        showLoading();
+        await updateDoc(doc(db, "mission1lakh", id), { planDate: dateVal });
+        hideLoading();
+        loadPeople();
+      }
     };
 
     window.deletePerson = async function(id){
-      if(confirm("डिलीट करायचे का?")) {
-        showLoading();
+      if(confirm("डिलीट करायचे?")) {
         await deleteDoc(doc(db, "mission1lakh", id));
         loadPeople();
       }
@@ -274,7 +402,7 @@
       showLoading();
       try {
         await uploadBytes(ref(storage, "reports/" + file.name), file);
-        alert("Report Uploaded ✔");
+        alert("Uploaded ✔");
       } catch(e){ alert(e.message); } finally { hideLoading(); }
     };
 
