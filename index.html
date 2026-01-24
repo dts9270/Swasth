@@ -2,136 +2,227 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission 1 Lakh - Report Saver</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Mission 1 Lakh - Pro Dashboard</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
-    /* BASIC STYLES */
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f4f8; }
-    
+    /* --- 1. GLOBAL & NO SCROLL SETTINGS --- */
+    * { box-sizing: border-box; }
+    body { 
+      font-family: 'Segoe UI', sans-serif; 
+      margin: 0; padding: 0; 
+      background: #f4f7f6; 
+      overflow-x: hidden; /* Stop Horizontal Scroll */
+      width: 100vw;
+    }
+
     /* LOADER */
-    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; flex-direction: column; }
-    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 2000; display: none; justify-content: center; align-items: center; flex-direction: column; }
+    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* UPLOAD MODAL */
-    #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
-    .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative; }
-    .close-btn { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; font-weight: bold; color: #555; }
-
-    /* PROGRESS BAR */
-    .progress-container { width: 100%; background-color: #f3f3f3; border-radius: 5px; margin-top: 15px; display: none; height: 20px; overflow: hidden; }
-    .progress-bar { width: 0%; height: 100%; background-color: #28a745; text-align: center; line-height: 20px; color: white; font-size: 12px; transition: width 0.2s; }
-
     /* HEADER */
-    .header { background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc); padding: 15px; text-align: center; color: white; }
-    
+    .header { 
+      background: linear-gradient(135deg, #0057b7, #003366); 
+      padding: 20px; text-align: center; color: white; 
+      border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .header h2 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+
     /* TABS */
-    .tab-btns { display: flex; justify-content: center; gap: 5px; background: #fff; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .tab-btns button { padding: 10px 10px; border: none; background: #e0e0e0; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; flex: 1; }
-    .tab-btns button.active-btn { background: #0057b7; color: white; }
+    .tab-btns { 
+      display: flex; justify-content: center; gap: 8px; 
+      padding: 15px; margin-top: -15px;
+    }
+    .tab-btns button { 
+      padding: 10px 12px; border: none; background: white; 
+      border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 13px; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; color: #555;
+      flex: 1; max-width: 100px;
+    }
+    .tab-btns button.active-btn { 
+      background: #ff9933; color: white; transform: translateY(-2px); 
+      box-shadow: 0 4px 10px rgba(255, 153, 51, 0.4);
+    }
 
     /* CONTAINER */
-    .container { width: 95%; max-width: 950px; margin: 15px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-height: 500px; }
+    .container { 
+      width: 96%; max-width: 800px; margin: 0 auto 20px auto; 
+      background: white; padding: 15px; border-radius: 15px; 
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+      min-height: 500px;
+    }
     .tab { display: none; }
-    .active { display: block; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .active { display: block; animation: fadeIn 0.4s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- 2. ATTRACTIVE DASHBOARD CARDS --- */
+    .dash-grid {
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); /* 2 Columns */
+      gap: 15px; margin-bottom: 20px;
+    }
+    .dash-card {
+      padding: 20px; border-radius: 15px; color: white;
+      text-align: center; position: relative; overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .dash-card:active { transform: scale(0.98); }
+    
+    .card-total { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .card-done { background: linear-gradient(135deg, #42e695 0%, #3bb2b8 100%); }
+    .card-plan { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); color: #444; }
+    .card-pending { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%); color: #444; }
+
+    .dash-num { font-size: 32px; font-weight: 800; display: block; margin-top: 5px; }
+    .dash-label { font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; }
+    .dash-icon { font-size: 24px; opacity: 0.8; }
 
     /* FORMS */
-    label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
-    input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-    .action-btn { margin-top: 20px; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+    label { display: block; margin-top: 12px; font-weight: 600; color: #444; font-size: 14px; }
+    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; background: #fafafa; }
+    input:focus, select:focus { border-color: #0057b7; background: white; outline: none; }
+    
+    .action-btn { 
+      margin-top: 25px; background: #0057b7; color: white; padding: 14px; 
+      border: none; border-radius: 50px; cursor: pointer; width: 100%; 
+      font-size: 16px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,87,183,0.3); 
+    }
 
-    /* TABLE */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th { background: #0057b7; color: white; padding: 10px; text-align: left; }
-    td { border-bottom: 1px solid #ddd; padding: 8px; vertical-align: middle; }
+    /* TABLE STYLES (NO HORIZONTAL SCROLL) */
+    .table-responsive { 
+      width: 100%; overflow-x: auto; 
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; /* Fix layout */ }
     
-    /* STATUS & ICONS */
-    .status-select { padding: 8px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 100%; margin-bottom: 5px; }
-    .btn-icon { text-decoration: none; font-size: 22px; margin-right: 15px; display: inline-block; transition: 0.2s; }
-    .pick-btn { background: #0057b7; color: white; border: none; border-radius: 5px; width: 50px; cursor: pointer; font-size: 20px; margin-top: 5px; }
+    th { background: #f1f5f9; color: #444; padding: 10px 5px; font-size: 12px; text-align: left; }
+    td { border-bottom: 1px solid #eee; padding: 10px 5px; vertical-align: middle; font-size: 13px; word-wrap: break-word; }
     
-    /* DOWNLOAD BUTTON */
-    .dl-btn { background: #0057b7; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; display: inline-block; font-size: 14px; }
-    .dl-btn:hover { background: #004494; }
+    /* Column Widths */
+    .col-sr { width: 35px; text-align: center; font-weight: bold; color: #888; }
+    .col-action { width: 40px; }
+
+    /* STATUS COLORS */
+    .status-select { padding: 6px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 100%; font-size: 12px; }
+    
+    /* MODAL */
+    #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; }
+    .modal-content { background: white; padding: 25px; border-radius: 15px; width: 90%; max-width: 350px; text-align: center; }
+
+    /* UTILS */
+    .btn-icon { text-decoration: none; font-size: 20px; margin-right: 10px; }
+    .pick-btn { background: #0057b7; color: white; border: none; border-radius: 5px; width: 45px; cursor: pointer; font-size: 18px; }
 
   </style>
 </head>
 
 <body>
 
-  <div id="loaderOverlay"><div class="spinner"></div><p>Please Wait...</p></div>
+  <div id="loaderOverlay"><div class="spinner"></div><p style="margin-top:10px; font-weight:bold; color:#0057b7;">Loading...</p></div>
 
   <div id="uploadModal">
     <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
       <h3 style="color:#0057b7; margin-top:0;">📂 रिपोर्ट अपलोड</h3>
-      <p id="modalUserName" style="font-weight:bold; margin-bottom:15px; color:#555;"></p>
+      <p id="modalUserName" style="color:#666; font-size:14px; margin-bottom:15px;"></p>
+      <input type="file" id="popupFile" style="border: 2px dashed #ccc; padding: 10px; width:100%; margin-bottom:15px;">
       
-      <div style="text-align:left;">
-        <label>फाईल निवडा (PDF/Photo):</label>
-        <input type="file" id="popupFile" style="border: 2px dashed #ccc; padding: 15px; width:100%; margin-top:5px;">
+      <div id="pContainer" style="width:100%; background:#eee; height:10px; border-radius:5px; display:none; overflow:hidden;">
+        <div id="pBar" style="width:0%; height:100%; background:#28a745;"></div>
       </div>
-
-      <div id="popupProgressContainer" class="progress-container"><div id="popupProgressBar" class="progress-bar">0%</div></div>
-      <button class="action-btn" onclick="uploadFromModal()">⬆️ Upload Now</button>
+      
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button onclick="closeModal()" style="flex:1; padding:10px; border:none; background:#eee; border-radius:5px;">Cancel</button>
+        <button onclick="uploadFromModal()" style="flex:1; padding:10px; border:none; background:#0057b7; color:white; border-radius:5px;">Upload</button>
+      </div>
       <input type="hidden" id="modalUserId">
     </div>
   </div>
 
   <div class="header">
-    <h2>🇮🇳 Mission 1 Lakh (Report Manager)</h2>
+    <h2>🇮🇳 Mission 1 Lakh</h2>
+    <small>Swasthya Kranti 2026</small>
   </div>
 
   <div class="tab-btns">
-    <button onclick="openTab('tab1', this)" class="active-btn">1. नोंदणी</button>
-    <button onclick="openTab('tab2', this)">2. प्लॅनिंग & चेक</button>
-    <button onclick="openTab('tab3', this)">3. रिपोर्ट यादी</button>
-    <button onclick="openTab('tab4', this)">4. डॅशबोर्ड</button>
+    <button onclick="openTab('tab4', this)" class="active-btn">📊 Dashboard</button>
+    <button onclick="openTab('tab1', this)">📝 नोंदणी</button>
+    <button onclick="openTab('tab2', this)">🗓️ यादी</button>
+    <button onclick="openTab('tab3', this)">📂 रिपोर्ट</button>
   </div>
 
-  <div id="tab1" class="tab active container">
+  <div id="tab4" class="tab active container" style="background:transparent; box-shadow:none; padding:0;">
+    <h3 style="margin-left:10px; color:#444;">प्रगती अहवाल (Live)</h3>
+    
+    <div class="dash-grid">
+      <div class="dash-card card-total">
+        <div class="dash-icon">👥</div>
+        <span class="dash-num" id="dTotal">0</span>
+        <span class="dash-label">एकूण नोंदणी</span>
+      </div>
+      <div class="dash-card card-done">
+        <div class="dash-icon">✅</div>
+        <span class="dash-num" id="dDone">0</span>
+        <span class="dash-label">चेक झाले</span>
+      </div>
+      <div class="dash-card card-plan">
+        <div class="dash-icon">🗓️</div>
+        <span class="dash-num" id="dPlanning">0</span>
+        <span class="dash-label">प्लॅनिंग</span>
+      </div>
+      <div class="dash-card card-pending">
+        <div class="dash-icon">⏳</div>
+        <span class="dash-num" id="dPending">0</span>
+        <span class="dash-label">बाकी</span>
+      </div>
+    </div>
+
+    <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; margin-top:0;">🔄 Refresh Data</button>
+  </div>
+
+  <div id="tab1" class="tab container">
     <h3>📝 नवीन नागरिक नोंदणी</h3>
     <label>पूर्ण नाव</label>
-    <input type="text" id="inpName" placeholder="नाव टाका"/>
+    <input type="text" id="inpName" placeholder="नाव टाका..."/>
     
     <div style="display:flex; gap:10px;">
       <div style="flex:1"><label>वय</label><input type="number" id="inpAge" placeholder="30"/></div>
       <div style="flex:1.5">
           <label>मोबाईल</label>
           <div style="display:flex; gap:5px;">
-            <input type="tel" id="inpMobile" placeholder="98XXXXXXXX" style="width:100%;"/>
+            <input type="tel" id="inpMobile" placeholder="Number"/>
             <button onclick="pickContact()" class="pick-btn">📒</button>
           </div>
       </div>
     </div>
-    
-    <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:15px; border:1px solid #ddd;">
-      <h4 style="margin:0 0 10px 0; color:#0057b7;">⚖️ BMI कॅल्क्युलेटर</h4>
+
+    <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-top:15px; border:1px solid #eee;">
+      <h4 style="margin:0 0 10px 0; color:#0057b7; font-size:14px;">⚖️ BMI कॅल्क्युलेटर</h4>
       <div style="display:flex; gap:10px;">
-        <div style="flex:1"><label>वजन (KG)</label><input type="number" id="inpWeight" oninput="calcBMI()"/></div>
-        <div style="flex:1"><label>उंची (CM)</label><input type="number" id="inpHeight" oninput="calcBMI()"/></div>
+        <div style="flex:1"><input type="number" id="inpWeight" placeholder="W (KG)" oninput="calcBMI()"/></div>
+        <div style="flex:1"><input type="number" id="inpHeight" placeholder="H (CM)" oninput="calcBMI()"/></div>
       </div>
-      <div id="bmiDisplay" style="margin-top:10px; font-weight:bold;">BMI: 0.0</div>
+      <div id="bmiDisplay" style="margin-top:10px; font-weight:bold; font-size:13px;">BMI: 0.0</div>
     </div>
     
     <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
   </div>
 
   <div id="tab2" class="tab container">
-    <h3>🗓️ स्टेटस, प्लॅनिंग आणि संपर्क</h3>
-    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:10px; width:100%; margin-bottom:15px; border: 2px solid #0057b7;">
-    <div style="overflow-x:auto;">
+    <h3>🗓️ यादी & प्लॅनिंग</h3>
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:12px; width:100%; border-radius:25px; border:1px solid #ddd; margin-bottom:15px; outline:none;">
+    
+    <div class="table-responsive">
       <table id="dataTable">
         <thead>
           <tr>
+            <th class="col-sr">Sr.</th>
             <th>नाव / BMI</th>
-            <th style="width: 28%;">स्टेटस (Action)</th>
-            <th>संपर्क</th>
-            <th>Del</th>
+            <th style="width:35%;">स्टेटस</th>
+            <th class="col-action">Del</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -140,36 +231,19 @@
   </div>
 
   <div id="tab3" class="tab container">
-    <h3>📂 रिपोर्ट डाउनलोड/पाहा</h3>
-    <p>येथे ज्यांचे चेकअप झाले आहे (Done), त्यांचे रिपोर्ट दिसतील.</p>
-    <div style="overflow-x:auto;">
+    <h3>📂 रिपोर्ट डाउनलोड</h3>
+    <div class="table-responsive">
       <table id="reportTable">
         <thead>
           <tr>
+            <th class="col-sr">Sr.</th>
             <th>नाव</th>
-            <th>तारीख</th>
-            <th>रिपोर्ट (Action)</th>
+            <th>रिपोर्ट</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
     </div>
-  </div>
-
-  <div id="tab4" class="tab container">
-    <h3>📊 प्रगती अहवाल</h3>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center;">
-      <div style="background:#eee; padding:15px; border-radius:10px; grid-column: span 2;">
-        <h1 id="dTotal" style="margin:0;">0</h1><small>एकूण नोंदणी</small>
-      </div>
-      <div style="background:#d4edda; padding:15px; border-radius:10px;">
-        <h1 id="dDone" style="color:green; margin:0;">0</h1><small>✅ चेक झाले</small>
-      </div>
-      <div style="background:#f8d7da; padding:15px; border-radius:10px;">
-        <h1 id="dPending" style="color:red; margin:0;">0</h1><small>बाकी</small>
-      </div>
-    </div>
-    <button class="action-btn" style="background:#666;" onclick="loadPeople()">Refresh Data 🔄</button>
   </div>
 
   <script type="module">
@@ -211,7 +285,7 @@
              if(c[0].name) document.getElementById("inpName").value = c[0].name[0];
           }
         } catch(e){}
-      } else alert("Mobile Only");
+      } else alert("Mobile Only Feature");
     };
 
     window.calcBMI = function() {
@@ -223,7 +297,7 @@
         let s = bmi<18.5?"Underweight":bmi<25?"Normal":"Overweight";
         let c = bmi<18.5?"orange":bmi<25?"green":"red";
         d.innerHTML = `BMI: ${bmi} <span style="color:${c}">(${s})</span>`;
-        d.dataset.val=bmi; d.dataset.stat=s;
+        d.dataset.val=bmi; 
       }
     };
 
@@ -236,7 +310,8 @@
       showLoading();
       try {
         await addDoc(collection(db, "mission1lakh"), {
-          name, mobile, age: document.getElementById("inpAge").value,
+          name, mobile, 
+          age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
           bmi: bmiVal, 
@@ -253,7 +328,8 @@
       showLoading();
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = "";
-      let total=0, done=0, pending=0;
+      let total=0, done=0, planning=0, pending=0;
+      let srNo = 1; // SERIAL NUMBER
 
       try {
         const snap = await getDocs(collection(db, "mission1lakh"));
@@ -262,30 +338,43 @@
           let p = d.data(); p.id = d.id;
           window.allPeople.push(p);
           total++;
-          if(p.status === "Yes") done++; else pending++;
+          if(p.status === "Yes") done++; 
+          else if(p.status === "Planning") planning++; 
+          else pending++;
 
           let row = tbody.insertRow();
-          row.style.background = p.status==="Yes"?"#e8f5e9":p.status==="Planning"?"#fff3cd":"white";
+          // Status Color Logic
+          if(p.status === "Yes") row.style.background = "#e8f5e9";
+          else if(p.status === "Planning") row.style.background = "#fff3cd";
           
           let planStyle = p.status==="Planning" ? "display:block" : "display:none";
-          let msg = p.status==="Planning"?`तारीख ${p.planDate} ठरली आहे.`:`तुमचा रिपोर्ट तयार आहे.`;
+          let waMsg = p.status==="Planning"?`तुमची तारीख ${p.planDate} ठरली आहे.`:`तुमचा रिपोर्ट तयार आहे.`;
           
           row.innerHTML = `
-            <td><b>${p.name}</b><br><small>BMI: ${p.bmi}</small></td>
+            <td class="col-sr">${srNo++}</td>
+            <td>
+              <b>${p.name}</b><br>
+              <small style="color:#666;">${p.mobile}</small>
+              <div style="margin-top:5px;">
+                 <a href="tel:${p.mobile}" class="btn-icon">📞</a>
+                 <a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn-icon">💚</a>
+              </div>
+            </td>
             <td>
               <select onchange="handleStatusChange('${p.id}', '${p.name}', this)" class="status-select">
                 <option value="No" ${p.status==="No"?"selected":""}>❌ चेक नाही</option>
                 <option value="Planning" ${p.status==="Planning"?"selected":""}>🗓️ प्लॅनिंग</option>
-                <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले (Done)</option>
+                <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले</option>
               </select>
-              <input type="date" id="date_${p.id}" value="${p.planDate||''}" style="${planStyle} width:100%; margin-top:5px;" onchange="updateDate('${p.id}',this.value)">
+              <input type="date" id="date_${p.id}" value="${p.planDate||''}" style="${planStyle} width:100%; margin-top:5px; font-size:12px;" onchange="updateDate('${p.id}',this.value)">
+              <div style="font-size:11px; margin-top:2px; color:#555; ${planStyle}">Date: ${p.planDate}</div>
             </td>
-            <td><a href="tel:${p.mobile}" class="btn-icon">📞</a><a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(msg)}" target="_blank" class="btn-icon">💚</a></td>
-            <td><button onclick="deletePerson('${p.id}')" style="background:red; color:white; border:none; padding:5px;">X</button></td>
+            <td><button onclick="deletePerson('${p.id}')" style="background:none; border:none; color:red; font-size:18px;">🗑️</button></td>
           `;
         });
         document.getElementById("dTotal").innerText = total;
         document.getElementById("dDone").innerText = done;
+        document.getElementById("dPlanning").innerText = planning;
         document.getElementById("dPending").innerText = pending;
       } catch(e){console.error(e);} finally { hideLoading(); }
     };
@@ -296,62 +385,69 @@
       if(el.value==="Planning") document.getElementById("date_"+id).style.display="block";
       else if(el.value==="Yes") {
         document.getElementById("date_"+id).style.display="none";
-        // OPEN UPLOAD MODAL
         document.getElementById("uploadModal").style.display="flex";
-        document.getElementById("modalUserName").innerText="रुग्ण: "+name;
+        document.getElementById("modalUserName").innerText="Name: "+name;
         document.getElementById("modalUserId").value=id;
-        document.getElementById("popupProgressContainer").style.display="none";
+        document.getElementById("pContainer").style.display="none";
         document.getElementById("popupFile").value = "";
       } else document.getElementById("date_"+id).style.display="none";
     };
     
     window.closeModal = () => document.getElementById("uploadModal").style.display="none";
     
-    window.uploadFromModal = async function() {
-      let id = document.getElementById("modalUserId").value;
+    window.uploadFromModal = function() {
       let file = document.getElementById("popupFile").files[0];
-      
-      if(!file) return alert("File निवडा");
-      
-      let pBar = document.getElementById("popupProgressBar");
-      document.getElementById("popupProgressContainer").style.display="block";
+      let id = document.getElementById("modalUserId").value;
+      if(!file) return alert("Select File");
 
+      document.getElementById("pContainer").style.display="block";
       const task = uploadBytesResumable(ref(storage, "reports/"+file.name), file);
+      
       task.on('state_changed', 
-        (snap) => { pBar.style.width = ((snap.bytesTransferred/snap.totalBytes)*100)+"%"; },
+        (snap) => { document.getElementById("pBar").style.width = ((snap.bytesTransferred/snap.totalBytes)*100)+"%"; },
         (err) => alert(err.message),
         () => {
           getDownloadURL(task.snapshot.ref).then(async (url) => {
              await updateDoc(doc(db, "mission1lakh", id), { reportUrl: url });
-             alert("रिपोर्ट सेव्ह झाला! ✔"); closeModal(); loadPeople();
+             alert("Done ✔"); closeModal(); loadPeople();
           });
         }
       );
     };
     
     window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
-    window.deletePerson = async(id) => {if(confirm("Del?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
+    window.deletePerson = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
-    /* --- LOAD REPORT TAB (SIMPLE DOWNLOAD LIST) --- */
     window.loadReportTab = function() {
       const tbody = document.querySelector("#reportTable tbody");
       tbody.innerHTML = "";
       let list = window.allPeople.filter(p => p.status === "Yes");
-      
-      if(list.length === 0) { tbody.innerHTML="<tr><td colspan='3' align='center'>अजून रिपोर्ट नाहीत.</td></tr>"; return; }
+      let sr = 1;
+
+      if(list.length === 0) { tbody.innerHTML="<tr><td colspan='3' align='center'>No Reports</td></tr>"; return; }
 
       list.forEach(p => {
         let row = tbody.insertRow();
         let btn = p.reportUrl 
-          ? `<a href="${p.reportUrl}" target="_blank" class="dl-btn">📂 पाहा / डाउनलोड</a>` 
-          : `<span style="color:red">अपलोड बाकी</span>`;
+          ? `<a href="${p.reportUrl}" target="_blank" style="color:blue; text-decoration:none; font-weight:bold;">📄 Download</a>` 
+          : `<span style="color:red">Pending</span>`;
 
         row.innerHTML = `
-          <td><b>${p.name}</b><br><small>${p.mobile}</small></td>
-          <td>${p.regDate}</td>
+          <td class="col-sr">${sr++}</td>
+          <td><b>${p.name}</b></td>
           <td>${btn}</td>
         `;
       });
+    };
+    
+    // Search Function
+    window.searchTable = function() {
+      let val = document.getElementById("searchInput").value.toUpperCase();
+      let tr = document.getElementById("dataTable").getElementsByTagName("tr");
+      for(let i=1; i<tr.length; i++){
+        let td = tr[i].getElementsByTagName("td")[1]; // Name column
+        if(td) tr[i].style.display = td.innerText.toUpperCase().indexOf(val) > -1 ? "" : "none";
+      }
     };
 
     loadPeople();
