@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission 1 Lakh - Progress Bar</title>
+  <title>Mission 1 Lakh - Full AI Report</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -16,12 +16,12 @@
     .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* UPLOAD MODAL (POPUP) */
+    /* UPLOAD MODAL */
     #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
     .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     .close-btn { float: right; font-size: 24px; cursor: pointer; font-weight: bold; color: #555; }
 
-    /* PROGRESS BAR STYLE */
+    /* PROGRESS BAR */
     .progress-container { width: 100%; background-color: #f3f3f3; border-radius: 5px; margin-top: 15px; display: none; height: 20px; overflow: hidden; }
     .progress-bar { width: 0%; height: 100%; background-color: #28a745; text-align: center; line-height: 20px; color: white; font-size: 12px; transition: width 0.2s; }
 
@@ -39,7 +39,7 @@
     .active { display: block; animation: fadeIn 0.3s; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* FORMS & INPUTS */
+    /* FORMS */
     label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
     input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
     .action-btn { margin-top: 20px; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
@@ -54,9 +54,24 @@
     .btn-icon { text-decoration: none; font-size: 22px; margin-right: 15px; display: inline-block; transition: 0.2s; }
     .pick-btn { background: #0057b7; color: white; border: none; border-radius: 5px; width: 50px; cursor: pointer; font-size: 20px; margin-top: 5px; }
     
-    /* AI ANALYSIS BOX */
-    .ai-box { background: #e3f2fd; border-left: 5px solid #2196f3; padding: 15px; margin-top: 10px; border-radius: 5px; display: none; }
-    .ai-title { font-weight: bold; color: #0d47a1; margin-bottom: 5px; }
+    /* DETAILED AI BOX */
+    .ai-box { 
+      background: #fdfdfd; 
+      border: 1px solid #ddd;
+      border-left: 5px solid #0057b7; 
+      padding: 20px; 
+      margin-top: 15px; 
+      border-radius: 8px; 
+      display: none; 
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      text-align: left;
+    }
+    .ai-header { font-size: 18px; font-weight: bold; color: #0057b7; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+    .ai-section { margin-bottom: 15px; }
+    .ai-subtitle { font-weight: bold; color: #333; margin-bottom: 5px; display: block; }
+    .ai-text { color: #555; font-size: 14px; line-height: 1.6; }
+    .ai-list { margin: 5px 0 0 20px; padding: 0; }
+    .ai-list li { margin-bottom: 5px; }
 
   </style>
 </head>
@@ -70,20 +85,15 @@
       <span class="close-btn" onclick="closeModal()">&times;</span>
       <h3>📂 रिपोर्ट अपलोड करा</h3>
       <p id="modalUserName" style="color:#0057b7; font-weight:bold;"></p>
-      
       <input type="file" id="popupFile" style="border: 2px dashed #ccc; padding: 20px; width:100%; margin-top:10px;">
-      
-      <div id="popupProgressContainer" class="progress-container">
-        <div id="popupProgressBar" class="progress-bar">0%</div>
-      </div>
-
+      <div id="popupProgressContainer" class="progress-container"><div id="popupProgressBar" class="progress-bar">0%</div></div>
       <button class="action-btn" onclick="uploadFromModal()">⬆️ Upload Now</button>
       <input type="hidden" id="modalUserId">
     </div>
   </div>
 
   <div class="header">
-    <h2>🇮🇳 Mission 1 Lakh (Progress Bar)</h2>
+    <h2>🇮🇳 Mission 1 Lakh (Full Analysis)</h2>
   </div>
 
   <div class="tab-btns">
@@ -97,7 +107,6 @@
     <h3>📝 नवीन नागरिक नोंदणी</h3>
     <label>पूर्ण नाव</label>
     <input type="text" id="inpName" placeholder="नाव आपोआप येईल किंवा टाइप करा"/>
-
     <div style="display:flex; gap:10px;">
       <div style="flex:1"><label>वय</label><input type="number" id="inpAge" placeholder="30"/></div>
       <div style="flex:1.5">
@@ -108,7 +117,6 @@
           </div>
       </div>
     </div>
-    
     <div style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:15px; border:1px solid #ddd;">
       <h4 style="margin:0 0 10px 0; color:#0057b7;">⚖️ BMI कॅल्क्युलेटर</h4>
       <div style="display:flex; gap:10px;">
@@ -117,14 +125,12 @@
       </div>
       <div id="bmiDisplay" style="margin-top:10px; font-weight:bold;">BMI: 0.0</div>
     </div>
-
     <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
   </div>
 
   <div id="tab2" class="tab container">
     <h3>🗓️ स्टेटस, प्लॅनिंग आणि संपर्क</h3>
     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:10px; width:100%; margin-bottom:15px; border: 2px solid #0057b7;">
-    
     <div style="overflow-x:auto;">
       <table id="dataTable">
         <thead>
@@ -141,9 +147,8 @@
   </div>
 
   <div id="tab3" class="tab container">
-    <h3>🤖 AI रिपोर्ट ॲनालिसिस</h3>
-    <p>ज्यांचे चेकअप झाले आहे (Done), त्यांची यादी खालीलप्रमाणे आहे. <b>Analyze</b> वर क्लिक करा.</p>
-    
+    <h3>🤖 AI रिपोर्ट ॲनालिसिस (सविस्तर)</h3>
+    <p>येथे रुग्णाचा संपूर्ण <b>आहार, व्यायाम आणि आरोग्याचा रिपोर्ट</b> तयार होईल.</p>
     <div style="overflow-x:auto;">
       <table id="analysisTable">
         <thead>
@@ -201,34 +206,31 @@
       document.getElementById(id).classList.add('active');
       document.querySelectorAll('.tab-btns button').forEach(b=>b.classList.remove('active-btn'));
       if(btn) btn.classList.add('active-btn');
-      
       if(id === 'tab3') loadAnalysisTab();
     };
 
-    /* --- CONTACT PICKER --- */
+    /* --- CONTACT & BMI --- */
     window.pickContact = async function() {
-      const isSupported = ('contacts' in navigator && 'ContactsManager' in window);
-      if(!isSupported) { alert("हे फीचर फक्त मोबाईलवर चालते."); return; }
+      if(!('contacts' in navigator)) return alert("Mobile Only");
       try {
-        const contacts = await navigator.contacts.select(['name', 'tel'], { multiple: false });
-        if(contacts.length > 0) {
-          if(contacts[0].tel) document.getElementById("inpMobile").value = contacts[0].tel[0].replace(/\s/g, '');
-          if(contacts[0].name) document.getElementById("inpName").value = contacts[0].name[0];
+        const c = await navigator.contacts.select(['name', 'tel'], {multiple:false});
+        if(c.length){
+           if(c[0].tel) document.getElementById("inpMobile").value = c[0].tel[0].replace(/\s/g, '');
+           if(c[0].name) document.getElementById("inpName").value = c[0].name[0];
         }
-      } catch(ex) { alert(ex.message); }
+      } catch(e){alert(e.message);}
     };
 
-    /* --- BMI --- */
     window.calcBMI = function() {
       let w = parseFloat(document.getElementById("inpWeight").value);
       let h = parseFloat(document.getElementById("inpHeight").value);
-      let display = document.getElementById("bmiDisplay");
+      let d = document.getElementById("bmiDisplay");
       if(w>0 && h>0) {
         let bmi = (w/((h/100)*(h/100))).toFixed(1);
-        let stat = bmi<18.5?"Underweight":bmi<25?"Normal":"Overweight";
-        let col = bmi<18.5?"orange":bmi<25?"green":"red";
-        display.innerHTML = `BMI: ${bmi} <span style="color:${col}">(${stat})</span>`;
-        display.dataset.val=bmi; display.dataset.stat=stat;
+        let s = bmi<18.5?"Underweight":bmi<25?"Normal":"Overweight";
+        let c = bmi<18.5?"orange":bmi<25?"green":"red";
+        d.innerHTML = `BMI: ${bmi} <span style="color:${c}">(${s})</span>`;
+        d.dataset.val=bmi; d.dataset.stat=s;
       }
     };
 
@@ -236,16 +238,15 @@
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
+      const age = document.getElementById("inpAge").value;
       const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
       const bmiStat = document.getElementById("bmiDisplay").dataset.stat || "-";
       
       if(!name || !mobile) { alert("नाव आणि मोबाईल भरा!"); return; }
       showLoading();
-
       try {
         await addDoc(collection(db, "mission1lakh"), {
-          name, mobile,
-          age: document.getElementById("inpAge").value,
+          name, mobile, age,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
           bmi: bmiVal, bmiStatus: bmiStat,
@@ -258,7 +259,7 @@
       } catch(e) { alert(e.message); } finally { hideLoading(); }
     };
 
-    /* --- LOAD TABLE --- */
+    /* --- LOAD DATA --- */
     window.loadPeople = async function(){
       showLoading();
       const tbody = document.querySelector("#dataTable tbody");
@@ -269,19 +270,17 @@
         const snap = await getDocs(collection(db, "mission1lakh"));
         window.allPeople = [];
         snap.forEach(d => {
-          let p = d.data();
-          p.id = d.id;
+          let p = d.data(); p.id = d.id;
           window.allPeople.push(p);
           total++;
           if(p.status === "Yes") done++; else pending++;
 
-          let rowClass = p.status==="Yes" ? "row-done" : (p.status==="Planning"?"row-planning":"row-pending");
-          let planStyle = p.status==="Planning" ? "display:block" : "display:none";
-          let msg = p.status==="Planning" ? `तुमची तारीख ${p.planDate} ठरली आहे.` : `तुमचा रिपोर्ट तयार आहे.`;
-          let waLink = `https://wa.me/91${p.mobile}?text=${encodeURIComponent(msg)}`;
-
           let row = tbody.insertRow();
           row.style.background = p.status==="Yes"?"#e8f5e9":p.status==="Planning"?"#fff3cd":"white";
+          
+          let planStyle = p.status==="Planning" ? "display:block" : "display:none";
+          let msg = p.status==="Planning"?`तारीख ${p.planDate} ठरली आहे.`:`रिपोर्ट तयार आहे.`;
+          
           row.innerHTML = `
             <td><b>${p.name}</b><br><small>BMI: ${p.bmi}</small></td>
             <td>
@@ -292,7 +291,7 @@
               </select>
               <input type="date" id="date_${p.id}" value="${p.planDate||''}" style="${planStyle} width:100%; margin-top:5px;" onchange="updateDate('${p.id}',this.value)">
             </td>
-            <td><a href="tel:${p.mobile}" class="btn-icon">📞</a><a href="${waLink}" target="_blank" class="btn-icon">💚</a></td>
+            <td><a href="tel:${p.mobile}" class="btn-icon">📞</a><a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(msg)}" target="_blank" class="btn-icon">💚</a></td>
             <td><button onclick="deletePerson('${p.id}')" style="background:red; color:white; border:none; padding:5px;">X</button></td>
           `;
         });
@@ -302,96 +301,60 @@
       } catch(e){console.error(e);} finally { hideLoading(); }
     };
 
-    /* --- POPUP & STATUS LOGIC --- */
-    window.handleStatusChange = async function(id, name, selectElem) {
-      let val = selectElem.value;
-      await updateDoc(doc(db, "mission1lakh", id), { status: val });
-
-      if(val === "Planning") {
-        document.getElementById("date_"+id).style.display = "block";
-      } else if (val === "Yes") {
-        document.getElementById("date_"+id).style.display = "none";
-        document.getElementById("uploadModal").style.display = "flex";
-        document.getElementById("modalUserName").innerText = "रुग्ण: " + name;
-        document.getElementById("modalUserId").value = id;
-        
-        // Reset Progress Bar
-        document.getElementById("popupProgressContainer").style.display = "none";
-        document.getElementById("popupProgressBar").style.width = "0%";
-        document.getElementById("popupProgressBar").innerText = "0%";
-      } else {
-        document.getElementById("date_"+id).style.display = "none";
-      }
+    /* --- STATUS & UPLOAD --- */
+    window.handleStatusChange = async function(id, name, el) {
+      await updateDoc(doc(db, "mission1lakh", id), { status: el.value });
+      if(el.value==="Planning") document.getElementById("date_"+id).style.display="block";
+      else if(el.value==="Yes") {
+        document.getElementById("date_"+id).style.display="none";
+        document.getElementById("uploadModal").style.display="flex";
+        document.getElementById("modalUserName").innerText="रुग्ण: "+name;
+        document.getElementById("modalUserId").value=id;
+        document.getElementById("popupProgressContainer").style.display="none";
+      } else document.getElementById("date_"+id).style.display="none";
     };
-
-    window.closeModal = function() { document.getElementById("uploadModal").style.display = "none"; }
+    window.closeModal = () => document.getElementById("uploadModal").style.display="none";
     
-    /* --- UPLOAD WITH PROGRESS BAR --- */
     window.uploadFromModal = function() {
       let file = document.getElementById("popupFile").files[0];
       let id = document.getElementById("modalUserId").value;
+      if(!file) return alert("File Select Kara");
       
-      if(!file) return alert("File निवडा");
-
-      // Show Progress Bar
-      let pContainer = document.getElementById("popupProgressContainer");
       let pBar = document.getElementById("popupProgressBar");
-      pContainer.style.display = "block";
+      document.getElementById("popupProgressContainer").style.display="block";
 
-      const storageRef = ref(storage, "reports/" + file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          pBar.style.width = progress + "%";
-          pBar.innerText = Math.round(progress) + "%";
-          console.log('Upload is ' + progress + '% done');
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          alert("Error: " + error.message);
-        }, 
+      const task = uploadBytesResumable(ref(storage, "reports/"+file.name), file);
+      task.on('state_changed', 
+        (snap) => { pBar.style.width = ((snap.bytesTransferred/snap.totalBytes)*100)+"%"; },
+        (err) => alert(err.message),
         () => {
-          // Handle successful uploads on complete
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            console.log('File available at', downloadURL);
-            
-            // Save URL to Firestore
-            await updateDoc(doc(db, "mission1lakh", id), { reportUrl: downloadURL });
-            
-            alert("अपलोड पूर्ण झाले! ✔");
-            closeModal();
+          getDownloadURL(task.snapshot.ref).then(async (url) => {
+             await updateDoc(doc(db, "mission1lakh", id), { reportUrl: url });
+             alert("Upload Complete ✔"); closeModal();
           });
         }
       );
     };
+    
+    window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
+    window.deletePerson = async(id) => {if(confirm("Del?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
-    window.updateDate = async function(id, val) { await updateDoc(doc(db, "mission1lakh", id), { planDate: val }); }
-    window.deletePerson = async function(id) { if(confirm("Del?")) { await deleteDoc(doc(db, "mission1lakh", id)); loadPeople(); } }
-
-    /* --- TAB 3: AI ANALYSIS LOGIC --- */
+    /* --- DETAILED AI ANALYSIS LOGIC --- */
     window.loadAnalysisTab = function() {
       const tbody = document.querySelector("#analysisTable tbody");
       tbody.innerHTML = "";
-      let donePeople = window.allPeople.filter(p => p.status === "Yes");
-      
-      if(donePeople.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='3' style='text-align:center'>कोणाचेही चेकअप झाले नाही.</td></tr>";
-        return;
-      }
+      let list = window.allPeople.filter(p => p.status === "Yes");
+      if(list.length === 0) { tbody.innerHTML="<tr><td colspan='3' align='center'>No Data</td></tr>"; return; }
 
-      donePeople.forEach(p => {
-        let reportLink = p.reportUrl ? `<a href="${p.reportUrl}" target="_blank" style="color:blue;">📄 रिपोर्ट पाहा</a>` : "रिपोर्ट नाही";
-
+      list.forEach(p => {
         let row = tbody.insertRow();
+        let reportLink = p.reportUrl ? `<a href="${p.reportUrl}" target="_blank">📄 PDF</a>` : "No Report";
         row.innerHTML = `
-          <td><b>${p.name}</b><br>${reportLink}</td>
+          <td><b>${p.name}</b> (${p.age} वर्षे)<br>${reportLink}</td>
           <td><span style="color:${p.bmiStatus==='Normal'?'green':'red'}">${p.bmiStatus} (${p.bmi})</span></td>
           <td>
-            <button class="action-btn" style="margin:0; padding:8px; font-size:12px;" onclick="showAIAnalysis('${p.id}', '${p.name}', '${p.bmiStatus}', '${p.age}')">
-              🔍 Analyze
+            <button class="action-btn" style="margin:0; padding:8px; font-size:12px;" onclick="generateDetailedReport('${p.id}', '${p.name}', ${p.bmi}, '${p.bmiStatus}', ${p.age})">
+              🔍 सविस्तर रिपोर्ट (Analyze)
             </button>
             <div id="aiRes_${p.id}" class="ai-box"></div>
           </td>
@@ -399,23 +362,79 @@
       });
     };
 
-    window.showAIAnalysis = function(id, name, status, age) {
+    window.generateDetailedReport = function(id, name, bmi, status, age) {
       let box = document.getElementById("aiRes_"+id);
       box.style.display = "block";
       
-      let advice = "";
-      if(status === "Normal") {
-        advice = "✅ <b>उत्तम:</b> रिपोर्टनुसार सर्व ठीक आहे. आहार चालू ठेवा.";
-      } else if (status === "Overweight" || status === "Obese") {
-        advice = "⚠️ <b>धोका:</b> वजन जास्त आहे. साखर/तेल बंद करा. दररोज चाला.";
-      } else {
-        advice = "⚠️ <b>कुपोषण:</b> वजन कमी आहे. प्रोटीन आणि सकस आहार वाढवा.";
+      let diet = "", exercise = "", precaution = "", color="#333";
+      
+      // LOGIC FOR DETAILED REPORT
+      if(status === "Underweight") {
+        color = "#e65100"; // Orange
+        diet = `
+          <ul class="ai-list">
+            <li>🥜 <b>प्रथिने (Protein):</b> दूध, अंडी, सोयाबीन, डाळी, पनीर, सुका मेवा (बदाम, काजू) खा.</li>
+            <li>🍌 <b>फळे:</b> केळी, चिकू, आंबा यांसारखी वजन वाढवणारी फळे खा.</li>
+            <li>🍛 <b>जेवण:</b> दिवसातून ३ ऐवजी ५-६ वेळा थोडे थोडे खा. तूप आणि लोणी आहारात ठेवा.</li>
+          </ul>`;
+        exercise = `वजन उचलण्याचे व्यायाम (Strength Training) करा. जास्त कार्डिओ (धावणे) टाळा.`;
+        precaution = `अशक्तपणा जाणवल्यास डॉक्टरांकडून Multivitamin घ्या. वेळेवर झोप घ्या.`;
+      
+      } else if (status === "Normal") {
+        color = "#2e7d32"; // Green
+        diet = `
+          <ul class="ai-list">
+            <li>🥗 <b>समतोल आहार:</b> हिरव्या पालेभाज्या, फळे आणि कडधान्ये नियमित ठेवा.</li>
+            <li>💧 <b>पाणी:</b> दिवसाला किमान ३-४ लिटर पाणी प्या.</li>
+            <li>🚫 <b>टाळा:</b> जास्त तेलकट आणि बाहेरील जंक फूड खाणे टाळा.</li>
+          </ul>`;
+        exercise = `दररोज ३० मिनिटे चालणे, धावणे किंवा योगासने करा.`;
+        precaution = `सध्याचे वजन टिकवून ठेवण्याचा प्रयत्न करा. वर्षातून एकदा रूटीन चेकअप करा.`;
+      
+      } else { // Overweight or Obese
+        color = "#c62828"; // Red
+        diet = `
+          <ul class="ai-list">
+            <li>🚫 <b>वर्ज्य (Stop):</b> साखर, गोड पदार्थ, तेलकट, मैदा (बिस्किटे/ब्रेड) पूर्ण बंद करा.</li>
+            <li>🥗 <b>काय खावे:</b> जेवणात ५०% ताट सॅलड (काकडी, टोमॅटो) असावे. ज्वारी/बाजरीची भाकरी खा.</li>
+            <li>☕ <b>पेय:</b> कोमट पाणी, ग्रीन टी, लिंबू पाणी घ्या. दूध आणि चहा कमी करा.</li>
+          </ul>`;
+        exercise = `सकाळी वेगाने ४५ मिनिटे चालणे (Brisk Walk). सूर्य नमस्कार आणि सायकलिंग करा.`;
+        precaution = `हृदयविकार आणि मधुमेहाचा धोका असू शकतो. दर ३ महिन्यांनी BP आणि Sugar तपासा.`;
       }
 
+      // Age based specific advice
+      if(age > 50) {
+        precaution += `<br>🔴 <b>विशेष टीप:</b> वयानुसार हाडे ठिसूळ होऊ शकतात, कॅल्शियम युक्त आहार घ्या. गुडघेदुखी असल्यास चालताना काळजी घ्या.`;
+      }
+
+      box.style.borderLeftColor = color;
       box.innerHTML = `
-        <div class="ai-title">🤖 AI रिपोर्ट:</div>
-        <p><b>रुग्ण:</b> ${name} (वय: ${age})</p>
-        <p>${advice}</p>
+        <div class="ai-header" style="color:${color}">🤖 आरोग्य विश्लेषण रिपोर्ट</div>
+        
+        <div class="ai-section">
+          <span class="ai-subtitle">🏥 आरोग्य स्थिती:</span>
+          <span class="ai-text">रुग्ण <b>${status}</b> श्रेणीमध्ये आहे (BMI: ${bmi}).</span>
+        </div>
+
+        <div class="ai-section">
+          <span class="ai-subtitle">🥗 आहार योजना (Diet Plan):</span>
+          <div class="ai-text">${diet}</div>
+        </div>
+
+        <div class="ai-section">
+          <span class="ai-subtitle">🏃 व्यायाम सल्ला (Exercise):</span>
+          <span class="ai-text">${exercise}</span>
+        </div>
+
+        <div class="ai-section">
+          <span class="ai-subtitle">⚠️ वैद्यकीय सल्ला & काळजी:</span>
+          <span class="ai-text">${precaution}</span>
+        </div>
+        
+        <div style="font-size:11px; color:#999; margin-top:10px; border-top:1px dashed #ccc; padding-top:5px;">
+          *सूचना: हा रिपोर्ट BMI आणि वयावर आधारित AI सल्ला आहे. कृपया अंतिम उपचारांसाठी डॉक्टरांना भेटा.
+        </div>
       `;
     };
 
