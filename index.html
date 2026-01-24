@@ -3,184 +3,135 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission 1 Lakh - Swasthya Kranti</title>
+  <title>Mission 1 Lakh - Health Mission</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    /* ---------------- BASIC STYLES ---------------- */
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f6f9; overflow-x: hidden; }
+    /* BASIC STYLES */
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f4f8; }
     
     /* LOGIN & LOADER */
-    #loginOverlay, #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; }
-    #loginOverlay { background: #0057b7; color: white; }
-    #loaderOverlay { background: rgba(255,255,255,0.9); display: none; color: #0057b7; font-weight: bold; }
-    #loginBox { background: white; padding: 30px; border-radius: 10px; text-align: center; color: #333; width: 300px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 10px; }
+    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; flex-direction: column; }
+    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* HEADER */
-    .header { background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc); padding: 15px; text-align: center; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    .header h1 { margin: 0; font-size: 22px; }
-    .header p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
-
+    .header { background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc); padding: 15px; text-align: center; color: white; }
+    
     /* TABS */
-    .tab-btns { display: flex; justify-content: center; gap: 8px; background: #fff; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-    .tab-btns button { padding: 8px 15px; border: none; background: #e0e0e0; color: #333; border-radius: 20px; cursor: pointer; transition: 0.3s; font-weight: 600; }
-    .tab-btns button.active-btn { background: #0057b7; color: white; box-shadow: 0 2px 5px rgba(0,87,183,0.3); }
+    .tab-btns { display: flex; justify-content: center; gap: 5px; background: #fff; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .tab-btns button { padding: 10px 15px; border: none; background: #e0e0e0; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 14px; }
+    .tab-btns button.active-btn { background: #0057b7; color: white; }
 
     /* CONTAINER */
-    .container { width: 95%; max-width: 900px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); min-height: 500px; }
+    .container { width: 95%; max-width: 900px; margin: 15px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-height: 500px; }
     .tab { display: none; }
-    .active { display: block; animation: slideUp 0.4s; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .active { display: block; }
 
     /* FORMS */
-    label { display: block; margin-top: 12px; font-weight: 600; color: #444; font-size: 14px; }
-    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
-    input:focus { border-color: #0057b7; outline: none; }
-    
-    .action-btn { margin-top: 25px; background: #28a745; color: white; padding: 14px; border: none; border-radius: 8px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(40,167,69,0.2); transition: 0.2s; }
-    .action-btn:active { transform: scale(0.98); }
+    label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
+    input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+    .action-btn { margin-top: 20px; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
 
-    /* BMI SECTION */
-    .bmi-box { background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 5px solid #ccc; }
-    .bmi-result { font-weight: bold; margin-top: 5px; font-size: 16px; }
-
-    /* DASHBOARD & CHARTS */
-    .chart-container { position: relative; height: 300px; width: 100%; margin: 20px 0; }
-    .goal-container { background: #e9ecef; border-radius: 20px; margin: 20px 0; overflow: hidden; height: 30px; position: relative; }
-    .goal-bar { height: 100%; background: linear-gradient(90deg, #28a745, #00ff6c); width: 0%; transition: width 1s; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; color: white; font-weight: bold; font-size: 12px; }
+    /* TABLE IN TAB 2 */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { background: #0057b7; color: white; padding: 10px; text-align: left; }
+    td { border-bottom: 1px solid #ddd; padding: 10px; vertical-align: middle; }
     
-    /* STAT CARDS */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px; }
-    .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; border-bottom: 4px solid #0057b7; }
-    .stat-num { font-size: 28px; font-weight: 800; color: #333; display: block; }
-    .stat-label { font-size: 13px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+    /* Blood Check Dropdown Style */
+    .status-select { padding: 8px; font-weight: bold; border-radius: 4px; }
+    .status-pending { border: 2px solid red; color: red; background: #fff0f0; }
+    .status-done { border: 2px solid green; color: green; background: #f0fff0; }
 
-    /* TABLE */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-    th { background: #f1f3f5; color: #555; text-transform: uppercase; font-size: 12px; }
-    th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
-    
-    /* PRINT */
-    @media print {
-      body * { visibility: hidden; }
-      #printArea, #printArea * { visibility: visible; }
-      #printArea { position: absolute; left: 0; top: 0; width: 100%; }
-      .token-card { border: 2px solid #000; padding: 20px; width: 300px; margin: auto; text-align: center; }
-    }
+    /* Row Colors */
+    tr.row-done { background-color: #e8f5e9; } /* Greenish for Done */
+    tr.row-pending { background-color: #fff; }
+
   </style>
 </head>
 
 <body>
 
-  <div id="loginOverlay">
-    <div id="loginBox">
-      <h2>🛡️ Mission Login</h2>
-      <input type="password" id="loginPass" placeholder="Password (1234)" style="text-align:center; margin-bottom:15px;">
-      <button onclick="checkLogin()" style="background:#0052d4; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer;">प्रवेश करा</button>
-    </div>
-  </div>
-
-  <div id="loaderOverlay"><div class="spinner"></div><p>कृपया थांबा...</p></div>
-
-  <div id="printArea" style="display:none;">
-    <div class="token-card">
-      <h3>🏥 मिशन स्वास्थ्य क्रांती</h3>
-      <hr>
-      <p><strong>नाव:</strong> <span id="pName"></span></p>
-      <p>BMI: <span id="pBMI"></span> | BP: <span id="pBP"></span></p>
-      <h1 id="pToken">Token: 0000</h1>
-      <hr>
-      <p><small>निरोगी भारत, आनंदी भारत!</small></p>
-    </div>
-  </div>
+  <div id="loaderOverlay"><div class="spinner"></div><p>Please Wait...</p></div>
 
   <div class="header">
-    <h1>🇮🇳 Mission 1 Lakh - Health Dashboard</h1>
-    <p>Target: 1,00,000 Healthy Citizens</p>
+    <h2>🇮🇳 Mission 1 Lakh - Health Campaign</h2>
   </div>
 
   <div class="tab-btns">
-    <button onclick="openTab('tab1', this)" class="active-btn">1. तपासणी (Checkup)</button>
-    <button onclick="openTab('tab2', this)">2. यादी (List)</button>
-    <button onclick="openTab('tab4', this)">3. प्रगती (Progress)</button>
+    <button onclick="openTab('tab1', this)" class="active-btn">1. नोंदणी (Registration)</button>
+    <button onclick="openTab('tab2', this)">2. ब्लड चेक (Status)</button>
+    <button onclick="openTab('tab3', this)">3. रिपोर्ट अपलोड</button>
+    <button onclick="openTab('tab4', this)">4. डॅशबोर्ड</button>
   </div>
 
   <div id="tab1" class="tab active container">
-    <h2>🩺 नवीन रुग्ण तपासणी</h2>
+    <h3>📝 नवीन रुग्णाची नोंदणी</h3>
     
-    <label>रुग्णाचे नाव</label>
-    <input type="text" id="inpName" placeholder="उदा. रमेश जाधव"/>
+    <label>रुग्णाचे पूर्ण नाव</label>
+    <input type="text" id="inpName" placeholder="नाव टाका"/>
 
-    <div style="display:flex; gap:15px;">
+    <div style="display:flex; gap:10px;">
       <div style="flex:1"><label>वय</label><input type="number" id="inpAge" placeholder="30"/></div>
       <div style="flex:1"><label>मोबाईल</label><input type="tel" id="inpMobile" placeholder="98XXXXXXXX"/></div>
     </div>
-
-    <div class="bmi-box">
-      <h3 style="margin-top:0; color:#0057b7;">⚖️ BMI कॅल्क्युलेटर</h3>
-      <div style="display:flex; gap:15px;">
-        <div style="flex:1">
-          <label>वजन (Weight in KG)</label>
-          <input type="number" id="inpWeight" placeholder="Kg" oninput="calculateBMI()">
-        </div>
-        <div style="flex:1">
-          <label>उंची (Height in CM)</label>
-          <input type="number" id="inpHeight" placeholder="Cm" oninput="calculateBMI()">
-        </div>
-      </div>
-      <div class="bmi-result" id="bmiOutput" style="color:#555;">BMI: 0.0 (Status)</div>
-      <input type="hidden" id="bmiValue">
-      <input type="hidden" id="bmiStatus">
+    
+    <div style="display:flex; gap:10px;">
+        <div style="flex:1"><label>वजन (Weight KG)</label><input type="number" id="inpWeight"/></div>
+        <div style="flex:1"><label>उंची (Height CM)</label><input type="number" id="inpHeight"/></div>
     </div>
 
-    <div style="display:flex; gap:15px; margin-top:10px;">
-      <div style="flex:1"><label>BP (Blood Pressure)</label><input type="text" id="inpBP" placeholder="120/80"/></div>
-      <div style="flex:1"><label>Sugar (Random)</label><input type="number" id="inpSugar" placeholder="140"/></div>
-    </div>
-
-    <button class="action-btn" onclick="savePerson()">✅ सेव्ह करा आणि पावती द्या</button>
+    <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा (Save Data)</button>
   </div>
 
   <div id="tab2" class="tab container">
-    <h2>📋 रुग्ण यादी & संपर्क</h2>
-    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:12px; width:100%; border-radius:25px; border:2px solid #ddd; margin-bottom:20px;">
+    <h3>🩸 ब्लड सॅम्पल स्टेटस (Blood Check)</h3>
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:10px; width:100%; margin-bottom:15px; border: 2px solid #0057b7;">
     
     <div style="overflow-x:auto;">
       <table id="dataTable">
-        <thead><tr><th>नाव</th><th>BMI / Status</th><th>कृती</th></tr></thead>
+        <thead>
+          <tr>
+            <th>रुग्णाचे नाव</th>
+            <th>मोबाईल</th>
+            <th>ब्लड चेक केले का? (Action)</th>
+            <th>कृती</th>
+          </tr>
+        </thead>
         <tbody></tbody>
       </table>
     </div>
-    <button onclick="exportToExcel()" style="margin-top:20px; background:#1D6F42; color:white; padding:10px; border:none; border-radius:5px; width:100%; cursor:pointer;">📊 Download Excel Report</button>
+  </div>
+
+  <div id="tab3" class="tab container">
+    <h3>📂 रिपोर्ट अपलोड करा</h3>
+    <p>ज्यांचे ब्लड चेक झाले आहे, त्यांचे रिपोर्ट इथे अपलोड करा.</p>
+    <input type="file" id="reportFile" style="border: 2px dashed #0057b7; padding: 20px;"/>
+    <button class="action-btn" style="background:#17a2b8;" onclick="uploadReport()">Upload Report</button>
   </div>
 
   <div id="tab4" class="tab container">
-    <h2>🎯 मिशन डॅशबोर्ड</h2>
-    
-    <label>1 Lakh टार्गेट प्रगती:</label>
-    <div class="goal-container">
-      <div class="goal-bar" id="progressBar">0%</div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-card"><span class="stat-num" id="dTotal">0</span><span class="stat-label">एकूण लोक</span></div>
-      <div class="stat-card" style="border-bottom-color:#28a745"><span class="stat-num" id="dHealthy">0</span><span class="stat-label">निरोगी (Healthy)</span></div>
-      <div class="stat-card" style="border-bottom-color:#dc3545"><span class="stat-num" id="dRisk">0</span><span class="stat-label">रिस्क (Risk)</span></div>
-    </div>
-
-    <div class="chart-container">
-      <canvas id="healthChart"></canvas>
+    <h3>📊 प्रगती (Progress)</h3>
+    <div style="display:flex; justify-content:space-around; text-align:center; margin-bottom:20px;">
+      <div style="background:#eee; padding:15px; border-radius:10px; width:30%;">
+        <h1><span id="dTotal">0</span></h1><p>एकूण नोंदणी</p>
+      </div>
+      <div style="background:#d4edda; padding:15px; border-radius:10px; width:30%;">
+        <h1 style="color:green;"><span id="dDone">0</span></h1><p>ब्लड चेक झाले</p>
+      </div>
+      <div style="background:#f8d7da; padding:15px; border-radius:10px; width:30%;">
+        <h1 style="color:red;"><span id="dPending">0</span></h1><p>बाकी (Pending)</p>
+      </div>
     </div>
     <button class="action-btn" style="background:#666;" onclick="loadPeople()">Refresh Data 🔄</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
@@ -193,14 +144,11 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    
-    let allData = [];
-    let myChart = null; // For Chart.js instance
+    const storage = getStorage(app);
 
-    window.checkLogin = function() {
-      if(document.getElementById("loginPass").value === "1234") document.getElementById("loginOverlay").style.display = "none";
-      else alert("चुकीचा पासवर्ड");
-    };
+    const loader = document.getElementById("loaderOverlay");
+    function showLoading() { loader.style.display = "flex"; }
+    function hideLoading() { loader.style.display = "none"; }
 
     window.openTab = function(id, btn){
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -209,176 +157,116 @@
       if(btn) btn.classList.add('active-btn');
     };
 
-    /* --- 1. BMI CALCULATOR LOGIC --- */
-    window.calculateBMI = function() {
-      const w = parseFloat(document.getElementById("inpWeight").value);
-      const h_cm = parseFloat(document.getElementById("inpHeight").value);
-      const out = document.getElementById("bmiOutput");
-      
-      if(w > 0 && h_cm > 0) {
-        const h_m = h_cm / 100;
-        const bmi = (w / (h_m * h_m)).toFixed(1);
-        
-        let status = "Normal";
-        let color = "green";
-
-        if(bmi < 18.5) { status = "Underweight"; color = "orange"; }
-        else if(bmi >= 25 && bmi < 29.9) { status = "Overweight"; color = "orange"; }
-        else if(bmi >= 30) { status = "Obese (Risk)"; color = "red"; }
-
-        out.innerHTML = `BMI: ${bmi} <span style="color:${color}">(${status})</span>`;
-        document.getElementById("bmiValue").value = bmi;
-        document.getElementById("bmiStatus").value = status;
-        
-        // High Risk Alert Logic
-        out.style.border = (status.includes("Risk")) ? "2px solid red" : "none";
-      }
-    };
-
-    /* --- 2. SAVE & PRINT --- */
+    /* --- 1. SAVE REGISTRATION (TAB 1) --- */
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
       
-      if(!name || !mobile) { alert("नाव आणि मोबाईल नंबर आवश्यक आहे."); return; }
-      
-      document.getElementById("loaderOverlay").style.display = "flex";
+      if(!name || !mobile) { alert("नाव आणि मोबाईल अनिवार्य आहे!"); return; }
+      showLoading();
 
       try {
-        const person = {
+        await addDoc(collection(db, "mission1lakh"), {
           name, mobile,
           age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
-          bmi: document.getElementById("bmiValue").value || "0",
-          bmiStatus: document.getElementById("bmiStatus").value || "Unknown",
-          bp: document.getElementById("inpBP").value || "-",
-          sugar: document.getElementById("inpSugar").value || "-",
-          date: new Date().toLocaleDateString('en-IN')
-        };
+          bloodCheck: "No", // DEFAULT STATUS IS NO
+          regDate: new Date().toLocaleDateString('en-IN')
+        });
 
-        await addDoc(collection(db, "mission1lakh"), person);
-        
-        // Print Logic
-        document.getElementById("pName").innerText = name;
-        document.getElementById("pBMI").innerText = person.bmi + " ("+person.bmiStatus+")";
-        document.getElementById("pBP").innerText = person.bp;
-        document.getElementById("pToken").innerText = "Token: " + Math.floor(Math.random()*9000+1000);
-        window.print();
-
-        alert("सेव्ह झाले! ✔");
-        // Clear inputs
+        alert("नोंदणी झाली! आता Tab 2 मध्ये ब्लड स्टेटस अपडेट करा. ✔");
         document.querySelectorAll("input").forEach(i => i.value = "");
-        document.getElementById("bmiOutput").innerHTML = "BMI: 0.0";
-        
-        loadPeople(); // Update Chart
+        loadPeople();
       } catch(e) { alert(e.message); }
-      finally { document.getElementById("loaderOverlay").style.display = "none"; }
+      finally { hideLoading(); }
     };
 
-    /* --- 3. LOAD DATA & CHART --- */
+    /* --- 2. LOAD DATA (TAB 2 Logic) --- */
     window.loadPeople = async function(){
-      document.getElementById("loaderOverlay").style.display = "flex";
-      const tableBody = document.querySelector("#dataTable tbody");
-      tableBody.innerHTML = "";
-      allData = [];
-
-      let total = 0, healthy = 0, risk = 0;
+      showLoading();
+      const tbody = document.querySelector("#dataTable tbody");
+      tbody.innerHTML = "";
+      
+      let total=0, done=0, pending=0;
 
       try {
         const snap = await getDocs(collection(db, "mission1lakh"));
         snap.forEach(d => {
-          const p = d.data();
-          allData.push(p);
+          let p = d.data();
+          let id = d.id;
           total++;
-
-          // Stats Logic
-          if(p.bmiStatus === "Normal") healthy++;
-          else risk++;
-
-          // Table Row
-          let waLink = `https://wa.me/91${p.mobile}?text=नमस्ते ${p.name}, तुमचा हेल्थ रिपोर्ट तयार आहे.`;
-          let colorStyle = p.bmiStatus.includes("Risk") ? "background:#ffe6e6;" : ""; // Red background for Risk
-
-          let row = tableBody.insertRow();
-          if(p.bmiStatus.includes("Risk")) row.style.backgroundColor = "#fff0f0";
           
+          if(p.bloodCheck === "Yes") done++; else pending++;
+
+          let isDone = (p.bloodCheck === "Yes");
+          let rowClass = isDone ? "row-done" : "row-pending";
+          
+          let row = tbody.insertRow();
+          row.className = rowClass;
           row.innerHTML = `
-            <td><b>${p.name}</b><br><small>${p.date}</small></td>
+            <td><b>${p.name}</b><br><small>${p.regDate}</small></td>
+            <td>${p.mobile}</td>
             <td>
-              <span style="font-weight:bold; color:${p.bmiStatus==='Normal'?'green':'red'}">${p.bmi} (${p.bmiStatus})</span>
-              <br><small>BP: ${p.bp}</small>
+              <select onchange="updateBloodStatus('${id}', this.value)" 
+                      class="status-select ${isDone ? 'status-done' : 'status-pending'}">
+                <option value="No" ${!isDone ? "selected" : ""}>❌ नाही (Pending)</option>
+                <option value="Yes" ${isDone ? "selected" : ""}>✅ झाले (Done)</option>
+              </select>
             </td>
             <td>
-              <a href="${waLink}" target="_blank" style="text-decoration:none; font-size:20px;">💚</a>
-              <a href="tel:${p.mobile}" style="text-decoration:none; font-size:20px; margin-left:10px;">📞</a>
-              <button onclick="deletePerson('${d.id}')" style="background:red; color:white; border:none; border-radius:3px; margin-left:10px;">X</button>
+              <button onclick="deletePerson('${id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Delete</button>
             </td>
           `;
         });
 
-        // UPDATE DASHBOARD NUMBERS
+        // Dashboard Update
         document.getElementById("dTotal").innerText = total;
-        document.getElementById("dHealthy").innerText = healthy;
-        document.getElementById("dRisk").innerText = risk;
-
-        // UPDATE GOAL PROGRESS BAR (Target 1 Lakh)
-        let percent = (total / 100000) * 100;
-        let bar = document.getElementById("progressBar");
-        bar.style.width = percent + "%";
-        bar.innerText = total + " / 1 Lakh";
-
-        // UPDATE CHART.JS
-        renderChart(healthy, risk, (total - healthy - risk));
+        document.getElementById("dDone").innerText = done;
+        document.getElementById("dPending").innerText = pending;
 
       } catch(e) { console.error(e); }
-      finally { document.getElementById("loaderOverlay").style.display = "none"; }
+      finally { hideLoading(); }
     };
 
-    function renderChart(healthy, risk, others) {
-      const ctx = document.getElementById('healthChart').getContext('2d');
-      
-      if(myChart) myChart.destroy(); // Clear old chart
-
-      myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['निरोगी (Healthy)', 'जोखीम (Risk)', 'इतर'],
-          datasets: [{
-            data: [healthy, risk, others],
-            backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { position: 'bottom' } }
-        }
-      });
-    }
+    /* --- 3. UPDATE BLOOD STATUS --- */
+    window.updateBloodStatus = async function(id, val){
+      showLoading();
+      try {
+        await updateDoc(doc(db, "mission1lakh", id), { bloodCheck: val });
+        // alert("Status अपडेट झाले!"); // हे काढून टाकले जेणेकरून फास्ट काम होईल
+        loadPeople(); // Refresh list to show colors
+      } catch(e) { alert("Error: " + e.message); hideLoading(); }
+    };
 
     /* --- HELPERS --- */
-    window.deletePerson = async (id) => {
-      if(confirm("डिलीट करायचे?")) { await deleteDoc(doc(db, "mission1lakh", id)); loadPeople(); }
-    };
-
-    window.searchTable = () => {
-      let val = document.getElementById("searchInput").value.toUpperCase();
-      let tr = document.getElementById("dataTable").getElementsByTagName("tr");
-      for(let i=1; i<tr.length; i++){
-        tr[i].style.display = tr[i].innerText.toUpperCase().includes(val) ? "" : "none";
+    window.deletePerson = async function(id){
+      if(confirm("ही एंट्री डिलीट करायची का?")) {
+        showLoading();
+        await deleteDoc(doc(db, "mission1lakh", id));
+        loadPeople();
       }
     };
 
-    window.exportToExcel = () => {
-      const ws = XLSX.utils.json_to_sheet(allData);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "MissionData");
-      XLSX.writeFile(wb, "Mission_1_Lakh_Report.xlsx");
+    window.searchTable = function() {
+      let input = document.getElementById("searchInput").value.toUpperCase();
+      let tr = document.getElementById("dataTable").getElementsByTagName("tr");
+      for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName("td")[0];
+        if (td) tr[i].style.display = td.innerText.toUpperCase().indexOf(input) > -1 ? "" : "none";
+      }
     };
 
-    // Load on start
+    window.uploadReport = async function(){
+      let file = document.getElementById("reportFile").files[0];
+      if(!file) return alert("File निवडा");
+      showLoading();
+      try {
+        await uploadBytes(ref(storage, "reports/" + file.name), file);
+        alert("Report Uploaded ✔");
+      } catch(e){ alert(e.message); } finally { hideLoading(); }
+    };
+
     loadPeople();
   </script>
 </body>
