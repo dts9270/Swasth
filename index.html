@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission 1 Lakh - AI & Popup</title>
+  <title>Mission 1 Lakh - Progress Bar</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
@@ -20,6 +20,10 @@
     #uploadModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; }
     .modal-content { background: white; padding: 25px; border-radius: 10px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
     .close-btn { float: right; font-size: 24px; cursor: pointer; font-weight: bold; color: #555; }
+
+    /* PROGRESS BAR STYLE */
+    .progress-container { width: 100%; background-color: #f3f3f3; border-radius: 5px; margin-top: 15px; display: none; height: 20px; overflow: hidden; }
+    .progress-bar { width: 0%; height: 100%; background-color: #28a745; text-align: center; line-height: 20px; color: white; font-size: 12px; transition: width 0.2s; }
 
     /* HEADER */
     .header { background: linear-gradient(90deg, #0052d4, #4364f7, #6fb1fc); padding: 15px; text-align: center; color: white; }
@@ -66,26 +70,31 @@
       <span class="close-btn" onclick="closeModal()">&times;</span>
       <h3>📂 रिपोर्ट अपलोड करा</h3>
       <p id="modalUserName" style="color:#0057b7; font-weight:bold;"></p>
+      
       <input type="file" id="popupFile" style="border: 2px dashed #ccc; padding: 20px; width:100%; margin-top:10px;">
+      
+      <div id="popupProgressContainer" class="progress-container">
+        <div id="popupProgressBar" class="progress-bar">0%</div>
+      </div>
+
       <button class="action-btn" onclick="uploadFromModal()">⬆️ Upload Now</button>
       <input type="hidden" id="modalUserId">
     </div>
   </div>
 
   <div class="header">
-    <h2>🇮🇳 Mission 1 Lakh (AI Analysis)</h2>
+    <h2>🇮🇳 Mission 1 Lakh (Progress Bar)</h2>
   </div>
 
   <div class="tab-btns">
     <button onclick="openTab('tab1', this)" class="active-btn">1. नोंदणी & BMI</button>
     <button onclick="openTab('tab2', this)">2. प्लॅनिंग & चेक</button>
-    <button onclick="openTab('tab3', this)">3. AI रिपोर्ट (Analysis)</button>
+    <button onclick="openTab('tab3', this)">3. AI रिपोर्ट</button>
     <button onclick="openTab('tab4', this)">4. डॅशबोर्ड</button>
   </div>
 
   <div id="tab1" class="tab active container">
     <h3>📝 नवीन नागरिक नोंदणी</h3>
-    
     <label>पूर्ण नाव</label>
     <input type="text" id="inpName" placeholder="नाव आपोआप येईल किंवा टाइप करा"/>
 
@@ -168,7 +177,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
@@ -193,7 +202,7 @@
       document.querySelectorAll('.tab-btns button').forEach(b=>b.classList.remove('active-btn'));
       if(btn) btn.classList.add('active-btn');
       
-      if(id === 'tab3') loadAnalysisTab(); // Load AI Tab data
+      if(id === 'tab3') loadAnalysisTab();
     };
 
     /* --- CONTACT PICKER --- */
@@ -240,7 +249,7 @@
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
           bmi: bmiVal, bmiStatus: bmiStat,
-          status: "No", planDate: "",
+          status: "No", planDate: "", reportUrl: "",
           regDate: new Date().toLocaleDateString('en-IN')
         });
         alert("सेव्ह झाले! ✔");
@@ -258,7 +267,7 @@
 
       try {
         const snap = await getDocs(collection(db, "mission1lakh"));
-        window.allPeople = []; // Store for AI tab
+        window.allPeople = [];
         snap.forEach(d => {
           let p = d.data();
           p.id = d.id;
@@ -296,18 +305,20 @@
     /* --- POPUP & STATUS LOGIC --- */
     window.handleStatusChange = async function(id, name, selectElem) {
       let val = selectElem.value;
-      
-      // Update DB first
       await updateDoc(doc(db, "mission1lakh", id), { status: val });
 
       if(val === "Planning") {
         document.getElementById("date_"+id).style.display = "block";
       } else if (val === "Yes") {
-        // OPEN POPUP
         document.getElementById("date_"+id).style.display = "none";
         document.getElementById("uploadModal").style.display = "flex";
         document.getElementById("modalUserName").innerText = "रुग्ण: " + name;
         document.getElementById("modalUserId").value = id;
+        
+        // Reset Progress Bar
+        document.getElementById("popupProgressContainer").style.display = "none";
+        document.getElementById("popupProgressBar").style.width = "0%";
+        document.getElementById("popupProgressBar").innerText = "0%";
       } else {
         document.getElementById("date_"+id).style.display = "none";
       }
@@ -315,17 +326,46 @@
 
     window.closeModal = function() { document.getElementById("uploadModal").style.display = "none"; }
     
-    window.uploadFromModal = async function() {
+    /* --- UPLOAD WITH PROGRESS BAR --- */
+    window.uploadFromModal = function() {
       let file = document.getElementById("popupFile").files[0];
       let id = document.getElementById("modalUserId").value;
-      if(!file) return alert("File निवडा");
       
-      showLoading();
-      try {
-        await uploadBytes(ref(storage, "reports/" + file.name), file);
-        alert("रिपोर्ट अपलोड झाला! ✔");
-        closeModal();
-      } catch(e){ alert(e.message); } finally { hideLoading(); }
+      if(!file) return alert("File निवडा");
+
+      // Show Progress Bar
+      let pContainer = document.getElementById("popupProgressContainer");
+      let pBar = document.getElementById("popupProgressBar");
+      pContainer.style.display = "block";
+
+      const storageRef = ref(storage, "reports/" + file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on('state_changed', 
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          pBar.style.width = progress + "%";
+          pBar.innerText = Math.round(progress) + "%";
+          console.log('Upload is ' + progress + '% done');
+        }, 
+        (error) => {
+          // Handle unsuccessful uploads
+          alert("Error: " + error.message);
+        }, 
+        () => {
+          // Handle successful uploads on complete
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            console.log('File available at', downloadURL);
+            
+            // Save URL to Firestore
+            await updateDoc(doc(db, "mission1lakh", id), { reportUrl: downloadURL });
+            
+            alert("अपलोड पूर्ण झाले! ✔");
+            closeModal();
+          });
+        }
+      );
     };
 
     window.updateDate = async function(id, val) { await updateDoc(doc(db, "mission1lakh", id), { planDate: val }); }
@@ -335,23 +375,23 @@
     window.loadAnalysisTab = function() {
       const tbody = document.querySelector("#analysisTable tbody");
       tbody.innerHTML = "";
-      
-      // Filter only Checked People
       let donePeople = window.allPeople.filter(p => p.status === "Yes");
       
       if(donePeople.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='3' style='text-align:center'>अजून कोणाचेही चेकअप झाले नाही.</td></tr>";
+        tbody.innerHTML = "<tr><td colspan='3' style='text-align:center'>कोणाचेही चेकअप झाले नाही.</td></tr>";
         return;
       }
 
       donePeople.forEach(p => {
+        let reportLink = p.reportUrl ? `<a href="${p.reportUrl}" target="_blank" style="color:blue;">📄 रिपोर्ट पाहा</a>` : "रिपोर्ट नाही";
+
         let row = tbody.insertRow();
         row.innerHTML = `
-          <td><b>${p.name}</b><br><small>Age: ${p.age}</small></td>
+          <td><b>${p.name}</b><br>${reportLink}</td>
           <td><span style="color:${p.bmiStatus==='Normal'?'green':'red'}">${p.bmiStatus} (${p.bmi})</span></td>
           <td>
-            <button class="action-btn" style="margin:0; padding:8px; font-size:12px;" onclick="showAIAnalysis('${p.id}', '${p.name}', '${p.bmi}', '${p.bmiStatus}', '${p.age}')">
-              🔍 Analyze Report
+            <button class="action-btn" style="margin:0; padding:8px; font-size:12px;" onclick="showAIAnalysis('${p.id}', '${p.name}', '${p.bmiStatus}', '${p.age}')">
+              🔍 Analyze
             </button>
             <div id="aiRes_${p.id}" class="ai-box"></div>
           </td>
@@ -359,25 +399,23 @@
       });
     };
 
-    window.showAIAnalysis = function(id, name, bmi, status, age) {
+    window.showAIAnalysis = function(id, name, status, age) {
       let box = document.getElementById("aiRes_"+id);
       box.style.display = "block";
       
-      // SIMULATED AI LOGIC
       let advice = "";
       if(status === "Normal") {
-        advice = "✅ <b>उत्तम आरोग्य:</b> रिपोर्टनुसार सर्व काही ठीक आहे. आहार चालू ठेवा आणि दररोज व्यायाम करा.";
+        advice = "✅ <b>उत्तम:</b> रिपोर्टनुसार सर्व ठीक आहे. आहार चालू ठेवा.";
       } else if (status === "Overweight" || status === "Obese") {
-        advice = "⚠️ <b>धोका:</b> वजन जास्त आहे. साखर आणि तेलकट पदार्थ ताबडतोब बंद करा. दररोज 45 मिनिटे चालणे गरजेचे आहे.";
+        advice = "⚠️ <b>धोका:</b> वजन जास्त आहे. साखर/तेल बंद करा. दररोज चाला.";
       } else {
-        advice = "⚠️ <b>कुपोषण:</b> वजन खूप कमी आहे. प्रोटीन आणि सकस आहार (अंडी, दूध, कडधान्ये) वाढवा.";
+        advice = "⚠️ <b>कुपोषण:</b> वजन कमी आहे. प्रोटीन आणि सकस आहार वाढवा.";
       }
 
       box.innerHTML = `
-        <div class="ai-title">🤖 AI रिपोर्ट सारांश:</div>
+        <div class="ai-title">🤖 AI रिपोर्ट:</div>
         <p><b>रुग्ण:</b> ${name} (वय: ${age})</p>
         <p>${advice}</p>
-        <small><i>(हा सल्ला BMI आणि प्राथमिक माहितीवर आधारित आहे.)</i></small>
       `;
     };
 
