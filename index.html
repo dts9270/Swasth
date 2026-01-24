@@ -3,98 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mission 1 Lakh - Marathi Report</title>
+  <title>Mission 1 Lakh - Final App</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
-    /* --- GLOBAL & SCROLL SETTINGS --- */
+    /* --- GLOBAL STYLES --- */
     * { box-sizing: border-box; }
-    body { 
-      font-family: 'Segoe UI', sans-serif; 
-      margin: 0; padding: 0; 
-      background: #f4f7f6; 
-      overflow-x: hidden; 
-      width: 100vw;
-    }
-
-    /* LOADER */
-    #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.95); z-index: 2000; display: none; justify-content: center; align-items: center; flex-direction: column; }
-    .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 50px; height: 50px; animation: spin 0.8s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; }
 
     /* HEADER */
     .header { 
-      background: linear-gradient(135deg, #0057b7, #003366); 
+      background: linear-gradient(135deg, #0061f2, #6900c7); 
       padding: 20px; text-align: center; color: white; 
-      border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    .header h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px; }
 
     /* TABS */
-    .tab-btns { display: flex; justify-content: center; gap: 8px; padding: 0 15px; margin-top: -20px; }
+    .tab-btns { display: flex; justify-content: center; gap: 8px; padding: 15px; margin-top: -25px; }
     .tab-btns button { 
-      padding: 12px 10px; border: none; background: white; border-radius: 12px; 
-      cursor: pointer; font-weight: bold; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-      transition: 0.3s; color: #555; flex: 1; 
+      padding: 10px; border: none; background: white; border-radius: 12px; 
+      font-weight: bold; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+      flex: 1; color: #555;
     }
-    .tab-btns button.active-btn { 
-      background: #ff9933; color: white; transform: translateY(-3px); 
-      box-shadow: 0 6px 12px rgba(255, 153, 51, 0.4);
-    }
+    .tab-btns button.active-btn { background: #ff9933; color: white; transform: translateY(-3px); }
 
     /* CONTAINER */
     .container { 
-      width: 95%; max-width: 900px; margin: 20px auto; background: white; 
-      padding: 20px; border-radius: 15px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); min-height: 500px;
+      width: 95%; max-width: 800px; margin: 10px auto; background: white; 
+      padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     .tab { display: none; }
     .active { display: block; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* DASHBOARD */
-    .dash-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
-    .dash-card { padding: 20px; border-radius: 15px; color: white; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.15); }
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    .dash-card { padding: 15px; border-radius: 12px; color: white; text-align: center; }
     .card-total { background: linear-gradient(135deg, #667eea, #764ba2); }
-    .card-done { background: linear-gradient(135deg, #42e695, #3bb2b8); }
-    .card-plan { background: linear-gradient(135deg, #f6d365, #fda085); color: #444; }
-    .card-pending { background: linear-gradient(135deg, #ff9a9e, #fecfef); color: #444; }
-    .dash-num { font-size: 36px; font-weight: 800; display: block; }
+    .card-done { background: #28a745; }
+    .card-plan { background: #ffc107; color: #333; }
+    .card-pending { background: #dc3545; }
+    .dash-num { font-size: 28px; font-weight: bold; display: block; }
 
     /* FORMS */
-    label { display: block; margin-top: 15px; font-weight: 600; color: #444; font-size: 14px; }
-    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; font-size: 15px; }
-    .action-btn { margin-top: 25px; background: #0061f2; color: white; padding: 15px; border: none; border-radius: 50px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
+    label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
+    input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; }
+    .action-btn { margin-top: 20px; background: #0061f2; color: white; padding: 12px; border: none; border-radius: 50px; width: 100%; font-size: 16px; font-weight: bold; }
 
     /* TABLE */
-    .table-responsive { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 100%; }
-    th { background: #f8f9fa; color: #444; padding: 12px 8px; font-size: 12px; text-align: left; border-bottom: 2px solid #eee; white-space: nowrap; }
-    td { border-bottom: 1px solid #eee; padding: 12px 8px; vertical-align: middle; font-size: 14px; }
-    .col-sr { width: 40px; text-align: center; color: #888; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    th { background: #f8f9fa; padding: 10px; text-align: left; border-bottom: 2px solid #ddd; }
+    td { padding: 10px; border-bottom: 1px solid #eee; }
+    .badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+    .badge-done { background: #d4edda; color: green; }
+    .badge-plan { background: #fff3cd; color: #856404; }
+    .badge-pending { background: #f8d7da; color: red; }
 
-    /* EXPORT BUTTONS */
-    .export-btns { display: flex; gap: 10px; margin-bottom: 15px; }
-    .btn-export { flex: 1; padding: 12px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; color: white; font-size: 14px; }
-    .btn-excel { background: #1D6F42; }
-    .btn-pdf { background: #D32F2F; }
-
-    /* UTILS */
-    .pick-btn { background: #0061f2; color: white; border: none; border-radius: 8px; width: 50px; cursor: pointer; font-size: 20px; }
-    .status-select { padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 100%; font-size: 13px; font-weight: 600; }
-    
-    /* STATUS BADGES FOR REPORT */
-    .badge-done { background: #d4edda; color: #155724; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; display:inline-block; }
-    .badge-pending { background: #f8d7da; color: #721c24; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; display:inline-block; }
-    .badge-plan { background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 12px; display:inline-block; }
+    /* PRINT STYLE (Magic Fix for Mobile) */
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea { position: absolute; left: 0; top: 0; width: 100%; }
+      table { width: 100%; border: 1px solid #000; }
+      th, td { border: 1px solid #000; padding: 5px; }
+    }
+    #printArea { display: none; }
 
   </style>
 </head>
 
 <body>
 
-  <div id="loaderOverlay"><div class="spinner"></div><p style="margin-top:10px; font-weight:bold; color:#0061f2;">Loading...</p></div>
+  <div id="printArea"></div>
 
   <div class="header">
     <h2>🇮🇳 Mission 1 Lakh</h2>
@@ -108,18 +89,18 @@
     <button onclick="openTab('tab3', this)">📋 रिपोर्ट</button>
   </div>
 
-  <div id="tab4" class="tab active container" style="background:transparent; box-shadow:none; padding:0;">
+  <div id="tab4" class="tab active container">
     <div class="dash-grid">
-      <div class="dash-card card-total"><span class="dash-num" id="dTotal">0</span><small>एकूण नोंदणी</small></div>
-      <div class="dash-card card-done"><span class="dash-num" id="dDone">0</span><small>तपासणी झाली</small></div>
-      <div class="dash-card card-plan"><span class="dash-num" id="dPlanning">0</span><small>प्लॅनिंग (करणार)</small></div>
-      <div class="dash-card card-pending"><span class="dash-num" id="dPending">0</span><small>बाकी (Pending)</small></div>
+      <div class="dash-card card-total"><span class="dash-num" id="dTotal">0</span><small>एकूण</small></div>
+      <div class="dash-card card-done"><span class="dash-num" id="dDone">0</span><small>झाले</small></div>
+      <div class="dash-card card-plan"><span class="dash-num" id="dPlanning">0</span><small>प्लॅनिंग</small></div>
+      <div class="dash-card card-pending"><span class="dash-num" id="dPending">0</span><small>बाकी</small></div>
     </div>
-    <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; margin-top:0;">🔄 Refresh Data</button>
+    <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; border:1px solid #ccc;">🔄 Refresh</button>
   </div>
 
   <div id="tab1" class="tab container">
-    <h3>📝 नवीन नागरिक नोंदणी</h3>
+    <h3>📝 नवीन नोंदणी</h3>
     <label>पूर्ण नाव</label>
     <input type="text" id="inpName" placeholder="नाव टाका..."/>
     
@@ -139,17 +120,17 @@
         <label>मोबाईल</label>
         <div style="display:flex; gap:5px;">
             <input type="tel" id="inpMobile" placeholder="Number"/>
-            <button onclick="pickContact()" class="pick-btn">📒</button>
+            <button onclick="pickContact()" style="background:#0061f2; color:white; border:none; border-radius:5px; width:50px;">📒</button>
         </div>
     </div>
 
     <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-top:20px; border:1px solid #eee;">
-      <h4 style="margin:0 0 10px 0; color:#0061f2; font-size:14px;">⚖️ BMI माहिती (वजन/उंची)</h4>
-      <div style="display:flex; gap:10px;">
+      <h4 style="margin:0; color:#0061f2;">⚖️ BMI (वजन/उंची)</h4>
+      <div style="display:flex; gap:10px; margin-top:5px;">
         <div style="flex:1"><input type="number" id="inpWeight" placeholder="वजन (KG)" oninput="calcBMI()"/></div>
         <div style="flex:1"><input type="number" id="inpHeight" placeholder="उंची (CM)" oninput="calcBMI()"/></div>
       </div>
-      <div id="bmiDisplay" style="margin-top:10px; font-weight:bold; font-size:14px; color:#444;">BMI: 0.0</div>
+      <div id="bmiDisplay" style="margin-top:5px; font-weight:bold;">BMI: 0.0</div>
     </div>
     
     <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
@@ -157,15 +138,15 @@
 
   <div id="tab2" class="tab container">
     <h3>🗓️ स्टेटस आणि प्लॅनिंग</h3>
-    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:12px; width:100%; border-radius:25px; border:1px solid #ddd; margin-bottom:15px; outline:none;">
+    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="width:100%; padding:10px; border-radius:20px; border:1px solid #ccc; margin-bottom:10px;">
     
-    <div class="table-responsive">
+    <div style="overflow-x:auto;">
       <table id="dataTable">
         <thead>
           <tr>
-            <th class="col-sr">क्र.</th>
+            <th>क्र.</th>
             <th>नाव / मोबाईल</th>
-            <th style="width:40%;">स्टेटस (कृती)</th>
+            <th>स्टेटस (Action)</th>
             <th>Del</th>
           </tr>
         </thead>
@@ -175,22 +156,20 @@
   </div>
 
   <div id="tab3" class="tab container">
-    <h3>📋 नोंदणी अहवाल (Marathi Report)</h3>
-    <p>येथे सर्व नागरिकांची माहिती आणि स्टेटस दिसेल.</p>
-    
-    <div class="export-btns">
-      <button onclick="exportToExcel()" class="btn-export btn-excel">📊 Excel डाउनलोड</button>
-      <button onclick="exportToPDF()" class="btn-export btn-pdf">📄 PDF डाउनलोड (मराठी)</button>
+    <h3>📋 नोंदणी अहवाल</h3>
+    <div style="display:flex; gap:10px; margin-bottom:15px;">
+      <button onclick="exportToExcel()" style="flex:1; padding:10px; background:#1D6F42; color:white; border:none; border-radius:5px;">📊 Excel</button>
+      <button onclick="printPDF()" style="flex:1; padding:10px; background:#D32F2F; color:white; border:none; border-radius:5px;">📄 PDF (Print)</button>
     </div>
 
-    <div class="table-responsive">
+    <div style="overflow-x:auto;">
       <table id="reportTable">
         <thead>
           <tr>
-            <th class="col-sr">क्र.</th>
+            <th>क्र.</th>
             <th>नाव</th>
             <th>मोबाईल</th>
-            <th>ब्लड चेक स्टेटस</th>
+            <th>स्टेटस</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -202,6 +181,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+    // FIREBASE CONFIG
     const firebaseConfig = {
       apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
       authDomain: "swasth-80320.firebaseapp.com",
@@ -214,10 +194,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const loader = document.getElementById("loaderOverlay");
-    function showLoading() { loader.style.display = "flex"; }
-    function hideLoading() { loader.style.display = "none"; }
-
+    // TAB SWITCHER
     window.openTab = function(id, btn){
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
       document.getElementById(id).classList.add('active');
@@ -226,6 +203,7 @@
       if(id === 'tab3') loadReportTab();
     };
 
+    // CONTACT PICKER
     window.pickContact = async function() {
       if('contacts' in navigator) {
         try {
@@ -238,46 +216,44 @@
       } else alert("Mobile Only Feature");
     };
 
+    // BMI
     window.calcBMI = function() {
       let w = parseFloat(document.getElementById("inpWeight").value);
       let h = parseFloat(document.getElementById("inpHeight").value);
-      let d = document.getElementById("bmiDisplay");
       if(w>0 && h>0) {
         let bmi = (w/((h/100)*(h/100))).toFixed(1);
-        let s = bmi<18.5?"Underweight":bmi<25?"Normal":"Overweight";
-        let c = bmi<18.5?"orange":bmi<25?"green":"red";
-        d.innerHTML = `BMI: ${bmi} <span style="color:${c}">(${s})</span>`;
-        d.dataset.val=bmi; d.dataset.stat=s;
+        document.getElementById("bmiDisplay").innerText = "BMI: " + bmi;
+        document.getElementById("bmiDisplay").dataset.val = bmi;
       }
     };
 
+    // SAVE
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
-      const gender = document.getElementById("inpGender").value;
-      const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
-      const bmiStat = document.getElementById("bmiDisplay").dataset.stat || "-";
       
       if(!name || !mobile) { alert("नाव आणि मोबाईल भरा!"); return; }
-      showLoading();
+      
       try {
         await addDoc(collection(db, "mission1lakh"), {
-          name, mobile, gender,
+          name, mobile, 
+          gender: document.getElementById("inpGender").value,
           age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
-          bmi: bmiVal, bmiStatus: bmiStat,
+          bmi: document.getElementById("bmiDisplay").dataset.val || "0",
           status: "No", planDate: "",
           regDate: new Date().toLocaleDateString('en-IN')
         });
         alert("सेव्ह झाले! ✔");
-        document.querySelectorAll("input").forEach(i => i.value = "");
+        document.getElementById("inpName").value = "";
+        document.getElementById("inpMobile").value = "";
         loadPeople();
-      } catch(e) { alert(e.message); } finally { hideLoading(); }
+      } catch(e) { alert(e.message); }
     };
 
+    // LOAD DATA
     window.loadPeople = async function(){
-      showLoading();
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = "";
       let total=0, done=0, planning=0, pending=0;
@@ -289,139 +265,92 @@
         snap.forEach(d => {
           let p = d.data(); p.id = d.id;
           window.allPeople.push(p);
-          total++;
+          
           if(p.status === "Yes") done++; 
           else if(p.status === "Planning") planning++; 
           else pending++;
+          total++;
 
           let row = tbody.insertRow();
-          if(p.status === "Yes") row.style.background = "#e8f5e9";
-          else if(p.status === "Planning") row.style.background = "#fff3cd";
-          
+          if(p.status==="Yes") row.style.background="#e8f5e9";
+          if(p.status==="Planning") row.style.background="#fff3cd";
+
           let planStyle = p.status==="Planning" ? "display:block" : "display:none";
-          let waMsg = p.status==="Planning"?`तुमची तारीख ${p.planDate} ठरली आहे.`:`तुमचा रिपोर्ट तयार आहे.`;
-          
+          let msg = p.status==="Planning"?`तुमची तारीख ${p.planDate} ठरली आहे.`:`रिपोर्ट तयार आहे.`;
+
           row.innerHTML = `
-            <td class="col-sr">${srNo++}</td>
+            <td>${srNo++}</td>
             <td>
               <b>${p.name}</b> <small>(${p.gender})</small><br>
-              <small style="color:#666;">${p.mobile}</small>
-              <div style="margin-top:5px;">
-                 <a href="tel:${p.mobile}" style="font-size:18px; text-decoration:none; margin-right:10px;">📞</a>
-                 <a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(waMsg)}" target="_blank" style="font-size:18px; text-decoration:none;">💚</a>
-              </div>
+              <a href="tel:${p.mobile}" style="text-decoration:none;">📞 ${p.mobile}</a>
+              <a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(msg)}" target="_blank" style="margin-left:5px; text-decoration:none;">💚</a>
             </td>
             <td>
-              <select onchange="handleStatusChange('${p.id}', this)" class="status-select">
-                <option value="No" ${p.status==="No"?"selected":""}>❌ चेक नाही</option>
+              <select onchange="updateStatus('${p.id}', this)" style="padding:5px; border-radius:5px; width:100%;">
+                <option value="No" ${p.status==="No"?"selected":""}>❌ नाही</option>
                 <option value="Planning" ${p.status==="Planning"?"selected":""}>🗓️ प्लॅनिंग</option>
                 <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले</option>
               </select>
-              <input type="date" id="date_${p.id}" value="${p.planDate||''}" style="${planStyle} width:100%; margin-top:5px; font-size:12px;" onchange="updateDate('${p.id}',this.value)">
-              <div style="font-size:11px; margin-top:2px; color:#555; ${planStyle}">Date: ${p.planDate}</div>
+              <input type="date" id="date_${p.id}" value="${p.planDate||''}" style="${planStyle} width:100%; margin-top:5px;" onchange="updateDate('${p.id}',this.value)">
             </td>
-            <td><button onclick="deletePerson('${p.id}')" style="background:none; border:none; color:red; font-size:18px;">🗑️</button></td>
+            <td><button onclick="delP('${p.id}')" style="color:red; border:none; background:none;">🗑️</button></td>
           `;
         });
         document.getElementById("dTotal").innerText = total;
         document.getElementById("dDone").innerText = done;
         document.getElementById("dPlanning").innerText = planning;
         document.getElementById("dPending").innerText = pending;
-      } catch(e){console.error(e);} finally { hideLoading(); }
+      } catch(e){console.error(e);}
     };
 
-    window.handleStatusChange = async function(id, el) {
+    window.updateStatus = async function(id, el) {
       await updateDoc(doc(db, "mission1lakh", id), { status: el.value });
       if(el.value==="Planning") document.getElementById("date_"+id).style.display="block";
       else document.getElementById("date_"+id).style.display="none";
     };
-    
     window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
-    window.deletePerson = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
+    window.delP = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
 
-    // TAB 3: DATA REPORT (WITH MARATHI & STATUS)
+    // REPORT TAB
     window.loadReportTab = function() {
       const tbody = document.querySelector("#reportTable tbody");
       tbody.innerHTML = "";
       let sr = 1;
-
-      if(window.allPeople.length === 0) { tbody.innerHTML="<tr><td colspan='4' align='center'>माहिती उपलब्ध नाही</td></tr>"; return; }
-
       window.allPeople.forEach(p => {
-        let row = tbody.insertRow();
+        let badge = p.status==="Yes" ? '<span class="badge badge-done">✅ झाले</span>' : 
+                    p.status==="Planning" ? '<span class="badge badge-plan">🗓️ प्लॅन</span>' : 
+                    '<span class="badge badge-pending">❌ नाही</span>';
         
-        // Status Badge Logic
-        let statusBadge = "";
-        if(p.status === "Yes") statusBadge = `<span class="badge-done">✅ झाले</span>`;
-        else if(p.status === "Planning") statusBadge = `<span class="badge-plan">🗓️ प्लॅनिंग</span>`;
-        else statusBadge = `<span class="badge-pending">❌ नाही</span>`;
-
-        row.innerHTML = `
-          <td class="col-sr">${sr++}</td>
-          <td>
-            <b>${p.name}</b> <br>
-            <small style="color:#666;">${p.age} वर्षे / ${p.gender}</small>
-          </td>
-          <td style="font-weight:bold; color:#333;">${p.mobile}</td>
-          <td>${statusBadge}</td>
-        `;
+        tbody.innerHTML += `<tr><td>${sr++}</td><td>${p.name}<br><small>${p.age}/${p.gender}</small></td><td>${p.mobile}</td><td>${badge}</td></tr>`;
       });
     };
-    
+
+    // EXCEL
     window.exportToExcel = function() {
-      if(window.allPeople.length === 0) return alert("No Data");
-      let data = window.allPeople.map(p => ({
-        Name: p.name, Mobile: p.mobile, CheckStatus: p.status, 
-        Gender: p.gender, Age: p.age, BMI: p.bmi
-      }));
+      let data = window.allPeople.map(p => ({Name:p.name, Mobile:p.mobile, Status:p.status, Age:p.age, Gender:p.gender}));
       const ws = XLSX.utils.json_to_sheet(data);
       const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "MissionData");
-      XLSX.writeFile(wb, "Mission_1Lakh_Data.xlsx");
+      XLSX.utils.book_append_sheet(wb, ws, "Data");
+      XLSX.writeFile(wb, "Mission_Data.xlsx");
     };
 
-    // PDF EXPORT (UPDATED FOR MARATHI PRINTING)
-    window.exportToPDF = function() {
-      if(window.allPeople.length === 0) return alert("No Data");
+    // PDF PRINT FIX (BEST FOR MARATHI)
+    window.printPDF = function() {
+      let content = `
+        <h2 style="text-align:center; color:#0057b7;">🇮🇳 मिशन 1 लाख - अहवाल</h2>
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; text-align:left;">
+          <tr style="background:#eee;"><th>क्र.</th><th>नाव</th><th>मोबाईल</th><th>स्टेटस</th></tr>
+          ${window.allPeople.map((p,i) => `
+            <tr>
+              <td>${i+1}</td>
+              <td>${p.name} <small>(${p.age}/${p.gender})</small></td>
+              <td>${p.mobile}</td>
+              <td>${p.status==='Yes'?'✅ झाले':(p.status==='Planning'?'🗓️ प्लॅनिंग':'❌ नाही')}</td>
+            </tr>`).join('')}
+        </table>`;
       
-      let printWindow = window.open('', '', 'height=600,width=800');
-      
-      let rows = window.allPeople.map((p, i) => `
-        <tr>
-          <td>${i+1}</td>
-          <td>${p.name}</td>
-          <td>${p.mobile}</td>
-          <td>${p.age}</td>
-          <td>${p.gender}</td>
-          <td>${p.status==='Yes'?'✅ झाले':(p.status==='Planning'?'🗓️ प्लॅनिंग':'❌ नाही')}</td>
-        </tr>
-      `).join('');
-
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Mission 1 Lakh Report</title>
-            <style>
-              body { font-family: 'Segoe UI', sans-serif; text-align: center; padding: 20px; }
-              table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-              th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-              th { background-color: #f2f2f2; }
-              h2 { color: #0057b7; }
-            </style>
-          </head>
-          <body>
-            <h2>🇮🇳 Mission 1 Lakh - नोंदणी अहवाल</h2>
-            <table>
-              <thead>
-                <tr><th>क्र.</th><th>नाव</th><th>मोबाईल</th><th>वय</th><th>लिंग</th><th>स्टेटस</th></tr>
-              </thead>
-              <tbody>${rows}</tbody>
-            </table>
-            <script>window.onload = function(){ window.print(); window.close(); }<\/script>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
+      document.getElementById("printArea").innerHTML = content;
+      window.print();
     };
 
     window.searchTable = function() {
