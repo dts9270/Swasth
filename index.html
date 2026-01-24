@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mission 1 Lakh - Health Mission</title>
+  <title>Mission 1 Lakh - Health Planner</title>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* BASIC STYLES */
     body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f4f8; }
     
-    /* LOGIN & LOADER */
+    /* LOADER */
     #loaderOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; flex-direction: column; }
     .spinner { border: 5px solid #f3f3f3; border-top: 5px solid #0057b7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -22,32 +21,32 @@
     
     /* TABS */
     .tab-btns { display: flex; justify-content: center; gap: 5px; background: #fff; padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .tab-btns button { padding: 10px 15px; border: none; background: #e0e0e0; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 14px; }
+    .tab-btns button { padding: 10px 10px; border: none; background: #e0e0e0; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; flex: 1; }
     .tab-btns button.active-btn { background: #0057b7; color: white; }
 
     /* CONTAINER */
     .container { width: 95%; max-width: 900px; margin: 15px auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); min-height: 500px; }
     .tab { display: none; }
-    .active { display: block; }
+    .active { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* FORMS */
     label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
     input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
     .action-btn { margin-top: 20px; background: #28a745; color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; font-weight: bold; }
 
-    /* TABLE IN TAB 2 */
+    /* TABLE */
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th { background: #0057b7; color: white; padding: 10px; text-align: left; }
     td { border-bottom: 1px solid #ddd; padding: 10px; vertical-align: middle; }
     
-    /* Blood Check Dropdown Style */
-    .status-select { padding: 8px; font-weight: bold; border-radius: 4px; }
-    .status-pending { border: 2px solid red; color: red; background: #fff0f0; }
-    .status-done { border: 2px solid green; color: green; background: #f0fff0; }
-
-    /* Row Colors */
-    tr.row-done { background-color: #e8f5e9; } /* Greenish for Done */
-    tr.row-pending { background-color: #fff; }
+    /* STATUS COLORS (Dropdown) */
+    .status-select { padding: 8px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 100%; }
+    
+    /* ROW COLORS */
+    tr.row-done { background-color: #e8f5e9; }      /* Greenish */
+    tr.row-planning { background-color: #fff3cd; }  /* Yellowish */
+    tr.row-pending { background-color: #fff; }      /* White */
 
   </style>
 </head>
@@ -57,20 +56,20 @@
   <div id="loaderOverlay"><div class="spinner"></div><p>Please Wait...</p></div>
 
   <div class="header">
-    <h2>🇮🇳 Mission 1 Lakh - Health Campaign</h2>
+    <h2>🇮🇳 Mission 1 Lakh (नागरिक आरोग्य)</h2>
   </div>
 
   <div class="tab-btns">
     <button onclick="openTab('tab1', this)" class="active-btn">1. नोंदणी (Registration)</button>
-    <button onclick="openTab('tab2', this)">2. ब्लड चेक (Status)</button>
-    <button onclick="openTab('tab3', this)">3. रिपोर्ट अपलोड</button>
+    <button onclick="openTab('tab2', this)">2. प्लॅनिंग (Status)</button>
+    <button onclick="openTab('tab3', this)">3. रिपोर्ट (Upload)</button>
     <button onclick="openTab('tab4', this)">4. डॅशबोर्ड</button>
   </div>
 
   <div id="tab1" class="tab active container">
-    <h3>📝 नवीन रुग्णाची नोंदणी</h3>
+    <h3>📝 नवीन नागरिकाची नोंदणी</h3>
     
-    <label>रुग्णाचे पूर्ण नाव</label>
+    <label>नागरिकाचे पूर्ण नाव</label>
     <input type="text" id="inpName" placeholder="नाव टाका"/>
 
     <div style="display:flex; gap:10px;">
@@ -83,21 +82,21 @@
         <div style="flex:1"><label>उंची (Height CM)</label><input type="number" id="inpHeight"/></div>
     </div>
 
-    <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा (Save Data)</button>
+    <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
   </div>
 
   <div id="tab2" class="tab container">
-    <h3>🩸 ब्लड सॅम्पल स्टेटस (Blood Check)</h3>
+    <h3>🗓️ ब्लड चेक प्लॅनिंग & स्टेटस</h3>
     <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="padding:10px; width:100%; margin-bottom:15px; border: 2px solid #0057b7;">
     
     <div style="overflow-x:auto;">
       <table id="dataTable">
         <thead>
           <tr>
-            <th>रुग्णाचे नाव</th>
+            <th>नाव / तारीख</th>
             <th>मोबाईल</th>
-            <th>ब्लड चेक केले का? (Action)</th>
-            <th>कृती</th>
+            <th>सद्यस्थिती (Planning Status)</th>
+            <th>Delete</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -106,25 +105,34 @@
   </div>
 
   <div id="tab3" class="tab container">
-    <h3>📂 रिपोर्ट अपलोड करा</h3>
-    <p>ज्यांचे ब्लड चेक झाले आहे, त्यांचे रिपोर्ट इथे अपलोड करा.</p>
-    <input type="file" id="reportFile" style="border: 2px dashed #0057b7; padding: 20px;"/>
+    <h3>📂 रिपोर्ट अपलोड</h3>
+    <input type="file" id="reportFile" style="border: 2px dashed #0057b7; padding: 20px; width:100%;"/>
     <button class="action-btn" style="background:#17a2b8;" onclick="uploadReport()">Upload Report</button>
   </div>
 
   <div id="tab4" class="tab container">
-    <h3>📊 प्रगती (Progress)</h3>
-    <div style="display:flex; justify-content:space-around; text-align:center; margin-bottom:20px;">
-      <div style="background:#eee; padding:15px; border-radius:10px; width:30%;">
-        <h1><span id="dTotal">0</span></h1><p>एकूण नोंदणी</p>
+    <h3>📊 प्रगती अहवाल</h3>
+    
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; text-align:center; margin-bottom:20px;">
+      
+      <div style="background:#eee; padding:15px; border-radius:10px; grid-column: span 2;">
+        <h1 id="dTotal" style="margin:0;">0</h1><small>एकूण नोंदणी</small>
       </div>
-      <div style="background:#d4edda; padding:15px; border-radius:10px; width:30%;">
-        <h1 style="color:green;"><span id="dDone">0</span></h1><p>ब्लड चेक झाले</p>
+
+      <div style="background:#d4edda; padding:15px; border-radius:10px;">
+        <h1 id="dDone" style="color:green; margin:0;">0</h1><small>✅ चेक झाले</small>
       </div>
-      <div style="background:#f8d7da; padding:15px; border-radius:10px; width:30%;">
-        <h1 style="color:red;"><span id="dPending">0</span></h1><p>बाकी (Pending)</p>
+
+      <div style="background:#fff3cd; padding:15px; border-radius:10px;">
+        <h1 id="dPlanning" style="color:#856404; margin:0;">0</h1><small>🗓️ प्लॅनिंग (करणार)</small>
       </div>
+
+      <div style="background:#f8d7da; padding:15px; border-radius:10px; grid-column: span 2;">
+        <h1 id="dPending" style="color:red; margin:0;">0</h1><small>❌ काहीच झाले नाही</small>
+      </div>
+
     </div>
+
     <button class="action-btn" style="background:#666;" onclick="loadPeople()">Refresh Data 🔄</button>
   </div>
 
@@ -157,12 +165,12 @@
       if(btn) btn.classList.add('active-btn');
     };
 
-    /* --- 1. SAVE REGISTRATION (TAB 1) --- */
+    /* --- 1. SAVE (TAB 1) --- */
     window.savePerson = async function(){
       const name = document.getElementById("inpName").value;
       const mobile = document.getElementById("inpMobile").value;
       
-      if(!name || !mobile) { alert("नाव आणि मोबाईल अनिवार्य आहे!"); return; }
+      if(!name || !mobile) { alert("नाव आणि मोबाईल नंबर भरा!"); return; }
       showLoading();
 
       try {
@@ -171,24 +179,24 @@
           age: document.getElementById("inpAge").value,
           weight: document.getElementById("inpWeight").value,
           height: document.getElementById("inpHeight").value,
-          bloodCheck: "No", // DEFAULT STATUS IS NO
+          status: "No", // Default Status: No (Not Checked)
           regDate: new Date().toLocaleDateString('en-IN')
         });
 
-        alert("नोंदणी झाली! आता Tab 2 मध्ये ब्लड स्टेटस अपडेट करा. ✔");
+        alert("नागरिकाची माहिती सेव्ह झाली! ✔");
         document.querySelectorAll("input").forEach(i => i.value = "");
         loadPeople();
       } catch(e) { alert(e.message); }
       finally { hideLoading(); }
     };
 
-    /* --- 2. LOAD DATA (TAB 2 Logic) --- */
+    /* --- 2. LOAD & STATUS (TAB 2) --- */
     window.loadPeople = async function(){
       showLoading();
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = "";
       
-      let total=0, done=0, pending=0;
+      let total=0, done=0, planning=0, pending=0;
 
       try {
         const snap = await getDocs(collection(db, "mission1lakh"));
@@ -197,51 +205,54 @@
           let id = d.id;
           total++;
           
-          if(p.bloodCheck === "Yes") done++; else pending++;
+          // Count Logic
+          if(p.status === "Yes") done++;
+          else if(p.status === "Planning") planning++;
+          else pending++; // Status is 'No'
 
-          let isDone = (p.bloodCheck === "Yes");
-          let rowClass = isDone ? "row-done" : "row-pending";
-          
+          // Row Color Logic
+          let rowClass = "row-pending";
+          if(p.status === "Yes") rowClass = "row-done";
+          if(p.status === "Planning") rowClass = "row-planning";
+
           let row = tbody.insertRow();
           row.className = rowClass;
+          
           row.innerHTML = `
             <td><b>${p.name}</b><br><small>${p.regDate}</small></td>
             <td>${p.mobile}</td>
             <td>
-              <select onchange="updateBloodStatus('${id}', this.value)" 
-                      class="status-select ${isDone ? 'status-done' : 'status-pending'}">
-                <option value="No" ${!isDone ? "selected" : ""}>❌ नाही (Pending)</option>
-                <option value="Yes" ${isDone ? "selected" : ""}>✅ झाले (Done)</option>
+              <select onchange="updateStatus('${id}', this.value)" class="status-select" 
+                style="background:${p.status==='Yes'?'#d4edda':(p.status==='Planning'?'#fff3cd':'#fff')};">
+                
+                <option value="No" ${p.status === "No" ? "selected" : ""}>❌ चेक केले नाही</option>
+                <option value="Planning" ${p.status === "Planning" ? "selected" : ""}>🗓️ करणार (Planning)</option>
+                <option value="Yes" ${p.status === "Yes" ? "selected" : ""}>✅ चेक झाले (Done)</option>
+              
               </select>
             </td>
-            <td>
-              <button onclick="deletePerson('${id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Delete</button>
-            </td>
+            <td><button onclick="deletePerson('${id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:4px;">X</button></td>
           `;
         });
 
-        // Dashboard Update
+        // Update Dashboard
         document.getElementById("dTotal").innerText = total;
         document.getElementById("dDone").innerText = done;
+        document.getElementById("dPlanning").innerText = planning;
         document.getElementById("dPending").innerText = pending;
 
       } catch(e) { console.error(e); }
       finally { hideLoading(); }
     };
 
-    /* --- 3. UPDATE BLOOD STATUS --- */
-    window.updateBloodStatus = async function(id, val){
+    window.updateStatus = async function(id, val){
       showLoading();
-      try {
-        await updateDoc(doc(db, "mission1lakh", id), { bloodCheck: val });
-        // alert("Status अपडेट झाले!"); // हे काढून टाकले जेणेकरून फास्ट काम होईल
-        loadPeople(); // Refresh list to show colors
-      } catch(e) { alert("Error: " + e.message); hideLoading(); }
+      await updateDoc(doc(db, "mission1lakh", id), { status: val });
+      loadPeople(); // Reload to update colors and counts
     };
 
-    /* --- HELPERS --- */
     window.deletePerson = async function(id){
-      if(confirm("ही एंट्री डिलीट करायची का?")) {
+      if(confirm("डिलीट करायचे का?")) {
         showLoading();
         await deleteDoc(doc(db, "mission1lakh", id));
         loadPeople();
