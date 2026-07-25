@@ -1,211 +1,229 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>DS WORLD – WhatsApp Business Message Sender</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1f3a">
+<title>DS WORLD – Monthly Shopping WhatsApp CRM PRO</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-:root{
-  --navy:#0b1f3a;--blue:#174ea6;--green:#128c7e;--green2:#25d366;--bg:#f4f7fb;--card:#ffffff;
-  --text:#162033;--muted:#6b7280;--warn:#b7791f;--danger:#c53030;--border:#dbe3ee;--shadow:0 10px 30px rgba(17,39,70,.08);
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Devanagari","Noto Sans",Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef4fb 0,#f8fafc 40%,#f4f7fb 100%);color:var(--text)}
-button,input,textarea,select{font:inherit}
-.container{max-width:1120px;margin:auto;padding:14px 14px 90px}
-.header{position:sticky;top:0;z-index:50;background:rgba(244,247,251,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(219,227,238,.8);margin:0 -14px 14px;padding:12px 14px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--navy),var(--blue));display:grid;place-items:center;color:#fff;font-weight:900;box-shadow:var(--shadow)}
-.brand h1{font-size:18px;margin:0;color:var(--navy)}
-.brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
-.grid{display:grid;gap:12px}.dashboard{grid-template-columns:repeat(5,1fr)}
-.stat{background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
-.stat b{display:block;font-size:22px;color:var(--navy)}.stat span{font-size:12px;color:var(--muted)}
-.panel{background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:18px;padding:15px;box-shadow:var(--shadow);margin-top:12px}
-.panel h2{font-size:16px;margin:0 0 12px;color:var(--navy)}
-.upload{border:2px dashed #9fb4d2;border-radius:16px;padding:18px;text-align:center;background:#f8fbff}
-.btn{border:none;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
-.btn:disabled{opacity:.45;cursor:not-allowed}.primary{background:var(--blue);color:#fff}.wa{background:var(--green2);color:#0b2a18}.business{background:var(--green);color:#fff}.light{background:#edf2f7;color:#24324a}.danger{background:#fff1f1;color:var(--danger);border:1px solid #f4caca}.warn{background:#fff8e8;color:#8a5a0a}
-.hidden{display:none!important}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row .auto{flex:0 0 auto}
-label{display:block;font-size:12px;font-weight:700;color:#44516a;margin-bottom:6px}
-input,textarea,select{width:100%;border:1px solid var(--border);border-radius:12px;padding:11px 12px;background:#fff;outline:none;color:var(--text)}
-input:focus,textarea:focus,select:focus{border-color:#7da4dc;box-shadow:0 0 0 3px rgba(23,78,166,.08)}
-textarea{min-height:120px;resize:vertical}
-.small{font-size:12px;color:var(--muted)}
-.preview{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px;min-height:90px}
-.tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
-.contact{background:#fff;border:1px solid var(--border);border-radius:16px;padding:13px;box-shadow:0 8px 22px rgba(17,39,70,.06);position:relative}
-.contact.invalid{border-color:#f0b3b3}.contact.duplicate{outline:2px solid #ffe4a3}
-.contact-top{display:flex;gap:10px;align-items:flex-start}.contact-top input[type=checkbox]{width:20px;height:20px;margin-top:3px}.contact-name{font-weight:800;font-size:16px;color:var(--navy)}
-.contact-mobile{font-size:13px;color:var(--muted);margin-top:2px}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;margin:6px 6px 0 0}.ok{background:#e9f9ef;color:#166534}.pending{background:#f2f4f7;color:#475467}.bad{background:#fff0f0;color:#b42318}.dup{background:#fff7df;color:#8a5a0a}
-.msg{font-size:13px;white-space:pre-wrap;background:#f8fafc;border-radius:12px;padding:10px;margin:10px 0;max-height:145px;overflow:auto;border:1px solid #edf1f6}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .full{grid-column:1/-1}
-.statusline{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px}.toggle{font-size:12px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:7px 9px}
-.empty{text-align:center;padding:36px 10px;color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#172033;color:#fff;padding:11px 15px;border-radius:12px;z-index:100;box-shadow:var(--shadow);max-width:90%;font-size:13px}
-.mapping{margin-top:12px;padding:12px;border-radius:14px;background:#fff8e8;border:1px solid #f3dfad}
-.footer-note{font-size:11px;color:var(--muted);text-align:center;margin:18px 0}
-@media(max-width:900px){.dashboard{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:1fr}.tools{grid-template-columns:1fr}}
-@media(max-width:560px){.dashboard{grid-template-columns:repeat(2,1fr)}.stat:last-child{grid-column:1/-1}.container{padding:10px 10px 90px}.header{margin:0 -10px 10px;padding:10px}.brand h1{font-size:16px}.panel{padding:12px}.actions{grid-template-columns:1fr}.actions .full{grid-column:auto}.row>*{flex-basis:100%}.row .auto{flex-basis:auto}.btn{width:100%}}
+:root{--navy:#091d38;--blue:#1557b0;--wa:#128c7e;--green:#20b15a;--bg:#f3f6fa;--card:#fff;--text:#172033;--muted:#667085;--line:#dce4ef;--amber:#d78a00;--red:#cc3131;--shadow:0 12px 34px rgba(14,36,66,.09)}
+*{box-sizing:border-box;min-width:0}html{scroll-behavior:smooth;overflow-x:hidden}body{margin:0;overflow-x:hidden;background:linear-gradient(180deg,#edf3fa,#f8fafc 45%,#f2f5f9);font-family:system-ui,-apple-system,"Noto Sans Devanagari","Noto Sans",Segoe UI,Arial,sans-serif;color:var(--text)}
+button,input,select,textarea{font:inherit}.app{max-width:1180px;margin:auto;padding:12px 12px 90px}.top{position:sticky;top:0;z-index:50;margin:0 -12px 12px;padding:10px 12px;background:rgba(243,246,250,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(220,228,239,.85)}
+.brand{display:flex;gap:11px;align-items:center}.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--navy),var(--blue));color:white;display:grid;place-items:center;font-weight:900;box-shadow:var(--shadow)}h1{font-size:18px;margin:0;color:var(--navy)}.sub{font-size:11px;color:var(--muted);margin-top:2px}.leaderline{font-size:12px;font-weight:700;color:var(--blue);margin-top:4px}
+.panel{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:12px;box-shadow:var(--shadow)}.panel h2{font-size:16px;margin:0 0 12px;color:var(--navy)}.grid{display:grid;gap:10px}.dash{grid-template-columns:repeat(6,1fr)}.stat{border:1px solid var(--line);background:#fff;border-radius:15px;padding:11px}.stat b{display:block;font-size:21px;color:var(--navy)}.stat span{font-size:11px;color:var(--muted)}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.auto{flex:0 0 auto}label{display:block;font-size:11px;font-weight:800;color:#46536a;margin:0 0 5px}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 11px;background:white;outline:none}input:focus,select:focus,textarea:focus{border-color:#78a1da;box-shadow:0 0 0 3px rgba(21,87,176,.08)}textarea{min-height:110px;resize:vertical}.btn{border:none;border-radius:12px;min-height:43px;padding:10px 13px;font-weight:800;cursor:pointer;display:inline-flex;justify-content:center;align-items:center;gap:7px}.primary{background:var(--blue);color:#fff}.wa{background:#25d366;color:#073d1c}.business{background:var(--wa);color:#fff}.light{background:#edf2f7;color:#28384f}.warn{background:#fff5dc;color:#8b5d00}.danger{background:#fff0f0;color:var(--red);border:1px solid #f4cece}.dark{background:var(--navy);color:#fff}.btn:disabled{opacity:.45}.hidden{display:none!important}.small{font-size:11px;color:var(--muted)}
+.upload{border:2px dashed #9bb1ce;border-radius:15px;padding:18px;text-align:center;background:#f9fbfe}.quick{display:flex;gap:7px;flex-wrap:wrap;overflow-x:visible;padding-bottom:3px}.chip{white-space:nowrap;border:none;border-radius:999px;padding:8px 11px;background:#edf3fb;color:#204a82;font-size:12px;font-weight:800;cursor:pointer}.chip.active{background:var(--blue);color:#fff}
+.filters{grid-template-columns:repeat(4,minmax(0,1fr))}.filters select,.filters input{min-height:44px}.filters label{font-size:12px;color:#24364f}.filters>div{background:#fbfdff;border:1px solid #e5edf6;border-radius:12px;padding:8px}.filters .span2{grid-column:span 2}.message-preview{white-space:pre-wrap;background:#e7f7ec;border-radius:15px 15px 15px 4px;padding:12px;border:1px solid #ccebd6;max-width:680px;font-size:13px}.tabs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;overflow-x:visible}.tab{border:none;border-radius:12px;padding:9px 12px;background:#edf2f7;font-weight:800;white-space:nowrap}.tab.active{background:var(--navy);color:white}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:12px}.contact{background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 8px 24px rgba(17,39,70,.06);max-width:100%;overflow:hidden}.contact.completed{background:#eefbf2;border-color:#b9e7c6}.contact.due{border-color:#f1be63;box-shadow:0 0 0 2px #fff1cc}.ctop{display:flex;gap:9px;justify-content:space-between}.name{font-size:15px;font-weight:900;color:var(--navy)}.meta{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.55}.amount{font-size:20px;font-weight:900;color:var(--navy);text-align:right}.badge{display:inline-flex;border-radius:999px;padding:4px 7px;font-size:10px;font-weight:800;margin:6px 5px 0 0}.bgreen{background:#e7f8ed;color:#14723a}.bgray{background:#f1f3f6;color:#536173}.bamber{background:#fff4d6;color:#8b5d00}.bred{background:#fff0f0;color:#ad2929}.bblue{background:#e9f2ff;color:#1c5ba8}.history{font-size:11px;line-height:1.6;background:#f8fafc;border:1px solid #edf1f5;padding:8px;border-radius:11px;margin-top:9px;overflow-x:hidden;white-space:normal;overflow-wrap:anywhere;word-break:break-word}.note{font-size:11px;background:#fff9e9;border-radius:10px;padding:8px;margin-top:8px}.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.actions .btn{padding:8px 5px;min-height:40px;font-size:11px}.statusrow{display:grid;grid-template-columns:1.3fr 1fr;gap:7px;margin-top:8px}.statusrow select,.statusrow input{padding:8px;font-size:11px}.empty{text-align:center;color:var(--muted);padding:32px}.toolbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}.countpill{display:inline-flex;background:#e8f1ff;color:var(--blue);border-radius:999px;padding:5px 9px;font-size:11px;font-weight:800}.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:100;background:#162033;color:white;padding:10px 14px;border-radius:12px;box-shadow:var(--shadow);font-size:12px;max-width:90%}.modal{position:fixed;inset:0;background:rgba(6,19,35,.58);z-index:200;display:grid;place-items:center;padding:15px}.modalbox{background:white;border-radius:18px;padding:16px;max-width:480px;width:100%;box-shadow:0 25px 80px rgba(0,0,0,.25)}.modalbox h3{margin:0 0 12px;color:var(--navy)}
+#pdfArea{position:fixed;left:-10000px;top:0;width:794px;background:white;color:#172033;padding:28px;font-family:"Noto Sans Devanagari",Arial,sans-serif}.pdfTitle{font-size:24px;font-weight:900;color:#091d38}.pdfGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:15px 0}.pdfStat{border:1px solid #dce4ef;border-radius:10px;padding:9px}.pdfStat b{display:block;font-size:18px}.pdfTable{width:100%;border-collapse:collapse;font-size:9px}.pdfTable th,.pdfTable td{border:1px solid #dfe5ed;padding:5px;text-align:left}.pdfTable th{background:#eef3f8}.footer{font-size:10px;color:#6b7280;text-align:center;margin-top:17px}
+@media(max-width:900px){.dash{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:1fr}.filters{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.app{padding:9px 9px 90px}.top{margin:0 -9px 9px;padding:9px}.dash{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr}.filters .span2{grid-column:auto}.toolbar{grid-template-columns:1fr}.row>*{flex-basis:100%}.row .auto{flex-basis:auto}.actions{grid-template-columns:repeat(2,1fr)}.btn{width:100%}.brand h1{font-size:15px}.panel{padding:11px}.pdfGrid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
-<div class="container">
-  <header class="header">
-    <div class="brand"><div class="logo">DS</div><div><h1>DS WORLD – WhatsApp Business Message Sender</h1><p>Excel Upload • Personalized Message • One Click WhatsApp</p></div></div>
-  </header>
+<div class="app">
+<header class="top"><div class="brand"><div class="logo">DS</div><div><h1>DS WORLD – WhatsApp Shopping CRM PRO</h1><div class="sub">Excel → Dashboard → Follow-up → WhatsApp / Call → Report</div><div id="leaderDisplay" class="leaderline">Leader: सेट केलेला नाही</div></div></div></header>
 
-  <section class="grid dashboard">
-    <div class="stat"><b id="sTotal">0</b><span>👥 एकूण संपर्क</span></div>
-    <div class="stat"><b id="sValid">0</b><span>📱 Valid Numbers</span></div>
-    <div class="stat"><b id="sInvalid">0</b><span>⚠️ Invalid Numbers</span></div>
-    <div class="stat"><b id="sOpened">0</b><span>✅ WhatsApp उघडले</span></div>
-    <div class="stat"><b id="sPending">0</b><span>⏳ Pending</span></div>
-  </section>
+<section class="grid dash">
+ <div class="stat"><b id="dTotal">0</b><span>👥 एकूण सदस्य</span></div>
+ <div class="stat"><b id="dDone">0</b><span>🛍️ या महिन्यात खरेदी</span></div>
+ <div class="stat"><b id="dPending">0</b><span>⏳ खरेदी बाकी</span></div>
+ <div class="stat"><b id="dValue">₹0</b><span>💰 महिन्याची खरेदी</span></div>
+ <div class="stat"><b id="dWill">0</b><span>🤝 खरेदी करणार</span></div>
+ <div class="stat"><b id="dToday">0</b><span>📅 आज Follow-up</span></div>
+</section>
 
-  <section class="panel">
-    <h2>📂 Excel File Upload</h2>
-    <div class="upload">
-      <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" />
-      <button class="btn primary" onclick="document.getElementById('fileInput').click()">📂 Excel File Upload करा</button>
-      <div class="small" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
-      <div id="fileName" class="small" style="margin-top:5px"></div>
-    </div>
-    <div id="mappingBox" class="mapping hidden">
-      <b>Column निवडा</b>
-      <div class="row" style="margin-top:10px">
-        <div><label>Name Column</label><select id="nameCol"></select></div>
-        <div><label>Mobile Column</label><select id="mobileCol"></select></div>
-        <div class="auto" style="align-self:end"><button class="btn primary" onclick="applyMapping()">लागू करा</button></div>
-      </div>
-    </div>
-    <div class="small" style="margin-top:10px">🔒 तुमचा Excel डेटा तुमच्या डिव्हाइसवरच प्रक्रिया केला जातो. कोणत्याही सर्व्हरवर अपलोड केला जात नाही.</div>
-  </section>
+<section class="panel">
+ <h2>👤 Leader माहिती</h2>
+ <div class="row"><div><label>Leader Name</label><input id="leaderName" placeholder="उदा. Deepak Shengule"></div><div><label>मोबाईल</label><input id="leaderMobile" inputmode="tel" placeholder="10 digit mobile"></div><div class="auto" style="align-self:end"><button class="btn dark" id="saveLeaderBtn">💾 Save</button></div></div>
+ <div class="small" style="margin-top:7px">Login नाही. ही माहिती फक्त या device/browser मध्ये save राहील आणि PDF report वर दिसेल.</div>
+</section>
 
-  <section class="panel">
-    <h2>✍️ सर्वांसाठी कॉमन मेसेज</h2>
-    <div class="row">
-      <div><label>Quick Template</label><select id="templateSelect"><option value="">Custom</option><option value="meeting">Meeting Reminder</option><option value="purchase">Purchase Follow-up</option><option value="health">Health Awareness</option><option value="training">Training Reminder</option><option value="event">Event Invitation</option></select></div>
-    </div>
-    <textarea id="commonMessage" placeholder="आजच्या महत्त्वाच्या मिटिंगची माहिती..."></textarea>
-    <div class="row" style="margin-top:10px">
-      <div><label>Greeting</label><input id="greeting" value="नमस्कार" /></div>
-      <div><label>Name suffix</label><input id="suffix" value="जी 🙏" /></div>
-      <div><label>Signature</label><input id="signature" value="धन्यवाद 🙏&#10;DS WORLD" /></div>
-    </div>
-    <div class="small" style="margin-top:8px"><span id="charCount">Characters: 0</span> • <span id="readyCount">Contacts Ready: 0</span></div>
-  </section>
+<section class="panel">
+ <h2>📂 Smart Report Excel</h2>
+ <div class="upload"><input id="fileInput" class="hidden" type="file" accept=".xlsx,.xls,.csv"><button class="btn primary" id="uploadBtn">📂 Excel Upload करा</button><div id="fileInfo" class="small" style="margin-top:7px">या report format मधील month columns app आपोआप ओळखेल.</div></div>
+ <div class="small" style="margin-top:8px">🔒 Excel आणि follow-up data या device च्या local database (IndexedDB) मध्येच save होतो. Firebase/API लागत नाही.</div>
+</section>
 
-  <section class="panel">
-    <h2>👁️ Sample Message Preview</h2>
-    <div id="samplePreview" class="preview">Excel अपलोड करा आणि कॉमन मेसेज टाइप करा.</div>
-  </section>
+<section id="workArea" class="hidden">
+<section class="panel">
+ <h2>🎯 आजचे काम</h2>
+ <div class="quick">
+  <button class="chip active" data-smart="pending">⏳ या महिन्यात खरेदी नाही</button>
+  <button class="chip" data-smart="previous">🔥 मागील महिन्यात केली, आता नाही</button>
+  <button class="chip" data-smart="regular">⭐ नियमित खरेदीदार</button>
+  <button class="chip" data-smart="today">📅 आज Follow-up</button>
+  <button class="chip" data-smart="all">👥 सर्व सदस्य</button>
+ </div>
+</section>
 
-  <section class="panel">
-    <div class="tools">
-      <input id="searchBox" placeholder="🔍 नाव किंवा मोबाईल नंबर शोधा" />
-      <select id="filterBox"><option value="all">सर्व</option><option value="pending">Pending</option><option value="opened">WhatsApp उघडले</option><option value="invalid">Invalid Number</option><option value="duplicates">Duplicates</option><option value="selected">Selected Only</option></select>
-      <button class="btn light" onclick="renderContacts()">🔄 Refresh</button>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <button class="btn light" onclick="setAllSelection(true)">☑️ Select All</button>
-      <button class="btn light" onclick="setAllSelection(false)">⬜ Deselect All</button>
-      <button class="btn light" onclick="document.getElementById('filterBox').value='selected';renderContacts()">👁️ Selected Only</button>
-      <button class="btn light" onclick="exportReport()">📥 Status Report Export करा</button>
-      <button class="btn danger" onclick="resetApp()">♻️ नवीन Excel सुरू करा</button>
-      <button class="btn danger" onclick="resetHistory()">🧹 Sent History Reset</button>
-    </div>
-    <div id="contacts" class="cards"><div class="empty">Excel अपलोड केल्यानंतर संपर्क येथे दिसतील.</div></div>
-  </section>
+<section class="panel" style="border:2px solid #1557b0;background:linear-gradient(180deg,#f7fbff,#ffffff)">
+ <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+   <div><h2 style="margin-bottom:3px">🔎 स्मार्ट फिल्टर</h2><div class="small">एक किंवा अनेक फिल्टर एकत्र वापरा. बदल केल्यावर यादी लगेच अपडेट होईल.</div></div>
+   <span id="resultCount" class="countpill" style="font-size:13px;padding:8px 12px">0 सदस्य</span>
+ </div>
+ <div class="quick" style="margin:12px 0 10px">
+   <button class="chip" data-smart-filter="all">👥 सर्व</button>
+   <button class="chip" data-smart-filter="pending">⏳ खरेदी बाकी</button>
+   <button class="chip" data-smart-filter="done">✅ खरेदी झाली</button>
+   <button class="chip" data-smart-filter="previous">🔥 मागील महिना केला, आता नाही</button>
+   <button class="chip" data-smart-filter="today">📅 आज Follow-up</button>
+ </div>
+ <div class="grid filters">
+  <div><label>📅 महिना</label><select id="monthSelect"></select></div>
+  <div><label>🛍️ खरेदी स्थिती</label><select id="shoppingStatusFilter"><option value="">सर्व</option><option value="pending">खरेदी बाकी</option><option value="done">खरेदी झाली</option></select></div>
+  <div><label>👤 Direct Proposer</label><select id="proposerFilter"><option value="">सर्व Proposer</option></select></div>
+  <div><label>👥 पूर्ण Downline / Team Leader</label><select id="teamLeaderFilter"><option value="">संपूर्ण Report</option></select></div>
+  <div><label>🏙️ शहर</label><select id="cityFilter"><option value="">सर्व शहर</option></select></div>
+  <div><label>📍 जिल्हा</label><select id="districtFilter"><option value="">सर्व जिल्हे</option></select></div>
+  <div><label>💰 खरेदी Range</label><select id="rangeFilter"><option value="">सर्व</option><option value="0">₹0</option><option value="1-999">₹1–₹999</option><option value="1000-2499">₹1,000–₹2,499</option><option value="2500-4999">₹2,500–₹4,999</option><option value="5000+">₹5,000+</option></select></div>
+  <div><label>📌 Follow-up Status</label><select id="statusFilter"><option value="">सर्व</option><option>बाकी</option><option>संपर्क केला</option><option>खरेदी करणार</option><option>खरेदी झाली</option><option>प्रतिसाद नाही</option></select></div>
+  <div><label>₹ किमान Shopping</label><input id="minAmountFilter" type="number" inputmode="decimal" placeholder="उदा. 1000"></div>
+  <div><label>₹ कमाल Shopping</label><input id="maxAmountFilter" type="number" inputmode="decimal" placeholder="उदा. 5000"></div>
+  <div class="span2"><label>🔍 नाव / मोबाईल / A.B. Id / शहर / Proposer</label><input id="searchBox" placeholder="नाव, नंबर किंवा ID शोधा..."></div>
+ </div>
+ <div class="row" style="margin-top:11px">
+   <button class="btn primary" id="showAllBtn">👥 सर्व सदस्य दाखवा</button>
+   <button class="btn light" id="clearFilterBtn">🧹 सर्व Filters Reset</button>
+ </div>
+</section>
 
-  <div class="footer-note">टीप: “WhatsApp उघडले” म्हणजे फक्त चॅट उघडली आहे; मेसेज प्रत्यक्ष पाठवला/डिलिव्हर झाला याची खात्री नाही.</div>
+<section class="panel">
+ <h2>✍️ कॉमन WhatsApp मेसेज</h2>
+ <textarea id="commonMessage" placeholder="इथे फक्त तुमचा मुख्य मेसेज लिहा..."></textarea>
+ <div class="small" style="margin-top:6px">Final format: <b>नमस्कार [नाव] जी 🙏</b> → तुमचा मेसेज → <b>धन्यवाद 🙏 [Leader Name] | DS WORLD</b></div>
+ <div id="msgPreview" class="message-preview" style="margin-top:10px">नमस्कार सदस्य जी 🙏\n\nतुमचा मेसेज येथे दिसेल.\n\nधन्यवाद 🙏\nDS WORLD</div>
+</section>
+
+<section class="panel">
+ <div class="toolbar"><input id="quickSearch" placeholder="🔍 झटपट Search"><button class="btn light" id="todayBtn">📅 आजचे Follow-up</button><button class="btn primary" id="nextBtn">➡️ पुढचा सदस्य</button></div>
+ <div id="cards" class="cards"></div>
+</section>
+
+<section class="panel">
+ <h2>📈 कामाचा अहवाल</h2>
+ <div class="row">
+  <button class="btn light" id="exportExcelBtn">📥 Filtered Excel Export</button>
+  <button class="btn dark" id="pdfBtn">📄 PDF Report</button>
+  <button class="btn business" id="shareReportBtn">📤 Report Share / WhatsApp</button>
+  <button class="btn danger" id="resetCrmBtn">🧹 CRM Follow-up Reset</button>
+ </div>
+ <div class="small" style="margin-top:8px">Report मध्ये WhatsApp किती वेळा उघडले, किती calls केले, follow-up status, expected amount आणि notes यांचा सारांश येईल.</div>
+</section>
+</section>
 </div>
+
 <div id="toast" class="toast hidden"></div>
+<div id="followModal" class="modal hidden"><div class="modalbox"><h3 id="modalTitle">Follow-up Update</h3><label>Status</label><select id="modalStatus"><option>बाकी</option><option>संपर्क केला</option><option>खरेदी करणार</option><option>खरेदी झाली</option><option>प्रतिसाद नाही</option></select><div id="willFields"><div class="row" style="margin-top:9px"><div><label>Expected Amount ₹</label><input id="expectedAmount" type="number" inputmode="decimal" placeholder="2500"></div><div><label>Follow-up Date</label><input id="followDate" type="date"></div></div></div><label style="margin-top:9px">Note</label><textarea id="memberNote" style="min-height:85px" placeholder="उदा. 28 तारखेला ₹2500 खरेदी करणार"></textarea><div class="row" style="margin-top:10px"><button class="btn light" id="closeModal">रद्द</button><button class="btn primary" id="saveFollow">💾 Save</button></div></div></div>
+<div id="pdfArea"></div>
 
 <script>
-const state={rows:[],headers:[],rawRows:[],nameKey:null,mobileKey:null,fileId:'',duplicates:new Set()};
-const templates={
- meeting:'आज रात्री आपल्या टीमची महत्त्वाची मिटिंग आहे. कृपया वेळेत उपस्थित राहा. 🙏',
- purchase:'आपली या महिन्याची नियमित खरेदी बाकी असल्यास कृपया आपल्या गरजेनुसार ऑर्डर कळवा. कोणतीही मदत हवी असल्यास नक्की संपर्क करा. 🙏',
- health:'आरोग्य हीच खरी संपत्ती आहे. आपल्या दैनंदिन जीवनशैलीत छोटे सकारात्मक बदल करून निरोगी जीवनाकडे एक पाऊल टाकूया. 🌿',
- training:'आजचे प्रशिक्षण आपल्या टीमच्या वाढीसाठी महत्त्वाचे आहे. कृपया वेळेत सहभागी व्हा आणि नोट्स तयार ठेवा. 📘',
- event:'आपल्यासाठी एक विशेष कार्यक्रम आयोजित केला आहे. आपल्या उपस्थितीने कार्यक्रमाची शोभा वाढेल. कृपया वेळेत उपस्थित राहा. 🙏'
-};
-const $=id=>document.getElementById(id);
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(toast._x);toast._x=setTimeout(()=>t.classList.add('hidden'),2500)}
-function safe(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function normalizeHeader(s){return String(s||'').trim().toLowerCase().replace(/[_\-.]/g,' ').replace(/\s+/g,' ')}
-function detectColumns(headers){
- const names=['name','नाव','customer name','member name','customer','member','full name','व्यक्तीचे नाव'];
- const mobiles=['mobile','mobile number','मोबाईल','मोबाईल नंबर','phone','phone number','contact','contact number','whatsapp number','whatsapp','number'];
- const n=headers.find(h=>names.includes(normalizeHeader(h)))||headers.find(h=>/name|नाव/.test(normalizeHeader(h)));
- const m=headers.find(h=>mobiles.includes(normalizeHeader(h)))||headers.find(h=>/mobile|phone|contact|whatsapp|मोबाईल|नंबर/.test(normalizeHeader(h)));
- return {n,m};
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MR_MONTH={January:'जानेवारी',February:'फेब्रुवारी',March:'मार्च',April:'एप्रिल',May:'मे',June:'जून',July:'जुलै',August:'ऑगस्ट',September:'सप्टेंबर',October:'ऑक्टोबर',November:'नोव्हेंबर',December:'डिसेंबर'};
+const S={rows:[],headers:[],months:[],month:'',filterMode:'pending',fileName:'',crm:new Map(),visible:[],cursor:0,modalId:null};
+const $=id=>document.getElementById(id);const money=n=>'₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0});
+function toast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');clearTimeout(toast.x);toast.x=setTimeout(()=>$('toast').classList.add('hidden'),2400)}
+function norm(v){return String(v??'').trim()} function num(v){const n=parseFloat(String(v??'').replace(/[^0-9.-]/g,''));return Number.isFinite(n)?n:0}
+function cleanMobile(v){let d=String(v??'').replace(/\D/g,'');if(d.length===11&&d.startsWith('0'))d=d.slice(1);if(d.length===10&&/^[6-9]/.test(d))return '91'+d;if(d.length===12&&d.startsWith('91')&&/^[6-9]/.test(d.slice(2)))return d;return ''}
+function memberKey(r){return norm(r['A.B. Id'])||cleanMobile(r.Mobile)||('ROW-'+r._row)}
+function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+
+// IndexedDB local database
+let db;
+function openDB(){return new Promise((res,rej)=>{const q=indexedDB.open('DS_WORLD_CRM_PRO',1);q.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('app'))d.createObjectStore('app');if(!d.objectStoreNames.contains('crm'))d.createObjectStore('crm')};q.onsuccess=e=>{db=e.target.result;res(db)};q.onerror=()=>rej(q.error)})}
+function dbGet(store,key){return new Promise((res,rej)=>{const q=db.transaction(store,'readonly').objectStore(store).get(key);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
+function dbPut(store,key,val){return new Promise((res,rej)=>{const q=db.transaction(store,'readwrite').objectStore(store).put(val,key);q.onsuccess=()=>res();q.onerror=()=>rej(q.error)})}
+function dbDelete(store,key){return new Promise((res,rej)=>{const q=db.transaction(store,'readwrite').objectStore(store).delete(key);q.onsuccess=()=>res();q.onerror=()=>rej(q.error)})}
+function dbGetAll(store){return new Promise((res,rej)=>{const q=db.transaction(store,'readonly').objectStore(store).getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error)})}
+function dbClear(store){return new Promise((res,rej)=>{const q=db.transaction(store,'readwrite').objectStore(store).clear();q.onsuccess=()=>res();q.onerror=()=>rej(q.error)})}
+
+function leader(){return {name:norm($('leaderName').value),mobile:norm($('leaderMobile').value)}}
+async function saveLeader(){const l=leader();await dbPut('app','leader',l);updateLeaderDisplay();toast('Leader माहिती save झाली')}
+function updateLeaderDisplay(){const l=leader();$('leaderDisplay').textContent='Leader: '+(l.name||'सेट केलेला नाही')+(l.mobile?' • '+l.mobile:'')}
+
+function detectRows(raw){
+ if(!raw.length)throw new Error('Excel मध्ये data नाही.');
+ const headers=Object.keys(raw[0]||{});const find=(rx)=>headers.find(h=>rx.test(h.trim().toLowerCase()));
+ const map={ab:find(/a\.b\.?\s*id|ab id/),name:find(/^name$|member name|customer name|नाव/),mobile:find(/^mobile$|mobile number|phone|contact|मोबाईल/),city:find(/^city$|शहर/),district:find(/district|जिल्हा/),proposer:find(/^proposer$|proposer id/),proposerName:find(/proposer name|sponsor name|प्रपोजर.*नाव/),feeding:find(/feeding date|joining date|date/),total:find(/^total$|एकूण/)};
+ if(!map.name||!map.mobile)throw new Error('Name किंवा Mobile column सापडला नाही.');
+ const months=headers.filter(h=>MONTHS.some(m=>m.toLowerCase()===h.trim().toLowerCase()));
+ return {headers,map,months};
 }
-function cleanMobileNumber(value){
- let d=String(value??'').replace(/\D/g,'');
- if(d.startsWith('00')) d=d.slice(2);
- while(d.length>10 && d.startsWith('0')) d=d.slice(1);
- if(d.length===11 && d.startsWith('0')) d=d.slice(1);
- if(d.length===10 && /^[6-9]/.test(d)) return '91'+d;
- if(d.length===12 && d.startsWith('91') && /^[6-9]/.test(d.slice(2))) return d;
- return '';
+function canon(raw,info,i){const g=k=>info.map[k]?raw[info.map[k]]:'';const r={_row:i+2,_raw:raw,'A.B. Id':g('ab'),Name:g('name'),Mobile:g('mobile'),City:g('city'),District:g('district'),Proposer:g('proposer'),'Proposer Name':g('proposerName'),'Feeding Date':g('feeding'),Total:g('total')};info.months.forEach(m=>r[m]=raw[m]);r._mobile=cleanMobile(r.Mobile);r._key=memberKey(r);return r}
+function chooseMonth(){const current=MONTHS[new Date().getMonth()];if(S.months.includes(current))return current;return S.months[S.months.length-1]||''}
+function setSelect(id,vals,first){$(id).innerHTML=`<option value="">${first}</option>`+vals.map(v=>`<option value="${String(v).replace(/"/g,'&quot;')}">${v}</option>`).join('')}
+function unique(k){return [...new Set(S.rows.map(r=>norm(r[k])).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'en',{numeric:true}))}
+function setupFilters(){
+ $('monthSelect').innerHTML=S.months.map(m=>`<option value="${m}">${MR_MONTH[m]||m}</option>`).join('');$('monthSelect').value=S.month;
+ setSelect('cityFilter',unique('City'),'सर्व शहर');setSelect('districtFilter',unique('District'),'सर्व जिल्हे');setSelect('proposerFilter',unique('Proposer Name'),'सर्व Proposer');
+ const leaders=S.rows.filter(r=>norm(r['A.B. Id'])).sort((a,b)=>norm(a.Name).localeCompare(norm(b.Name))).map(r=>({id:norm(r['A.B. Id']),name:norm(r.Name)}));
+ $('teamLeaderFilter').innerHTML='<option value="">संपूर्ण Report</option>'+leaders.map(x=>`<option value="${x.id}">${x.name} (${x.id})</option>`).join('');
 }
-function fileFingerprint(file){return [file.name,file.size,file.lastModified].join('|')}
-function statusKey(r){return 'dswa:'+state.fileId+':'+(r.cleaned||'invalid')+':'+r.rowNum}
-function loadStatus(r){try{return JSON.parse(localStorage.getItem(statusKey(r))||'null')}catch{return null}}
-function saveStatus(r,opened){const obj={opened:!!opened,date:new Date().toLocaleDateString('en-CA'),time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})};localStorage.setItem(statusKey(r),JSON.stringify(obj));r.status=obj;updateDashboard()}
-function generateMessage(name){
- const g=$('greeting').value.trim(), s=$('suffix').value.trim(), c=$('commonMessage').value.trim(), sig=$('signature').value.trim();
- let first='';
- if(name&&String(name).trim()) first=[g,String(name).trim(),s].filter(Boolean).join(' '); else first=[g,'🙏'].filter(Boolean).join(' ');
- return [first,c,sig].filter(Boolean).join('\n\n');
+function descendants(root){if(!root)return null;const children=new Map();S.rows.forEach(r=>{const p=norm(r.Proposer);if(!children.has(p))children.set(p,[]);children.get(p).push(norm(r['A.B. Id']))});const out=new Set([root]),q=[root];while(q.length){const id=q.shift();for(const c of children.get(id)||[]){if(c&&!out.has(c)){out.add(c);q.push(c)}}}return out}
+function crmFor(r){return S.crm.get(r._key)||{status:'बाकी',expected:0,followDate:'',note:'',waCount:0,callCount:0,lastWa:'',lastCall:'',updated:''}}
+async function saveCrm(r,obj){obj.updated=new Date().toISOString();S.crm.set(r._key,obj);await dbPut('crm',r._key,obj);updateAll()}
+function monthValue(r){return num(r[S.month])}
+function prevMonth(){const i=S.months.indexOf(S.month);return i>0?S.months[i-1]:''}
+function regularBuyer(r){const idx=S.months.indexOf(S.month);const arr=S.months.slice(Math.max(0,idx-5),idx+1);return arr.filter(m=>num(r[m])>0).length>=3}
+function passes(r){
+ const v=monthValue(r),c=crmFor(r),sm=S.filterMode;
+ if(sm==='pending'&&v>0)return false;if(sm==='done'&&v<=0)return false;if(sm==='previous'){const p=prevMonth();if(!p||num(r[p])<=0||v>0)return false}if(sm==='regular'&&!regularBuyer(r))return false;if(sm==='today'&&c.followDate!==todayISO())return false;
+ const city=$('cityFilter').value,district=$('districtFilter').value,prop=$('proposerFilter').value,status=$('statusFilter').value,shopStatus=$('shoppingStatusFilter').value,range=$('rangeFilter').value,minA=num($('minAmountFilter').value),maxRaw=norm($('maxAmountFilter').value),maxA=maxRaw?num(maxRaw):null,search=(norm($('searchBox').value)+' '+norm($('quickSearch').value)).trim().toLowerCase();
+ if(city&&norm(r.City)!==city)return false;if(district&&norm(r.District)!==district)return false;if(prop&&norm(r['Proposer Name'])!==prop)return false;if(status&&c.status!==status)return false;if(shopStatus==='pending'&&v>0)return false;if(shopStatus==='done'&&v<=0)return false;
+ const team=descendants($('teamLeaderFilter').value);if(team&&!team.has(norm(r['A.B. Id'])))return false;
+ if(range==='0'&&v!==0)return false;if(range==='1-999'&&(v<1||v>999))return false;if(range==='1000-2499'&&(v<1000||v>2499))return false;if(range==='2500-4999'&&(v<2500||v>4999))return false;if(range==='5000+'&&v<5000)return false;if(norm($('minAmountFilter').value)&&v<minA)return false;if(maxA!==null&&v>maxA)return false;
+ if(search){const hay=[r.Name,r.Mobile,r['A.B. Id'],r.City,r['Proposer Name']].join(' ').toLowerCase();if(!hay.includes(search))return false}
+ return true;
 }
-function processRows(){
- const counts={};state.rows=state.rawRows.map((r,i)=>{const name=String(r[state.nameKey]??'').trim();const original=String(r[state.mobileKey]??'').trim();const cleaned=cleanMobileNumber(original);if(cleaned)counts[cleaned]=(counts[cleaned]||0)+1;return {rowNum:i+2,name,original,cleaned,selected:true,status:null}});
- state.duplicates=new Set(Object.keys(counts).filter(k=>counts[k]>1));
- state.rows.forEach(r=>r.status=loadStatus(r));
- updateAll();
+function dashboard(){const total=S.rows.length,done=S.rows.filter(r=>monthValue(r)>0).length,pending=total-done,value=S.rows.reduce((a,r)=>a+monthValue(r),0),will=S.rows.filter(r=>crmFor(r).status==='खरेदी करणार').length,today=S.rows.filter(r=>crmFor(r).followDate===todayISO()).length;$('dTotal').textContent=total;$('dDone').textContent=done;$('dPending').textContent=pending;$('dValue').textContent=money(value);$('dWill').textContent=will;$('dToday').textContent=today}
+function generateMessage(r){const l=leader();const core=norm($('commonMessage').value);return `नमस्कार ${norm(r.Name)||''} जी 🙏\n\n${core}\n\nधन्यवाद 🙏\n${l.name?l.name+' | ':''}DS WORLD`.replace(/\n\n\n+/g,'\n\n')}
+function updatePreview(){const r=S.visible[0]||S.rows[0]||{Name:'सदस्य'};$('msgPreview').textContent=generateMessage(r)}
+function monthHistory(r){return S.months.map(m=>`${MR_MONTH[m]||m}: ${money(num(r[m]))}`).join('  •  ')}
+function cardHTML(r,i){const c=crmFor(r),v=monthValue(r),due=c.followDate===todayISO(),completed=(v>0||c.status==='खरेदी झाली');return `<article class="contact ${due?'due':''} ${completed?'completed':''}" id="card-${i}"><div class="ctop"><div><div class="name">👤 ${escapeHtml(norm(r.Name)||'नाव नाही')}</div><div class="meta">📱 ${escapeHtml(norm(r.Mobile))} &nbsp; • &nbsp; 🆔 ${escapeHtml(norm(r['A.B. Id']))}<br>📍 ${escapeHtml(norm(r.City))}${r.District?' • '+escapeHtml(norm(r.District)):''}<br>👥 Proposer: ${escapeHtml(norm(r['Proposer Name'])||'-')}</div></div><div><div class="amount">${money(v)}</div><div class="small">${MR_MONTH[S.month]||S.month}</div></div></div>
+ <div><span class="badge ${v>0?'bgreen':'bamber'}">${v>0?'खरेदी झाली':'खरेदी बाकी'}</span><span class="badge bblue">${escapeHtml(c.status)}</span>${c.followDate?`<span class="badge ${due?'bred':'bgray'}">Follow-up: ${c.followDate}</span>`:''}${c.expected?`<span class="badge bgreen">Expected: ${money(c.expected)}</span>`:''}</div>
+ <div class="history">${escapeHtml(monthHistory(r))}</div>${c.note?`<div class="note">📝 ${escapeHtml(c.note)}</div>`:''}
+ <div class="actions"><button class="btn wa" onclick="openWA('${r._key}')">💬 WhatsApp</button><button class="btn light" onclick="callMember('${r._key}')">📞 Call</button><button class="btn warn" onclick="editMember('${r._key}')">📝 Note</button><button class="btn primary" onclick="editMember('${r._key}')">📌 Status</button></div>
+ <div class="small" style="margin-top:8px">WhatsApp: ${c.waCount||0} • Calls: ${c.callCount||0}${c.updated?' • Updated: '+new Date(c.updated).toLocaleDateString('en-IN'):''}</div></article>`}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){S.visible=S.rows.filter(passes);$('resultCount').textContent=S.visible.length+' सदस्य';$('cards').innerHTML=S.visible.length?S.visible.map(cardHTML).join(''):'<div class="empty">या filter मध्ये सदस्य सापडले नाहीत.</div>';S.cursor=Math.min(S.cursor,Math.max(0,S.visible.length-1));updatePreview()}
+function updateAll(){dashboard();render()}
+function findRow(key){return S.rows.find(r=>r._key===key)}
+async function openWA(key){const r=findRow(key);if(!r)return;if(!r._mobile){toast('मोबाईल नंबर योग्य नाही');return}const c=crmFor(r);c.waCount=(c.waCount||0)+1;c.lastWa=new Date().toISOString();if(c.status==='बाकी')c.status='संपर्क केला';await saveCrm(r,c);window.open(`https://wa.me/${r._mobile}?text=${encodeURIComponent(generateMessage(r))}`,'_blank')}
+async function callMember(key){const r=findRow(key);if(!r)return;if(!r._mobile){toast('मोबाईल नंबर योग्य नाही');return}const c=crmFor(r);c.callCount=(c.callCount||0)+1;c.lastCall=new Date().toISOString();if(c.status==='बाकी')c.status='संपर्क केला';await saveCrm(r,c);location.href='tel:+'+r._mobile}
+function editMember(key){const r=findRow(key);if(!r)return;const c=crmFor(r);S.modalId=key;$('modalTitle').textContent=r.Name;$('modalStatus').value=c.status;$('expectedAmount').value=c.expected||'';$('followDate').value=c.followDate||'';$('memberNote').value=c.note||'';toggleWill();$('followModal').classList.remove('hidden')}
+function toggleWill(){$('willFields').classList.toggle('hidden',$('modalStatus').value!=='खरेदी करणार')}
+async function saveFollow(){const r=findRow(S.modalId);if(!r)return;const c=crmFor(r);c.status=$('modalStatus').value;c.expected=c.status==='खरेदी करणार'?num($('expectedAmount').value):0;c.followDate=$('followDate').value;c.note=norm($('memberNote').value);await saveCrm(r,c);$('followModal').classList.add('hidden');toast('Follow-up save झाला')}
+function nextMember(){if(!S.visible.length)return;S.cursor=(S.cursor+1)%S.visible.length;const el=$('card-'+S.cursor);if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}
+function clearFilters(){['cityFilter','districtFilter','proposerFilter','teamLeaderFilter','rangeFilter','statusFilter','shoppingStatusFilter'].forEach(id=>$(id).value='');['searchBox','quickSearch','minAmountFilter','maxAmountFilter'].forEach(id=>$(id).value='');S.filterMode='all';document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));render()}
+function showAll(){clearFilters();toast('सर्व सदस्य दाखवले')}
+function applySmartFilter(mode){clearFilters();S.filterMode=mode;document.querySelectorAll('[data-smart-filter]').forEach(c=>c.classList.toggle('active',c.dataset.smartFilter===mode));render()}
+
+async function loadExcel(file){
+ try{const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'}),ws=wb.Sheets[wb.SheetNames[0]],raw=XLSX.utils.sheet_to_json(ws,{defval:''});const info=detectRows(raw);S.headers=info.headers;S.months=info.months;S.rows=raw.map((x,i)=>canon(x,info,i));S.fileName=file.name;S.month=chooseMonth();await dbPut('app','lastDataset',{fileName:S.fileName,headers:S.headers,months:S.months,month:S.month,rows:S.rows});setupFilters();$('fileInfo').textContent=`✅ ${file.name} • ${S.rows.length} सदस्य • ${S.months.length} महिने`;S.filterMode='pending';$('workArea').classList.remove('hidden');updateAll();toast('Excel यशस्वी Upload झाला आणि local database मध्ये save झाला')}
+ catch(e){console.error(e);toast(e.message||'Excel वाचता आला नाही')}
 }
-function updateAll(){updateDashboard();updatePreview();renderContacts();}
-function updateDashboard(){
- const total=state.rows.length, valid=state.rows.filter(r=>r.cleaned).length, invalid=total-valid, opened=state.rows.filter(r=>r.status?.opened).length, pending=valid-opened;
- $('sTotal').textContent=total;$('sValid').textContent=valid;$('sInvalid').textContent=invalid;$('sOpened').textContent=opened;$('sPending').textContent=pending;$('readyCount').textContent='Contacts Ready: '+valid;
+async function restoreDataset(){const d=await dbGet('app','lastDataset');if(!d||!d.rows?.length)return;Object.assign(S,{rows:d.rows,headers:d.headers||[],months:d.months||[],month:d.month||'',fileName:d.fileName||'Saved Report'});S.rows.forEach(r=>{r._key=memberKey(r);r._mobile=cleanMobile(r.Mobile)});if(!S.month||!S.months.includes(S.month))S.month=chooseMonth();setupFilters();$('fileInfo').textContent=`💾 Saved: ${S.fileName} • ${S.rows.length} सदस्य`;$('workArea').classList.remove('hidden');updateAll()}
+async function loadCrm(){const all=await dbGetAll('crm');S.crm=new Map();all.forEach((v)=>{}); // store.getAll loses keys; reload with known rows later
 }
-function updatePreview(){
- const c=$('commonMessage').value;$('charCount').textContent='Characters: '+c.length;const first=state.rows.find(r=>r.cleaned)||state.rows[0];$('samplePreview').textContent=first?generateMessage(first.name):'Excel अपलोड करा आणि कॉमन मेसेज टाइप करा.';
-}
-function renderContacts(){
- const q=$('searchBox').value.trim().toLowerCase(), f=$('filterBox').value;let rows=state.rows.filter(r=>{const search=!q||r.name.toLowerCase().includes(q)||r.original.toLowerCase().includes(q)||r.cleaned.includes(q);if(!search)return false;if(f==='pending')return r.cleaned&&!r.status?.opened;if(f==='opened')return !!r.status?.opened;if(f==='invalid')return !r.cleaned;if(f==='duplicates')return state.duplicates.has(r.cleaned);if(f==='selected')return r.selected;return true});
- const box=$('contacts');if(!rows.length){box.innerHTML='<div class="empty">या फिल्टरमध्ये कोणतेही संपर्क सापडले नाहीत.</div>';return}
- box.innerHTML=rows.map(r=>{const idx=state.rows.indexOf(r), dup=state.duplicates.has(r.cleaned), valid=!!r.cleaned, opened=!!r.status?.opened,msg=generateMessage(r.name);return `<article class="contact ${!valid?'invalid':''} ${dup?'duplicate':''}">
- <div class="contact-top"><input type="checkbox" ${r.selected?'checked':''} onchange="toggleSelect(${idx},this.checked)"><div style="flex:1"><div class="contact-name">👤 ${safe(r.name||'नाव उपलब्ध नाही')}</div><div class="contact-mobile">📱 ${safe(r.original||'नंबर उपलब्ध नाही')} ${r.cleaned?'<span class="small">→ +'+r.cleaned+'</span>':''}</div><div><span class="badge ${valid?'ok':'bad'}">${valid?'Valid':'⚠️ मोबाईल नंबर तपासा'}</span>${dup?'<span class="badge dup">⚠️ Duplicate Number</span>':''}<span class="badge ${opened?'ok':'pending'}">${opened?'✅ WhatsApp उघडले':'⚪ Pending'}</span></div></div></div>
- <div class="msg">${safe(msg)}</div>
- <div class="actions"><button class="btn business full" ${!valid?'disabled':''} onclick="openWhatsApp(${idx},'business')">🟢 WhatsApp Business वर पाठवा</button><button class="btn wa" ${!valid?'disabled':''} onclick="openWhatsApp(${idx},'wa')">🟢 WhatsApp</button><button class="btn light" onclick="copyMessage(${idx})">📋 Copy Message</button></div>
- <div class="statusline"><span class="small">Excel Row: ${r.rowNum}${r.status?.date?' • '+safe(r.status.date)+' '+safe(r.status.time):''}</span><button class="toggle" onclick="toggleStatus(${idx})">${opened?'Mark Pending':'Mark Opened'}</button></div></article>`}).join('');
-}
-function toggleSelect(i,v){state.rows[i].selected=v}
-function setAllSelection(v){state.rows.forEach(r=>r.selected=v);renderContacts()}
-function toggleStatus(i){saveStatus(state.rows[i],!state.rows[i].status?.opened);renderContacts()}
-function openWhatsApp(i,type){
- const r=state.rows[i];if(!r.cleaned)return toast('मोबाईल नंबर तपासा');const msg=encodeURIComponent(generateMessage(r.name));saveStatus(r,true);renderContacts();
- // wa.me is the most reliable cross-device fallback. Android may offer WhatsApp/Business chooser depending on defaults.
- const url=`https://wa.me/${r.cleaned}?text=${msg}`;window.location.href=url;
-}
-async function copyMessage(i){try{await navigator.clipboard.writeText(generateMessage(state.rows[i].name));toast('मेसेज कॉपी झाला ✅')}catch{toast('कॉपी करता आली नाही')}}
-function applyMapping(){state.nameKey=$('nameCol').value;state.mobileKey=$('mobileCol').value;if(!state.mobileKey)return toast('Mobile Column निवडा');$('mappingBox').classList.add('hidden');processRows()}
-function fillMapping(){const nc=$('nameCol'),mc=$('mobileCol');nc.innerHTML='<option value="">नाव नाही / रिकामे</option>'+state.headers.map(h=>`<option value="${safe(h)}">${safe(h)}</option>`).join('');mc.innerHTML='<option value="">Mobile Column निवडा</option>'+state.headers.map(h=>`<option value="${safe(h)}">${safe(h)}</option>`).join('');if(state.nameKey)nc.value=state.nameKey;if(state.mobileKey)mc.value=state.mobileKey;$('mappingBox').classList.remove('hidden')}
-$('fileInput').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(!/\.(xlsx|xls|csv)$/i.test(file.name))throw new Error('Unsupported');$('fileName').textContent=file.name;state.fileId=fileFingerprint(file);const data=await file.arrayBuffer();const wb=XLSX.read(data,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});if(!json.length)throw new Error('Empty');state.rawRows=json;state.headers=Object.keys(json[0]||{});const d=detectColumns(state.headers);state.nameKey=d.n||'';state.mobileKey=d.m||'';if(!state.mobileKey){fillMapping();toast('Mobile column आपोआप सापडला नाही. कृपया निवडा.');return}if(!state.nameKey)fillMapping();else processRows()}catch(err){console.error(err);toast('Excel फाइल वाचता आली नाही. योग्य .xlsx/.xls/.csv फाइल निवडा.')}});
-$('commonMessage').addEventListener('input',updateAll);$('greeting').addEventListener('input',updateAll);$('suffix').addEventListener('input',updateAll);$('signature').addEventListener('input',updateAll);$('searchBox').addEventListener('input',renderContacts);$('filterBox').addEventListener('change',renderContacts);
-$('templateSelect').addEventListener('change',e=>{if(templates[e.target.value]){$('commonMessage').value=templates[e.target.value];updateAll()}});
-function exportReport(){if(!state.rows.length)return toast('Export करण्यासाठी डेटा नाही');const out=state.rows.map(r=>({Name:r.name,'Mobile Number':r.original,'Cleaned Number':r.cleaned?('+'+r.cleaned):'Invalid',Status:r.status?.opened?'WhatsApp Opened':'Pending',Date:r.status?.date||'',Time:r.status?.time||''}));const ws=XLSX.utils.json_to_sheet(out);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Status Report');XLSX.writeFile(wb,'DS_WORLD_WhatsApp_Status_Report.xlsx')}
-function resetApp(){if(!confirm('सध्याचा Excel आणि स्क्रीनवरील डेटा साफ करायचा? Sent History वेगळी राहील.'))return;state.rows=[];state.rawRows=[];state.headers=[];state.fileId='';$('fileInput').value='';$('fileName').textContent='';$('mappingBox').classList.add('hidden');$('searchBox').value='';$('filterBox').value='all';updateAll();toast('नवीन Excel साठी तयार ✅')}
-function resetHistory(){if(!confirm('या app चे सर्व saved WhatsApp Opened status reset करायचे?'))return;Object.keys(localStorage).filter(k=>k.startsWith('dswa:')).forEach(k=>localStorage.removeItem(k));state.rows.forEach(r=>r.status=null);updateAll();toast('Sent History Reset झाला')}
-window.addEventListener('error',()=>toast('काही तांत्रिक अडचण आली. पेज पुन्हा उघडा.'));
-updateAll();
+async function hydrateCrm(){S.crm=new Map();for(const r of S.rows){const c=await dbGet('crm',r._key);if(c)S.crm.set(r._key,c)}}
+
+function reportStats(rows=S.rows){return {total:rows.length,done:rows.filter(r=>monthValue(r)>0).length,pending:rows.filter(r=>monthValue(r)<=0).length,value:rows.reduce((a,r)=>a+monthValue(r),0),wa:rows.reduce((a,r)=>a+(crmFor(r).waCount||0),0),calls:rows.reduce((a,r)=>a+(crmFor(r).callCount||0),0),will:rows.filter(r=>crmFor(r).status==='खरेदी करणार').length,expected:rows.reduce((a,r)=>a+(crmFor(r).expected||0),0),today:rows.filter(r=>crmFor(r).followDate===todayISO()).length}}
+function buildPdfArea(){const rows=S.visible.length?S.visible:S.rows,st=reportStats(rows),l=leader();const contacted=rows.filter(r=>{const c=crmFor(r);return c.waCount||c.callCount||c.status!=='बाकी'||c.note}).slice(0,350);$('pdfArea').innerHTML=`<div class="pdfTitle">DS WORLD – Monthly Shopping Follow-up Report</div><div style="margin-top:5px;font-size:12px">Leader: <b>${escapeHtml(l.name||'-')}</b> ${l.mobile?'• '+escapeHtml(l.mobile):''}<br>Report: ${escapeHtml(S.fileName)} • Month: ${MR_MONTH[S.month]||S.month} • Date: ${new Date().toLocaleDateString('en-IN')}</div><div class="pdfGrid"><div class="pdfStat"><b>${st.total}</b>सदस्य</div><div class="pdfStat"><b>${st.done}</b>खरेदी झाली</div><div class="pdfStat"><b>${st.pending}</b>खरेदी बाकी</div><div class="pdfStat"><b>${money(st.value)}</b>खरेदी</div><div class="pdfStat"><b>${st.wa}</b>WhatsApp Open</div><div class="pdfStat"><b>${st.calls}</b>Calls</div><div class="pdfStat"><b>${st.will}</b>खरेदी करणार</div><div class="pdfStat"><b>${money(st.expected)}</b>Expected</div></div><h3>Follow-up Activity</h3><table class="pdfTable"><thead><tr><th>नाव</th><th>मोबाईल</th><th>${MR_MONTH[S.month]||S.month}</th><th>Status</th><th>WA</th><th>Calls</th><th>Follow-up</th><th>Expected</th><th>Note</th></tr></thead><tbody>${contacted.map(r=>{const c=crmFor(r);return `<tr><td>${escapeHtml(r.Name)}</td><td>${escapeHtml(r.Mobile)}</td><td>${money(monthValue(r))}</td><td>${escapeHtml(c.status)}</td><td>${c.waCount||0}</td><td>${c.callCount||0}</td><td>${escapeHtml(c.followDate||'')}</td><td>${money(c.expected||0)}</td><td>${escapeHtml(c.note||'')}</td></tr>`}).join('')}</tbody></table><div class="footer">हा report app मधील locally recorded actions वर आधारित आहे. WhatsApp delivery confirmation नाही.</div>`;return $('pdfArea')}
+async function pdfBlob(){const el=buildPdfArea();const opt={margin:6,filename:`DS_WORLD_${S.month}_Followup_Report.pdf`,image:{type:'jpeg',quality:.95},html2canvas:{scale:1.5,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'landscape'},pagebreak:{mode:['css','legacy']}};const worker=html2pdf().set(opt).from(el).toPdf();const pdf=await worker.get('pdf');return pdf.output('blob')}
+async function downloadPdf(){toast('PDF तयार होत आहे…');const blob=await pdfBlob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`DS_WORLD_${S.month}_Followup_Report.pdf`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('PDF तयार झाला')}
+async function shareReport(){try{toast('Report तयार होत आहे…');const blob=await pdfBlob(),file=new File([blob],`DS_WORLD_${S.month}_Followup_Report.pdf`,{type:'application/pdf'});if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({title:'DS WORLD Follow-up Report',text:`${leader().name||'DS WORLD'} – ${MR_MONTH[S.month]||S.month} Follow-up Report`,files:[file]})}else{const st=reportStats(S.visible.length?S.visible:S.rows);const text=`DS WORLD – ${MR_MONTH[S.month]||S.month} Follow-up Report\n👥 सदस्य: ${st.total}\n💬 WhatsApp Open: ${st.wa}\n📞 Calls: ${st.calls}\n🤝 खरेदी करणार: ${st.will}\n💰 Expected: ${money(st.expected)}`;window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');toast('या browser मध्ये PDF direct share support नाही; summary WhatsApp वर उघडला.')} }catch(e){if(e.name!=='AbortError')toast('Report share करता आला नाही')}}
+function exportExcel(){const rows=(S.visible.length?S.visible:S.rows).map(r=>{const c=crmFor(r);return {'A.B. Id':r['A.B. Id'],Name:r.Name,Mobile:r.Mobile,City:r.City,'Proposer Name':r['Proposer Name'],Month:S.month,'Shopping Amount':monthValue(r),Status:c.status,'Expected Amount':c.expected||0,'Follow-up Date':c.followDate||'',Note:c.note||'','WhatsApp Open Count':c.waCount||0,'Call Count':c.callCount||0}});const ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Follow-up');XLSX.writeFile(wb,`DS_WORLD_${S.month}_Followup.xlsx`)}
+
+// Events
+$('uploadBtn').onclick=()=>$('fileInput').click();$('fileInput').onchange=e=>{const f=e.target.files[0];if(f)loadExcel(f)};$('saveLeaderBtn').onclick=saveLeader;$('leaderName').oninput=updateLeaderDisplay;$('leaderMobile').oninput=updateLeaderDisplay;
+$('monthSelect').onchange=async e=>{S.month=e.target.value;await dbPut('app','lastDataset',{fileName:S.fileName,headers:S.headers,months:S.months,month:S.month,rows:S.rows});S.filterMode='pending';document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.smart==='pending'));updateAll()};
+['cityFilter','districtFilter','proposerFilter','teamLeaderFilter','rangeFilter','statusFilter','shoppingStatusFilter','searchBox','quickSearch','minAmountFilter','maxAmountFilter'].forEach(id=>$(id).addEventListener(['searchBox','quickSearch','minAmountFilter','maxAmountFilter'].includes(id)?'input':'change',render));$('commonMessage').oninput=updatePreview;$('clearFilterBtn').onclick=clearFilters;$('showAllBtn').onclick=showAll;document.querySelectorAll('[data-smart-filter]').forEach(c=>c.onclick=()=>applySmartFilter(c.dataset.smartFilter));$('todayBtn').onclick=()=>{S.filterMode='today';document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active',c.dataset.smart==='today'));render()};$('nextBtn').onclick=nextMember;
+document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{S.filterMode=c.dataset.smart;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('active',x===c));render()});
+$('modalStatus').onchange=toggleWill;$('closeModal').onclick=()=>$('followModal').classList.add('hidden');$('saveFollow').onclick=saveFollow;$('exportExcelBtn').onclick=exportExcel;$('pdfBtn').onclick=downloadPdf;$('shareReportBtn').onclick=shareReport;$('resetCrmBtn').onclick=async()=>{if(confirm('सर्व Follow-up status, notes, call/WhatsApp history reset करायची?')){await dbClear('crm');S.crm.clear();updateAll();toast('CRM history reset झाली')}};
+
+(async function init(){await openDB();const l=await dbGet('app','leader');if(l){$('leaderName').value=l.name||'';$('leaderMobile').value=l.mobile||''}updateLeaderDisplay();await restoreDataset();if(S.rows.length){await hydrateCrm();updateAll()}})();
 </script>
 </body>
 </html>
