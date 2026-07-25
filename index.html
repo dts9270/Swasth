@@ -1,379 +1,211 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Mission 1 Lakh - Final Dashboard</title>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <style>
-    /* --- GLOBAL STYLES --- */
-    * { box-sizing: border-box; }
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f0f2f5; }
-
-    /* HEADER */
-    .header { 
-      background: linear-gradient(135deg, #0061f2, #6900c7); 
-      padding: 20px; text-align: center; color: white; 
-      border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    .header h2 { margin: 0; font-size: 22px; }
-
-    /* TABS */
-    .tab-btns { display: flex; justify-content: center; gap: 8px; padding: 15px; margin-top: -25px; }
-    .tab-btns button { 
-      padding: 10px; border: none; background: white; border-radius: 12px; 
-      font-weight: bold; font-size: 13px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-      flex: 1; color: #555;
-    }
-    .tab-btns button.active-btn { background: #ff9933; color: white; transform: translateY(-3px); }
-
-    /* CONTAINER */
-    .container { 
-      width: 95%; max-width: 800px; margin: 10px auto; background: white; 
-      padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      min-height: 400px;
-    }
-    .tab { display: none; }
-    .active { display: block; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-    /* DASHBOARD (OLD COLORS RESTORED) */
-    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-    .dash-card { padding: 15px; border-radius: 12px; text-align: center; border: 1px solid rgba(0,0,0,0.05); }
-    
-    /* Old Color Logic */
-    .card-total { background: #eee; color: #333; }
-    .card-done { background: #d4edda; color: #155724; }
-    .card-plan { background: #fff3cd; color: #856404; }
-    .card-pending { background: #f8d7da; color: #721c24; }
-    
-    .dash-num { font-size: 28px; font-weight: bold; display: block; }
-    .dash-lbl { font-size: 12px; font-weight: bold; }
-
-    /* FORMS */
-    label { display: block; margin-top: 10px; font-weight: 600; color: #444; }
-    input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 8px; }
-    .action-btn { margin-top: 20px; background: #0061f2; color: white; padding: 12px; border: none; border-radius: 50px; width: 100%; font-size: 16px; font-weight: bold; }
-
-    /* TABLE */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-    th { background: #0057b7; color: white; padding: 10px; text-align: left; }
-    td { padding: 10px; border-bottom: 1px solid #ddd; vertical-align: middle; }
-    
-    /* List Row Colors */
-    tr.row-done { background-color: #e8f5e9; }
-    tr.row-planning { background-color: #fff3cd; }
-    tr.row-pending { background-color: #fff; }
-
-    /* UTILS */
-    .status-select { padding: 5px; border-radius: 5px; width: 100%; font-weight: bold; }
-    .bmi-text { font-weight: bold; font-size: 12px; }
-
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>DS WORLD – WhatsApp Business Message Sender</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --navy:#0b1f3a;--blue:#174ea6;--green:#128c7e;--green2:#25d366;--bg:#f4f7fb;--card:#ffffff;
+  --text:#162033;--muted:#6b7280;--warn:#b7791f;--danger:#c53030;--border:#dbe3ee;--shadow:0 10px 30px rgba(17,39,70,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Devanagari","Noto Sans",Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#eef4fb 0,#f8fafc 40%,#f4f7fb 100%);color:var(--text)}
+button,input,textarea,select{font:inherit}
+.container{max-width:1120px;margin:auto;padding:14px 14px 90px}
+.header{position:sticky;top:0;z-index:50;background:rgba(244,247,251,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(219,227,238,.8);margin:0 -14px 14px;padding:12px 14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--navy),var(--blue));display:grid;place-items:center;color:#fff;font-weight:900;box-shadow:var(--shadow)}
+.brand h1{font-size:18px;margin:0;color:var(--navy)}
+.brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.grid{display:grid;gap:12px}.dashboard{grid-template-columns:repeat(5,1fr)}
+.stat{background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:16px;padding:12px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:22px;color:var(--navy)}.stat span{font-size:12px;color:var(--muted)}
+.panel{background:rgba(255,255,255,.96);border:1px solid var(--border);border-radius:18px;padding:15px;box-shadow:var(--shadow);margin-top:12px}
+.panel h2{font-size:16px;margin:0 0 12px;color:var(--navy)}
+.upload{border:2px dashed #9fb4d2;border-radius:16px;padding:18px;text-align:center;background:#f8fbff}
+.btn{border:none;border-radius:12px;padding:11px 14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px}
+.btn:disabled{opacity:.45;cursor:not-allowed}.primary{background:var(--blue);color:#fff}.wa{background:var(--green2);color:#0b2a18}.business{background:var(--green);color:#fff}.light{background:#edf2f7;color:#24324a}.danger{background:#fff1f1;color:var(--danger);border:1px solid #f4caca}.warn{background:#fff8e8;color:#8a5a0a}
+.hidden{display:none!important}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row .auto{flex:0 0 auto}
+label{display:block;font-size:12px;font-weight:700;color:#44516a;margin-bottom:6px}
+input,textarea,select{width:100%;border:1px solid var(--border);border-radius:12px;padding:11px 12px;background:#fff;outline:none;color:var(--text)}
+input:focus,textarea:focus,select:focus{border-color:#7da4dc;box-shadow:0 0 0 3px rgba(23,78,166,.08)}
+textarea{min-height:120px;resize:vertical}
+.small{font-size:12px;color:var(--muted)}
+.preview{white-space:pre-wrap;background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:12px;min-height:90px}
+.tools{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.contact{background:#fff;border:1px solid var(--border);border-radius:16px;padding:13px;box-shadow:0 8px 22px rgba(17,39,70,.06);position:relative}
+.contact.invalid{border-color:#f0b3b3}.contact.duplicate{outline:2px solid #ffe4a3}
+.contact-top{display:flex;gap:10px;align-items:flex-start}.contact-top input[type=checkbox]{width:20px;height:20px;margin-top:3px}.contact-name{font-weight:800;font-size:16px;color:var(--navy)}
+.contact-mobile{font-size:13px;color:var(--muted);margin-top:2px}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:700;margin:6px 6px 0 0}.ok{background:#e9f9ef;color:#166534}.pending{background:#f2f4f7;color:#475467}.bad{background:#fff0f0;color:#b42318}.dup{background:#fff7df;color:#8a5a0a}
+.msg{font-size:13px;white-space:pre-wrap;background:#f8fafc;border-radius:12px;padding:10px;margin:10px 0;max-height:145px;overflow:auto;border:1px solid #edf1f6}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .full{grid-column:1/-1}
+.statusline{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px}.toggle{font-size:12px;border:1px solid var(--border);background:#fff;border-radius:10px;padding:7px 9px}
+.empty{text-align:center;padding:36px 10px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#172033;color:#fff;padding:11px 15px;border-radius:12px;z-index:100;box-shadow:var(--shadow);max-width:90%;font-size:13px}
+.mapping{margin-top:12px;padding:12px;border-radius:14px;background:#fff8e8;border:1px solid #f3dfad}
+.footer-note{font-size:11px;color:var(--muted);text-align:center;margin:18px 0}
+@media(max-width:900px){.dashboard{grid-template-columns:repeat(3,1fr)}.cards{grid-template-columns:1fr}.tools{grid-template-columns:1fr}}
+@media(max-width:560px){.dashboard{grid-template-columns:repeat(2,1fr)}.stat:last-child{grid-column:1/-1}.container{padding:10px 10px 90px}.header{margin:0 -10px 10px;padding:10px}.brand h1{font-size:16px}.panel{padding:12px}.actions{grid-template-columns:1fr}.actions .full{grid-column:auto}.row>*{flex-basis:100%}.row .auto{flex-basis:auto}.btn{width:100%}}
+</style>
 </head>
-
 <body>
+<div class="container">
+  <header class="header">
+    <div class="brand"><div class="logo">DS</div><div><h1>DS WORLD – WhatsApp Business Message Sender</h1><p>Excel Upload • Personalized Message • One Click WhatsApp</p></div></div>
+  </header>
 
-  <div class="header">
-    <h2>🇮🇳 Mission 1 Lakh</h2>
-    <small>Swasthya Kranti 2026</small>
-  </div>
+  <section class="grid dashboard">
+    <div class="stat"><b id="sTotal">0</b><span>👥 एकूण संपर्क</span></div>
+    <div class="stat"><b id="sValid">0</b><span>📱 Valid Numbers</span></div>
+    <div class="stat"><b id="sInvalid">0</b><span>⚠️ Invalid Numbers</span></div>
+    <div class="stat"><b id="sOpened">0</b><span>✅ WhatsApp उघडले</span></div>
+    <div class="stat"><b id="sPending">0</b><span>⏳ Pending</span></div>
+  </section>
 
-  <div class="tab-btns">
-    <button onclick="openTab('tab4', this)" class="active-btn">📊 Dashboard</button>
-    <button onclick="openTab('tab1', this)">📝 नोंदणी</button>
-    <button onclick="openTab('tab2', this)">🗓️ लिस्ट</button>
-    <button onclick="openTab('tab3', this)">📋 रिपोर्ट</button>
-  </div>
-
-  <div id="tab4" class="tab active container">
-    <div class="dash-grid">
-      <div class="dash-card card-total">
-          <span class="dash-num" id="dTotal">0</span>
-          <span class="dash-lbl">एकूण नोंदणी</span>
-      </div>
-      <div class="dash-card card-done">
-          <span class="dash-num" id="dDone">0</span>
-          <span class="dash-lbl">चेक झाले</span>
-      </div>
-      <div class="dash-card card-plan">
-          <span class="dash-num" id="dPlanning">0</span>
-          <span class="dash-lbl">प्लॅनिंग</span>
-      </div>
-      <div class="dash-card card-pending">
-          <span class="dash-num" id="dPending">0</span>
-          <span class="dash-lbl">बाकी</span>
+  <section class="panel">
+    <h2>📂 Excel File Upload</h2>
+    <div class="upload">
+      <input id="fileInput" type="file" accept=".xlsx,.xls,.csv" class="hidden" />
+      <button class="btn primary" onclick="document.getElementById('fileInput').click()">📂 Excel File Upload करा</button>
+      <div class="small" style="margin-top:8px">Supported: .xlsx, .xls, .csv</div>
+      <div id="fileName" class="small" style="margin-top:5px"></div>
+    </div>
+    <div id="mappingBox" class="mapping hidden">
+      <b>Column निवडा</b>
+      <div class="row" style="margin-top:10px">
+        <div><label>Name Column</label><select id="nameCol"></select></div>
+        <div><label>Mobile Column</label><select id="mobileCol"></select></div>
+        <div class="auto" style="align-self:end"><button class="btn primary" onclick="applyMapping()">लागू करा</button></div>
       </div>
     </div>
-    <button class="action-btn" onclick="loadPeople()" style="background:white; color:#333; border:1px solid #ccc;">🔄 Refresh Data</button>
-  </div>
+    <div class="small" style="margin-top:10px">🔒 तुमचा Excel डेटा तुमच्या डिव्हाइसवरच प्रक्रिया केला जातो. कोणत्याही सर्व्हरवर अपलोड केला जात नाही.</div>
+  </section>
 
-  <div id="tab1" class="tab container">
-    <h3>📝 नवीन नोंदणी</h3>
-    <label>पूर्ण नाव</label>
-    <input type="text" id="inpName" placeholder="नाव टाका..."/>
-    
-    <div style="display:flex; gap:10px;">
-      <div style="flex:1"><label>वय</label><input type="number" id="inpAge" placeholder="30"/></div>
-      <div style="flex:1">
-          <label>लिंग</label>
-          <select id="inpGender">
-              <option value="Male">पुरुष</option>
-              <option value="Female">स्त्री</option>
-              <option value="Other">इतर</option>
-          </select>
-      </div>
+  <section class="panel">
+    <h2>✍️ सर्वांसाठी कॉमन मेसेज</h2>
+    <div class="row">
+      <div><label>Quick Template</label><select id="templateSelect"><option value="">Custom</option><option value="meeting">Meeting Reminder</option><option value="purchase">Purchase Follow-up</option><option value="health">Health Awareness</option><option value="training">Training Reminder</option><option value="event">Event Invitation</option></select></div>
     </div>
-
-    <div style="margin-top:10px;">
-        <label>मोबाईल</label>
-        <div style="display:flex; gap:5px;">
-            <input type="tel" id="inpMobile" placeholder="Number"/>
-            <button onclick="pickContact()" style="background:#0061f2; color:white; border:none; border-radius:5px; width:50px;">📒</button>
-        </div>
+    <textarea id="commonMessage" placeholder="आजच्या महत्त्वाच्या मिटिंगची माहिती..."></textarea>
+    <div class="row" style="margin-top:10px">
+      <div><label>Greeting</label><input id="greeting" value="नमस्कार" /></div>
+      <div><label>Name suffix</label><input id="suffix" value="जी 🙏" /></div>
+      <div><label>Signature</label><input id="signature" value="धन्यवाद 🙏&#10;DS WORLD" /></div>
     </div>
+    <div class="small" style="margin-top:8px"><span id="charCount">Characters: 0</span> • <span id="readyCount">Contacts Ready: 0</span></div>
+  </section>
 
-    <div style="background:#f8f9fa; padding:15px; border-radius:10px; margin-top:20px; border:1px solid #eee;">
-      <h4 style="margin:0; color:#0061f2;">⚖️ BMI (वजन/उंची)</h4>
-      <div style="display:flex; gap:10px; margin-top:5px;">
-        <div style="flex:1"><input type="number" id="inpWeight" placeholder="वजन (KG)" oninput="calcBMI()"/></div>
-        <div style="flex:1"><input type="number" id="inpHeight" placeholder="उंची (CM)" oninput="calcBMI()"/></div>
-      </div>
-      <div id="bmiDisplay" style="margin-top:5px; font-weight:bold;">BMI: 0.0</div>
+  <section class="panel">
+    <h2>👁️ Sample Message Preview</h2>
+    <div id="samplePreview" class="preview">Excel अपलोड करा आणि कॉमन मेसेज टाइप करा.</div>
+  </section>
+
+  <section class="panel">
+    <div class="tools">
+      <input id="searchBox" placeholder="🔍 नाव किंवा मोबाईल नंबर शोधा" />
+      <select id="filterBox"><option value="all">सर्व</option><option value="pending">Pending</option><option value="opened">WhatsApp उघडले</option><option value="invalid">Invalid Number</option><option value="duplicates">Duplicates</option><option value="selected">Selected Only</option></select>
+      <button class="btn light" onclick="renderContacts()">🔄 Refresh</button>
     </div>
-    
-    <button class="action-btn" onclick="savePerson()">💾 माहिती सेव्ह करा</button>
-  </div>
-
-  <div id="tab2" class="tab container">
-    <h3>🗓️ लिस्ट आणि प्लॅनिंग</h3>
-    <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="🔍 नावाने शोधा..." style="width:100%; padding:10px; border-radius:20px; border:1px solid #ccc; margin-bottom:10px;">
-    
-    <div style="overflow-x:auto;">
-      <table id="dataTable">
-        <thead>
-          <tr>
-            <th>क्र.</th>
-            <th>नाव / BMI</th>
-            <th style="width:40%;">स्टेटस</th>
-            <th>Del</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="row" style="margin-top:10px">
+      <button class="btn light" onclick="setAllSelection(true)">☑️ Select All</button>
+      <button class="btn light" onclick="setAllSelection(false)">⬜ Deselect All</button>
+      <button class="btn light" onclick="document.getElementById('filterBox').value='selected';renderContacts()">👁️ Selected Only</button>
+      <button class="btn light" onclick="exportReport()">📥 Status Report Export करा</button>
+      <button class="btn danger" onclick="resetApp()">♻️ नवीन Excel सुरू करा</button>
+      <button class="btn danger" onclick="resetHistory()">🧹 Sent History Reset</button>
     </div>
-  </div>
+    <div id="contacts" class="cards"><div class="empty">Excel अपलोड केल्यानंतर संपर्क येथे दिसतील.</div></div>
+  </section>
 
-  <div id="tab3" class="tab container">
-    <h3>📋 नोंदणी अहवाल</h3>
-    <div style="display:flex; gap:10px; margin-bottom:15px;">
-      <button onclick="exportToExcel()" style="flex:1; padding:10px; background:#1D6F42; color:white; border:none; border-radius:5px;">📊 Excel</button>
-      <button onclick="printPDF()" style="flex:1; padding:10px; background:#D32F2F; color:white; border:none; border-radius:5px;">📄 PDF Print</button>
-    </div>
+  <div class="footer-note">टीप: “WhatsApp उघडले” म्हणजे फक्त चॅट उघडली आहे; मेसेज प्रत्यक्ष पाठवला/डिलिव्हर झाला याची खात्री नाही.</div>
+</div>
+<div id="toast" class="toast hidden"></div>
 
-    <div style="overflow-x:auto;">
-      <table id="reportTable">
-        <thead>
-          <tr>
-            <th>क्र.</th>
-            <th>नाव</th>
-            <th>मोबाईल</th>
-            <th>स्टेटस</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAhg7nlZjHxOojoBZeBNIAjKhDwzXzr1io",
-      authDomain: "swasth-80320.firebaseapp.com",
-      projectId: "swasth-80320",
-      storageBucket: "swasth-80320.firebasestorage.app",
-      messagingSenderId: "143665591308",
-      appId: "1:143665591308:web:99ce02ee034d041dd6ea29"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.openTab = function(id, btn){
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      document.querySelectorAll('.tab-btns button').forEach(b=>b.classList.remove('active-btn'));
-      if(btn) btn.classList.add('active-btn');
-      if(id === 'tab3') loadReportTab();
-    };
-
-    window.pickContact = async function() {
-      if('contacts' in navigator) {
-        try {
-          const c = await navigator.contacts.select(['name', 'tel'], {multiple:false});
-          if(c.length){
-             if(c[0].tel) document.getElementById("inpMobile").value = c[0].tel[0].replace(/\s/g, '');
-             if(c[0].name) document.getElementById("inpName").value = c[0].name[0];
-          }
-        } catch(e){}
-      } else alert("Mobile Only Feature");
-    };
-
-    window.calcBMI = function() {
-      let w = parseFloat(document.getElementById("inpWeight").value);
-      let h = parseFloat(document.getElementById("inpHeight").value);
-      let d = document.getElementById("bmiDisplay");
-      if(w>0 && h>0) {
-        let bmi = (w/((h/100)*(h/100))).toFixed(1);
-        let s = bmi<18.5?"Underweight":bmi<25?"Normal":"Overweight";
-        let c = bmi<18.5?"orange":bmi<25?"green":"red";
-        d.innerHTML = `BMI: ${bmi} <span style="color:${c}">(${s})</span>`;
-        d.dataset.val=bmi; d.dataset.stat=s;
-      }
-    };
-
-    window.savePerson = async function(){
-      const name = document.getElementById("inpName").value;
-      const mobile = document.getElementById("inpMobile").value;
-      const gender = document.getElementById("inpGender").value;
-      const bmiVal = document.getElementById("bmiDisplay").dataset.val || "0";
-      const bmiStat = document.getElementById("bmiDisplay").dataset.stat || "-";
-
-      if(!name || !mobile) { alert("नाव आणि मोबाईल भरा!"); return; }
-      
-      try {
-        await addDoc(collection(db, "mission1lakh"), {
-          name, mobile, gender,
-          age: document.getElementById("inpAge").value,
-          weight: document.getElementById("inpWeight").value,
-          height: document.getElementById("inpHeight").value,
-          bmi: bmiVal, bmiStatus: bmiStat,
-          status: "No", planDate: "",
-          regDate: new Date().toLocaleDateString('en-IN')
-        });
-        alert("सेव्ह झाले! ✔");
-        document.getElementById("inpName").value = "";
-        document.getElementById("inpMobile").value = "";
-        loadPeople();
-      } catch(e) { alert(e.message); }
-    };
-
-    window.loadPeople = async function(){
-      const tbody = document.querySelector("#dataTable tbody");
-      tbody.innerHTML = "";
-      let total=0, done=0, planning=0, pending=0;
-      let srNo = 1;
-
-      try {
-        const snap = await getDocs(collection(db, "mission1lakh"));
-        window.allPeople = [];
-        snap.forEach(d => {
-          let p = d.data(); p.id = d.id;
-          window.allPeople.push(p);
-          
-          if(p.status === "Yes") done++; 
-          else if(p.status === "Planning") planning++; 
-          else pending++;
-          total++;
-
-          let row = tbody.insertRow();
-          if(p.status === "Yes") row.className = "row-done";
-          else if(p.status === "Planning") row.className = "row-planning";
-          else row.className = "row-pending";
-
-          let planStyle = p.status==="Planning" ? "display:block" : "display:none";
-          let msg = p.status==="Planning"?`तुमची तारीख ${p.planDate} ठरली आहे.`:`रिपोर्ट तयार आहे.`;
-
-          // BMI Color Logic
-          let bmiColor = "black";
-          if(p.bmiStatus === "Underweight") bmiColor = "orange";
-          else if(p.bmiStatus === "Normal") bmiColor = "green";
-          else if(p.bmiStatus === "Overweight") bmiColor = "red";
-
-          row.innerHTML = `
-            <td>${srNo++}</td>
-            <td>
-              <b>${p.name}</b> <small>(${p.gender})</small><br>
-              <small class="bmi-text" style="color:${bmiColor}">BMI: ${p.bmi} (${p.bmiStatus})</small><br>
-              <div style="margin-top:4px;">
-                <a href="tel:${p.mobile}" style="text-decoration:none;">📞</a>
-                <a href="https://wa.me/91${p.mobile}?text=${encodeURIComponent(msg)}" target="_blank" style="margin-left:8px; text-decoration:none;">💚</a>
-              </div>
-            </td>
-            <td>
-              <select onchange="updateStatus('${p.id}', this)" class="status-select">
-                <option value="No" ${p.status==="No"?"selected":""}>❌ नाही</option>
-                <option value="Planning" ${p.status==="Planning"?"selected":""}>🗓️ प्लॅनिंग</option>
-                <option value="Yes" ${p.status==="Yes"?"selected":""}>✅ झाले</option>
-              </select>
-              <input type="date" id="date_${p.id}" value="${p.planDate||''}" style="${planStyle} width:100%; margin-top:5px;" onchange="updateDate('${p.id}',this.value)">
-            </td>
-            <td><button onclick="delP('${p.id}')" style="color:red; border:none; background:none; font-size:16px;">🗑️</button></td>
-          `;
-        });
-        document.getElementById("dTotal").innerText = total;
-        document.getElementById("dDone").innerText = done;
-        document.getElementById("dPlanning").innerText = planning;
-        document.getElementById("dPending").innerText = pending;
-      } catch(e){console.error(e);}
-    };
-
-    window.updateStatus = async function(id, el) {
-      await updateDoc(doc(db, "mission1lakh", id), { status: el.value });
-      loadPeople();
-    };
-    window.updateDate = async(id,v) => await updateDoc(doc(db,"mission1lakh",id),{planDate:v});
-    window.delP = async(id) => {if(confirm("Delete?")){await deleteDoc(doc(db,"mission1lakh",id));loadPeople();}};
-
-    window.loadReportTab = function() {
-      const tbody = document.querySelector("#reportTable tbody");
-      tbody.innerHTML = "";
-      let sr = 1;
-      window.allPeople.forEach(p => {
-        let statusText = p.status==="Yes" ? '✅ झाले' : (p.status==="Planning" ? '🗓️ प्लॅनिंग' : '❌ नाही');
-        tbody.innerHTML += `<tr><td>${sr++}</td><td>${p.name} <br><small>${p.age}/${p.gender}</small></td><td>${p.mobile}</td><td>${statusText}</td></tr>`;
-      });
-    };
-
-    window.exportToExcel = function() {
-      let data = window.allPeople.map(p => ({Name:p.name, Mobile:p.mobile, Status:p.status, Age:p.age, Gender:p.gender, BMI:p.bmi, BMI_Stat:p.bmiStatus}));
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Data");
-      XLSX.writeFile(wb, "Mission_Data.xlsx");
-    };
-
-    window.printPDF = function() {
-      let printWindow = window.open('', '', 'height=600,width=800');
-      let rows = window.allPeople.map((p,i) => `
-        <tr>
-          <td>${i+1}</td>
-          <td>${p.name}</td>
-          <td>${p.mobile}</td>
-          <td>${p.bmi} (${p.bmiStatus})</td>
-          <td>${p.status==='Yes'?'Done':(p.status==='Planning'?'Plan':'No')}</td>
-        </tr>
-      `).join('');
-      printWindow.document.write(`<html><head><title>Report</title><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #000;padding:5px;text-align:left;}</style></head><body><h2>Mission Report</h2><table><thead><tr><th>Sr</th><th>Name</th><th>Mobile</th><th>BMI</th><th>Status</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
-      printWindow.document.close();
-      printWindow.print();
-    };
-
-    window.searchTable = function() {
-      let val = document.getElementById("searchInput").value.toUpperCase();
-      let tr = document.getElementById("dataTable").getElementsByTagName("tr");
-      for(let i=1; i<tr.length; i++){
-        let td = tr[i].getElementsByTagName("td")[1];
-        if(td) tr[i].style.display = td.innerText.toUpperCase().indexOf(val) > -1 ? "" : "none";
-      }
-    };
-
-    loadPeople();
-  </script>
+<script>
+const state={rows:[],headers:[],rawRows:[],nameKey:null,mobileKey:null,fileId:'',duplicates:new Set()};
+const templates={
+ meeting:'आज रात्री आपल्या टीमची महत्त्वाची मिटिंग आहे. कृपया वेळेत उपस्थित राहा. 🙏',
+ purchase:'आपली या महिन्याची नियमित खरेदी बाकी असल्यास कृपया आपल्या गरजेनुसार ऑर्डर कळवा. कोणतीही मदत हवी असल्यास नक्की संपर्क करा. 🙏',
+ health:'आरोग्य हीच खरी संपत्ती आहे. आपल्या दैनंदिन जीवनशैलीत छोटे सकारात्मक बदल करून निरोगी जीवनाकडे एक पाऊल टाकूया. 🌿',
+ training:'आजचे प्रशिक्षण आपल्या टीमच्या वाढीसाठी महत्त्वाचे आहे. कृपया वेळेत सहभागी व्हा आणि नोट्स तयार ठेवा. 📘',
+ event:'आपल्यासाठी एक विशेष कार्यक्रम आयोजित केला आहे. आपल्या उपस्थितीने कार्यक्रमाची शोभा वाढेल. कृपया वेळेत उपस्थित राहा. 🙏'
+};
+const $=id=>document.getElementById(id);
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(toast._x);toast._x=setTimeout(()=>t.classList.add('hidden'),2500)}
+function safe(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function normalizeHeader(s){return String(s||'').trim().toLowerCase().replace(/[_\-.]/g,' ').replace(/\s+/g,' ')}
+function detectColumns(headers){
+ const names=['name','नाव','customer name','member name','customer','member','full name','व्यक्तीचे नाव'];
+ const mobiles=['mobile','mobile number','मोबाईल','मोबाईल नंबर','phone','phone number','contact','contact number','whatsapp number','whatsapp','number'];
+ const n=headers.find(h=>names.includes(normalizeHeader(h)))||headers.find(h=>/name|नाव/.test(normalizeHeader(h)));
+ const m=headers.find(h=>mobiles.includes(normalizeHeader(h)))||headers.find(h=>/mobile|phone|contact|whatsapp|मोबाईल|नंबर/.test(normalizeHeader(h)));
+ return {n,m};
+}
+function cleanMobileNumber(value){
+ let d=String(value??'').replace(/\D/g,'');
+ if(d.startsWith('00')) d=d.slice(2);
+ while(d.length>10 && d.startsWith('0')) d=d.slice(1);
+ if(d.length===11 && d.startsWith('0')) d=d.slice(1);
+ if(d.length===10 && /^[6-9]/.test(d)) return '91'+d;
+ if(d.length===12 && d.startsWith('91') && /^[6-9]/.test(d.slice(2))) return d;
+ return '';
+}
+function fileFingerprint(file){return [file.name,file.size,file.lastModified].join('|')}
+function statusKey(r){return 'dswa:'+state.fileId+':'+(r.cleaned||'invalid')+':'+r.rowNum}
+function loadStatus(r){try{return JSON.parse(localStorage.getItem(statusKey(r))||'null')}catch{return null}}
+function saveStatus(r,opened){const obj={opened:!!opened,date:new Date().toLocaleDateString('en-CA'),time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})};localStorage.setItem(statusKey(r),JSON.stringify(obj));r.status=obj;updateDashboard()}
+function generateMessage(name){
+ const g=$('greeting').value.trim(), s=$('suffix').value.trim(), c=$('commonMessage').value.trim(), sig=$('signature').value.trim();
+ let first='';
+ if(name&&String(name).trim()) first=[g,String(name).trim(),s].filter(Boolean).join(' '); else first=[g,'🙏'].filter(Boolean).join(' ');
+ return [first,c,sig].filter(Boolean).join('\n\n');
+}
+function processRows(){
+ const counts={};state.rows=state.rawRows.map((r,i)=>{const name=String(r[state.nameKey]??'').trim();const original=String(r[state.mobileKey]??'').trim();const cleaned=cleanMobileNumber(original);if(cleaned)counts[cleaned]=(counts[cleaned]||0)+1;return {rowNum:i+2,name,original,cleaned,selected:true,status:null}});
+ state.duplicates=new Set(Object.keys(counts).filter(k=>counts[k]>1));
+ state.rows.forEach(r=>r.status=loadStatus(r));
+ updateAll();
+}
+function updateAll(){updateDashboard();updatePreview();renderContacts();}
+function updateDashboard(){
+ const total=state.rows.length, valid=state.rows.filter(r=>r.cleaned).length, invalid=total-valid, opened=state.rows.filter(r=>r.status?.opened).length, pending=valid-opened;
+ $('sTotal').textContent=total;$('sValid').textContent=valid;$('sInvalid').textContent=invalid;$('sOpened').textContent=opened;$('sPending').textContent=pending;$('readyCount').textContent='Contacts Ready: '+valid;
+}
+function updatePreview(){
+ const c=$('commonMessage').value;$('charCount').textContent='Characters: '+c.length;const first=state.rows.find(r=>r.cleaned)||state.rows[0];$('samplePreview').textContent=first?generateMessage(first.name):'Excel अपलोड करा आणि कॉमन मेसेज टाइप करा.';
+}
+function renderContacts(){
+ const q=$('searchBox').value.trim().toLowerCase(), f=$('filterBox').value;let rows=state.rows.filter(r=>{const search=!q||r.name.toLowerCase().includes(q)||r.original.toLowerCase().includes(q)||r.cleaned.includes(q);if(!search)return false;if(f==='pending')return r.cleaned&&!r.status?.opened;if(f==='opened')return !!r.status?.opened;if(f==='invalid')return !r.cleaned;if(f==='duplicates')return state.duplicates.has(r.cleaned);if(f==='selected')return r.selected;return true});
+ const box=$('contacts');if(!rows.length){box.innerHTML='<div class="empty">या फिल्टरमध्ये कोणतेही संपर्क सापडले नाहीत.</div>';return}
+ box.innerHTML=rows.map(r=>{const idx=state.rows.indexOf(r), dup=state.duplicates.has(r.cleaned), valid=!!r.cleaned, opened=!!r.status?.opened,msg=generateMessage(r.name);return `<article class="contact ${!valid?'invalid':''} ${dup?'duplicate':''}">
+ <div class="contact-top"><input type="checkbox" ${r.selected?'checked':''} onchange="toggleSelect(${idx},this.checked)"><div style="flex:1"><div class="contact-name">👤 ${safe(r.name||'नाव उपलब्ध नाही')}</div><div class="contact-mobile">📱 ${safe(r.original||'नंबर उपलब्ध नाही')} ${r.cleaned?'<span class="small">→ +'+r.cleaned+'</span>':''}</div><div><span class="badge ${valid?'ok':'bad'}">${valid?'Valid':'⚠️ मोबाईल नंबर तपासा'}</span>${dup?'<span class="badge dup">⚠️ Duplicate Number</span>':''}<span class="badge ${opened?'ok':'pending'}">${opened?'✅ WhatsApp उघडले':'⚪ Pending'}</span></div></div></div>
+ <div class="msg">${safe(msg)}</div>
+ <div class="actions"><button class="btn business full" ${!valid?'disabled':''} onclick="openWhatsApp(${idx},'business')">🟢 WhatsApp Business वर पाठवा</button><button class="btn wa" ${!valid?'disabled':''} onclick="openWhatsApp(${idx},'wa')">🟢 WhatsApp</button><button class="btn light" onclick="copyMessage(${idx})">📋 Copy Message</button></div>
+ <div class="statusline"><span class="small">Excel Row: ${r.rowNum}${r.status?.date?' • '+safe(r.status.date)+' '+safe(r.status.time):''}</span><button class="toggle" onclick="toggleStatus(${idx})">${opened?'Mark Pending':'Mark Opened'}</button></div></article>`}).join('');
+}
+function toggleSelect(i,v){state.rows[i].selected=v}
+function setAllSelection(v){state.rows.forEach(r=>r.selected=v);renderContacts()}
+function toggleStatus(i){saveStatus(state.rows[i],!state.rows[i].status?.opened);renderContacts()}
+function openWhatsApp(i,type){
+ const r=state.rows[i];if(!r.cleaned)return toast('मोबाईल नंबर तपासा');const msg=encodeURIComponent(generateMessage(r.name));saveStatus(r,true);renderContacts();
+ // wa.me is the most reliable cross-device fallback. Android may offer WhatsApp/Business chooser depending on defaults.
+ const url=`https://wa.me/${r.cleaned}?text=${msg}`;window.location.href=url;
+}
+async function copyMessage(i){try{await navigator.clipboard.writeText(generateMessage(state.rows[i].name));toast('मेसेज कॉपी झाला ✅')}catch{toast('कॉपी करता आली नाही')}}
+function applyMapping(){state.nameKey=$('nameCol').value;state.mobileKey=$('mobileCol').value;if(!state.mobileKey)return toast('Mobile Column निवडा');$('mappingBox').classList.add('hidden');processRows()}
+function fillMapping(){const nc=$('nameCol'),mc=$('mobileCol');nc.innerHTML='<option value="">नाव नाही / रिकामे</option>'+state.headers.map(h=>`<option value="${safe(h)}">${safe(h)}</option>`).join('');mc.innerHTML='<option value="">Mobile Column निवडा</option>'+state.headers.map(h=>`<option value="${safe(h)}">${safe(h)}</option>`).join('');if(state.nameKey)nc.value=state.nameKey;if(state.mobileKey)mc.value=state.mobileKey;$('mappingBox').classList.remove('hidden')}
+$('fileInput').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(!/\.(xlsx|xls|csv)$/i.test(file.name))throw new Error('Unsupported');$('fileName').textContent=file.name;state.fileId=fileFingerprint(file);const data=await file.arrayBuffer();const wb=XLSX.read(data,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const json=XLSX.utils.sheet_to_json(ws,{defval:'',raw:false});if(!json.length)throw new Error('Empty');state.rawRows=json;state.headers=Object.keys(json[0]||{});const d=detectColumns(state.headers);state.nameKey=d.n||'';state.mobileKey=d.m||'';if(!state.mobileKey){fillMapping();toast('Mobile column आपोआप सापडला नाही. कृपया निवडा.');return}if(!state.nameKey)fillMapping();else processRows()}catch(err){console.error(err);toast('Excel फाइल वाचता आली नाही. योग्य .xlsx/.xls/.csv फाइल निवडा.')}});
+$('commonMessage').addEventListener('input',updateAll);$('greeting').addEventListener('input',updateAll);$('suffix').addEventListener('input',updateAll);$('signature').addEventListener('input',updateAll);$('searchBox').addEventListener('input',renderContacts);$('filterBox').addEventListener('change',renderContacts);
+$('templateSelect').addEventListener('change',e=>{if(templates[e.target.value]){$('commonMessage').value=templates[e.target.value];updateAll()}});
+function exportReport(){if(!state.rows.length)return toast('Export करण्यासाठी डेटा नाही');const out=state.rows.map(r=>({Name:r.name,'Mobile Number':r.original,'Cleaned Number':r.cleaned?('+'+r.cleaned):'Invalid',Status:r.status?.opened?'WhatsApp Opened':'Pending',Date:r.status?.date||'',Time:r.status?.time||''}));const ws=XLSX.utils.json_to_sheet(out);const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Status Report');XLSX.writeFile(wb,'DS_WORLD_WhatsApp_Status_Report.xlsx')}
+function resetApp(){if(!confirm('सध्याचा Excel आणि स्क्रीनवरील डेटा साफ करायचा? Sent History वेगळी राहील.'))return;state.rows=[];state.rawRows=[];state.headers=[];state.fileId='';$('fileInput').value='';$('fileName').textContent='';$('mappingBox').classList.add('hidden');$('searchBox').value='';$('filterBox').value='all';updateAll();toast('नवीन Excel साठी तयार ✅')}
+function resetHistory(){if(!confirm('या app चे सर्व saved WhatsApp Opened status reset करायचे?'))return;Object.keys(localStorage).filter(k=>k.startsWith('dswa:')).forEach(k=>localStorage.removeItem(k));state.rows.forEach(r=>r.status=null);updateAll();toast('Sent History Reset झाला')}
+window.addEventListener('error',()=>toast('काही तांत्रिक अडचण आली. पेज पुन्हा उघडा.'));
+updateAll();
+</script>
 </body>
 </html>
